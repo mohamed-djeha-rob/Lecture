@@ -1,0 +1,93 @@
+%\RequirePackage{timestamp}
+%\RequirePackage{graphicx}
+%\RequirePackage{tikz}
+\RequirePackage{setspace}
+\RequirePackage{xcolor}
+\RequirePackage[outline]{contour}
+
+\makeatletter
+  
+\def\@directorA{\textless{}Directeur\textgreater}
+  \newcommand{\directorA}[1]{\gdef\@directorA{#1}}
+\def\@directorB{\textless{}Directeur\textgreater}
+  \newcommand{\directorB}[1]{\gdef\@directorB{#1}}
+  
+  
+\def\@university{\textless{}Universit\'e\textgreater}
+  \newcommand{\university}[1]{\gdef\@university{#1}}
+\def\@researchunit{\textless{}Unit\'e de recherche\textgreater}
+  \newcommand{\researchunit}[1]{\gdef\@researchunit{#1}}
+\def\@specialisation{\textless{}Sp\'ecialit\'e\textgreater}
+  \newcommand{\specialisation}[1]{\gdef\@specialisation{#1}}
+  
+\def\@doctoral{\textless{} \'Ecole doctorale\textgreater}
+  \newcommand{\doctoral}[1]{\gdef\@doctoral{#1}}
+  
+\newcommand{\titletimestamp}{\gdef\@titletimestamp}
+\def\@myquote{\textless{} \MBOX{}.}
+  \newcommand{\myquote}[1]{\gdef\@myquote{#1}}
+\def\@univlogo{EMP.png}
+  \newcommand{\univlogo}[1]{\gdef\@univlogo{#1}}
+\def\@univwallpaper{Laogo.pdf}
+  \newcommand{\univwallpaper}[1]{\gdef\@univwallpaper{#1}}
+\def\@jury{}
+ \newcommand{\jury}[4]{\expandafter\def\expandafter\@jury\expandafter{\@jury{}\vspace{0.15cm} #1, #2, #3 & \hspace{0.1cm} & #4 \\ }}
+\def\@titlefootnote{}
+\newcommand{\titlefootnote}[1]{\gdef\@titlefootnote{#1}}
+
+\definecolor{rougefonce}{rgb}{0.91, 0.31, 0.32}
+\definecolor{grisdegueulasse}{rgb}{0.53, 0.55, 0.63}
+\contourlength{0.1pt}
+
+\renewcommand{\maketitle}
+%\def\arraystretch{1.8}
+{
+  \begin{titlepage}
+
+  \onehalfspacing
+  \begin{tikzpicture}[remember picture, overlay]
+
+	% Définit des coordonnées de base
+    \coordinate[xshift=0cm] (vcenter) at (current page.north) {};
+    \coordinate[xshift=6cm] (shadewidth) at (current page.north west) {};
+    \coordinate[xshift=6cm] (shadecorner) at (current page.south west) {};
+    
+    % Inclure le logo
+%    \node[anchor=north west,yshift=0.2cm, xshift=-0.2cm] at (current page.north west) {\includegraphics[width=21cm]{\@univwallpaper}};
+    \node[yshift=-26.5cm] at (vcenter) {\includegraphics[width=7.2cm]{\@univlogo}};
+    
+    % Texte 
+    \node[yshift=-2.6cm] at (vcenter) {\fontsize{20}{20}\selectfont {\bf {\color{rougefonce}\contour{rougefonce}{ÉCOLE MILITAIRE POLYTECHNIQUE}}}};
+    \node[yshift=-3.5cm] at (vcenter) {\fontsize{20}{20} {\bf {\color{rougefonce}\contour{rougefonce}{CHAHID ABDERRAHMANE TALEB}}}};
+
+    \node[yshift=-4.9cm] at (vcenter) {\fontsize{18}{18} {\bf Direction de Formation Graduée}};    
+    \node[yshift=-5.9cm] at (vcenter) {\fontsize{18}{18} {\bf Département de Génie Électrique}};
+   % \node[yshift=-6.9cm] at (vcenter) {\fontsize{12}{12} {\bf Unit\'e de recherche \@researchunit}};
+
+	\node[yshift=-12cm,inner sep=20pt] at (vcenter) {\fontsize{25}{25} {\bf {\color{grisdegueulasse}\contour{grisdegueulasse}{ \@title}}}};        
+        
+        
+	%-9.5cm
+    %-11cm
+    \node[yshift=-16.8cm] at (vcenter) {\fontsize{15}{15} {\bf \@author}};
+    \node[yshift=-17.5cm] at (vcenter) {\fontsize{15}{15} {\bf\@date{}}};
+    
+ %   \node[yshift=-14.7cm] at (vcenter) {\fontsize{13}{13} {\bf Sous la direction de \@directorA}};
+   % \node[yshift=-15.2cm] at (vcenter) {\fontsize{13}{13} {\bf et \@directorB}};
+    
+    
+%    \node[yshift=-17cm] at (vcenter) {\fontsize{12}{12} {\bf Devant le jury compos\'e de }};
+%    \node[anchor=north,yshift=-17.6cm] at (vcenter) {{\fontsize{10}{10}\selectfont {\bf 
+%      \begin{tabular}{lcl}
+%        \@jury
+%      \end{tabular}
+%  }}};
+%  \node[yshift=-27.2cm,xshift=-4.29cm] at (vcenter) {\small %
+%     %Jury pr\'esid\'e par ??? ???
+%    };
+
+  \end{tikzpicture}
+  \singlespacing
+  \end{titlepage}
+ % \cleardoublepage
+}

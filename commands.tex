@@ -1,0 +1,551 @@
+\def\actConf{\bm{\hat{q}}}
+\def\actConfDot{\bm{\dot{\hat{q}}}}
+\def\actConfDDot{{\bm{\ddot{\hat{q}}}}}
+\def\desConf{\bm{\hat{q}}_\mathrm{d}}
+\def\desConfDot{\bm{\dot{\hat{q}}}_\mathrm{d}}
+\def\desConfDDot{\bm{\ddot{\hat{q}}}_\mathrm{d}}
+\def\refConf{\bm{q}_\mathrm{ref}}
+\def\refJointConf{\bm{\hat{q}}_\mathrm{ref}}
+\def\refConfDot{\bm{\dot{q}}_\mathrm{ref}}
+\def\refConfDDot{\bm{\ddot{q}}_\mathrm{ref}}
+\def\actJointDyn{\bm{\hat{x}}}
+\def\actJointDynDot{\bm{\dot{\hat{x}}}}
+\def\actJointDynDDot{\bm{\ddot{\hat{x}}}}
+\def\desJointDyn{\bm{\hat{x}}_\mathrm{d}}
+\def\desJointDynDot{\bm{\dot{\hat{x}}}_\mathrm{d}}
+\def\desJointDynDDot{\bm{\ddot{\hat{x}}}_\mathrm{d}}
+\def\jointTrackErr{\boldsymbol{\phi}}
+\def\jointDynTrackErr{\boldsymbol{\hat{\phi}}}
+\def\jointDynTrackErrDot{\boldsymbol{\dot{\hat{\phi}}}}
+\def\jointDisturbIn{\boldsymbol{\tau}_{\rm{l}}} % \delta is already used for relaxation 
+%%%%%%%%%%%%%%%%%%\def\jointCrtlIn{\bm{\hat{u}}}
+\def\jointCrtlIn{\desConfDDot}
+\def\taskCrtlIn{\boldsymbol{\mu}^{\fkin}}
+\def\actJac{\mathbf{J}^{\fkin}}
+\def\actJacDot{\mathbf{\dot{J}}^{\fkin}}
+\def\desJac{\mathbf{J}_\mathrm{d}^{\fkin}}
+\def\desJacDot{\mathbf{\dot{J}}_\mathrm{d}^{\fkin}}
+\def\fkin{\bm{s}}
+\def\fkinDot{\bm{\dot{s}}}
+\def\fkinDDot{\bm{\ddot{s}}}
+\def\fkinRef{\bm{s}_\mathrm{ref}}
+\def\fkinRefDot{\bm{\dot{s}}_\mathrm{ref}}
+\def\fkinRefDDot{\bm{\ddot{s}}_\mathrm{ref}}
+\def\actOut{\bm{e}}
+\def\actOutDot{\bm{\dot{e}}}
+\def\actOutDDot{\bm{\ddot{e}}}
+\def\desOut{\bm{e_\mathrm{d}}}
+\def\desOutDot{\bm{\dot{e}_\mathrm{d}}}
+\def\desOutDDot{\bm{\ddot{e}_\mathrm{d}}}
+\def\desTaskOut{{\boldsymbol{\eta}_\mathrm{d}^{\fkin}}}
+\def\desTaskOuti{{\boldsymbol{\eta}_\mathrm{d}^{\fkini}}}
+\def\desTaskOutOne{\boldsymbol{\eta}_{\mathrm{d}1}^{\fkin}}
+\def\desTaskOutTwo{\boldsymbol{\eta}_{\mathrm{d}2}^{\fkin}}
+\def\desTaskOutDot{{\boldsymbol{\dot{\eta}}_\mathrm{d}^{\fkin}}}
+\def\desTaskOutDotOne{\boldsymbol{\dot{\eta}}_{\mathrm{d}1}^{\fkin}}
+\def\desTaskOutDotTwo{\boldsymbol{\dot{\eta}}_{\mathrm{d}2}^{\fkin}}
+
+\def\desBfuncOut{{\boldsymbol{\eta}_{\mathrm{d}}^{\bfunc}}}
+\def\desBfuncOutDot{{\boldsymbol{\dot{\eta}_{\mathrm{d}}^{\bfunc}}}}
+\def\actBfuncOut{\boldsymbol{\eta}^{\bfunc}}
+
+\def\actTaskOut{\boldsymbol{\eta}^{\fkin}}
+\def\actTaskOutOne{\boldsymbol{\eta}_1^{\fkin}}
+\def\actTaskOutTwo{\boldsymbol{\eta}_2^{\fkin}}
+\def\actTaskOutDot{{\boldsymbol{\dot{\eta}}^{\fkin}}}
+\def\actTaskOutDotOne{\bm{\dot{\actTaskOut}}_1^{\fkin}}
+\def\actTaskOutDotTwo{\bm{\dot{\actTaskOut}}_2^{\fkin}}
+\def\taskTrackErr{\actTaskOut_{\jointTrackErr}}
+\def\taskDisturbIn{\boldsymbol{\varphi}}
+\def\zeroDyn{\bm{z}}
+\def\zeroDynDot{\bm{\dot{z}}}
+\def\gains{\mathbf{K}}
+\def\stiff{\mathbf{K_p}}
+\def\damp{\mathbf{K_v}}
+\def\dampRobust{\bm{L_v}}
+\def\AdesJointDyn{\mathbf{A_{\desJointDyn}}}
+\def\BdesJointDyn{\mathbf{B_{\desJointDyn}}}
+\def\AdesTaskOut{\mathbf{A_{\desTaskOut}}}
+\def\BdesTaskOut{\mathbf{B_{\desTaskOut}}}
+\def\Qqp{\mathbf{Q}}
+\def\Pqp{\mathbf{P}}
+\def\auxDyn{\xi}
+\def\auxDynDot{\dot{\xi}}
+\def\desTaskOutEq{\desTaskOut^\mathrm{eq}}
+\def\Krclf{\mathbf{K}_{\mathrm{RCLF}}}
+\def\KrclfQP{\boldsymbol{\kappa}}
+\def\setC{{\cal C}}
+\def\setD{{\cal D}}
+\def\setS{{\cal S}}
+\def\setR{{\cal R}}
+\def\setCd{{{\cal C}_{\mathrm{d}}}}
+\def\classK{{\cal K}}
+\def\classKinf{{\cal K}_\infty}
+\def\classKL{{\cal KL}}
+\def\INT{\mathrm{Int}}
+\def\bfunc{h}
+\def\bfuncDot{\dot{\bfunc}}
+\def\bfuncDDot{\ddot{\bfunc}}
+\def\desBfunc{h_{\mathrm{d}}}
+\def\desBfuncDot{\dot{\bfunc}_{\mathrm{d}}}
+\def\desBfuncDDot{\ddot{\bfunc}_{\mathrm{d}}}
+\def\actJacBfunc{\mathbf{J}^\bfunc}
+\def\actJacBfuncDot{\mathbf{\dot{J}}^{\bfunc}}
+\def\desJacBfunc{\mathbf{J}_\mathrm{d}^{\bfunc}}
+\def\desJacBfuncDot{\mathbf{\dot{J}}_\mathrm{d}^{\bfunc}}
+\def\bfuncCrtlIn{{\mu}^{\bfunc}}
+\def\taskCrtlIni{\boldsymbol{\mu}^{\fkini}}
+\def\AdesBfuncOut{\mathbf{A}_{\desBfuncOut}}
+\def\BdesBfuncOut{\mathbf{B}_{\desBfuncOut}}
+\def\AactTaskOut{\mathbf{A}_{\actTaskOut}}
+\def\BactTaskOut{\mathbf{B}_{\actTaskOut}}
+\def\CdesBfuncOut{\mathbf{C}_{\desBfuncOut}}
+\def\bfuncTrackErr{\boldsymbol{\eta}^{\bfunc}_{\jointTrackErr}}
+\def\KBfunc{{_{\mathrm{b}}K}}
+\def\stiffBfunc{{_{\mathrm{b}}K_p}}
+\def\dampingBfunc{{_{\mathrm{b}}K_v}}
+\def\integralBfunc{{_{\mathrm{b}}L_v}}
+\def\bfuncDisturbIn{{_{\mathrm{b}}\taskDisturbIn}}
+\def\bfuncDelta{\delta^{\bfunc}}
+\def\bfuncDeltaMax{\delta^{\bfunc}_{\max}}
+\def\bfuncPsi{{\boldsymbol{\psi}^{\bfunc}}}
+\def\taskPsi{{\boldsymbol{\psi}^{\fkin}}}
+\def\bfuncPsiSet{{{\Psi}^{\bfunc}}}
+\def\PdesBfuncOut{\mathbf{P}_{\desBfuncOut}}
+\def\QdesBfuncOut{\mathbf{Q}_{\desBfuncOut}}
+\def\desBfuncOutEq{\desBfuncOut^\mathrm{eq}}
+\def\RecbfFdbk{{_{\mathrm{b}}{\kappa}}}
+\def\KBfuncEq{{_{\mathrm{b}}\check{K}}}
+\def\bfuncPsiEq{{_{\mathrm{b}}\check{\psi}}}
+\def\bfuncEq{{_{\mathrm{b}}\check{\psi}}}
+\def\desBfuncOutHyb{{_{\mathrm{b}}\bar{\eta}}}
+\def\genActConf{\bm{q}}
+%\def\genActConfDot{\dot{\bm{q}}}
+\def\genActConfDot{\boldsymbol{\alpha}_{\genActConf}}
+\def\genActConfDDot{\boldsymbol{\dot{\alpha}}_{\genActConf}}
+\def\genDesConf{\bm{q}_{\mathrm{d}}}
+%\def\genDesConfDot{\dot{\bm{q}}_{\mathrm{d}}}
+\def\genDesConfDot{\boldsymbol{\alpha}_{\genDesConf}}
+\def\genDesConfDDot{\boldsymbol{\dot{\alpha}}_{\genDesConf}}
+\def\genActJointDyn{\bm{x}}
+%\def\genActJointDynDot{\dot{\bm{x}}}
+\def\genActJointDynDot{\boldsymbol{\alpha}_{\genActJointDyn}}
+\def\genDesJointDyn{\bm{x}_{\mathrm{d}}}
+%\def\genDesJointDynDot{\dot{\bm{x}}_{\mathrm{d}}}
+\def\genDesJointDynDot{{\boldsymbol{\alpha}}_{\genDesJointDyn}}
+\def\genDesJointDynDDot{\boldsymbol{\dot{\alpha}}_{\genDesJointDyn}}
+\def\AgenDesJointDyn{\mathbf{A}}
+\def\BgenDesJointDyn{\mathbf{B}}
+\def\AFB{A^{\mathrm{FB}}}
+\def\BFB{B^{\mathrm{FB}}}
+%%%%%%%%%%%\def\UgenDesJointDyn{\bm{u}}
+\def\UgenDesJointDyn{\genDesConfDDot}
+\def\actFBDyn{\genActJointDyn^{\mathrm{FB}}}
+%\def\actFBDynDot{\actJointDynDot^{\mathrm{FB}}}
+\def\actFBDynDot{\boldsymbol{\alpha}_{\actFBDyn}}
+\def\desFBDyn{\genDesJointDyn^{\mathrm{FB}}}
+\def\desFBDynDot{\desJointDynDot^{\mathrm{FB}}}
+%%%%%%%%%%\def\FBCrtlIn{\bm{u}^{\mathrm{FB}}}
+\def\FBCrtlIn{\genDesConfDDot^{\mathrm{FB}}}
+\def\FB{\boldsymbol{\xi}}
+\def\FBDot{\bm{v}}
+\def\FBDDot{\bm{\dot{v}}}
+\def\desFB{\boldsymbol{\xi}_{\mathrm{d}}}
+\def\desFBDot{\bm{v}_{\mathrm{d}}}
+\def\desFBDDot{\bm{\dot{v}}_{\mathrm{d}}}
+\def\genRefConf{\bm{q}_\mathrm{ref}}
+\def\desTau{\boldsymbol{\tau}_{\mathrm{d}}}
+\def\desForce{\bm{f}_{\mathrm{d}}}
+\def\Tau{\bm{\tau}}
+\def\force{\bm{f}}
+\def\massMat{\mathbf{M}}
+\def\nnLinTorqueMat{\mathbf{N}}
+\def\selectMat{\mathbf{S}}
+\def\decisionVector{\bm{\chi}}
+\def\quaternion{\mathbf{\underline{q}}}
+\def\trans{\mathrm{trans}}
+\def\quat{\mathrm{quat}}
+\def\actCoM{\bm{CoM}(\genActJointDyn)}
+\def\desCoM{\bm{CoM}(\genDesJointDyn)}
+\def\weight{w}%{\mathrm{w}}
+\def\quatern{\bm{q}}
+\def\rotMatGrasp{\mathbf{R}_{\rm grasp}}
+\def\rotMatEndEff{\mathbf{R}_{\rm ee}}
+\def\rotMatObs{\mathbf{R}_{\rm obs}}
+\def\frameWorld{\setR_{\rm w}}
+\def\frameGrasp{{\cal R}_{\rm grasp}}
+\def\frameEndEff{{\cal R}_{\rm ee}}
+\def\frameObs{{\cal R}_{\rm obs}}
+\def\frameObj{{\cal R}_{\rm obj}}
+\def\trajTrackTaskState{\boldsymbol{\eta}_{\rm tt}}
+\def\trajTrackTaskStateDot{\boldsymbol{\dot{\eta}}_{\rm tt}}
+\def\grasPointTrackTaskState{\boldsymbol{\eta}_{\rm gpt}}
+\def\grasPointTrackTaskStateDot{\boldsymbol{\dot{\eta}}_{\rm gpt}}
+\def\graspSetTrackTaskState{\boldsymbol{\eta}_{\rm gst}}
+\def\orientTrackTaskState{\boldsymbol{\eta}_{\rm or}}
+\def\orientTrackTaskStateDot{\boldsymbol{\dot{\eta}}_{\rm ot}}
+\def\observTaskState{\boldsymbol{\eta}_{\rm obs}}
+\def\observTaskStateDot{\boldsymbol{\dot{\eta}}_{\rm obs}}
+\def\lineSegTrackTaskState{\boldsymbol{\eta}_{\rm lst}}
+\def\lineSegTrackTaskStateDot{\boldsymbol{\dot{\eta}}_{\rm lst}}
+\def\lineSegTrackErr{\bm{e}_{\rm lst}}
+\def\lineSegTrackErrDot{\bm{\dot{e}}_{\rm lst}}
+\def\lineSegTrackErrDDot{\bm{\ddot{e}}_{\rm lst}}
+\def\setPgrasp{{\cal P}_{\rm grasp}}
+\def\segLineGrasp{{\cal L}_{\rm grasp}}
+\def\planeN{{\Pi}_{\bm{n}_{\rm grasp}}}
+\def\normPlaneN{\bm{n}_{\rm grasp}} 
+\def\planeV{{\Pi}_{\bm{v}_{\rm grasp}}}
+\def\normPlaneV{\bm{v}_{\rm grasp}}
+\def\planUmax{\Pi_{\bm{u}_{{\rm grasp},\max}}}
+\def\normPlanUmax{\bm{u}_{{\rm grasp},\max}}
+\def\planUmin{\Pi_{\bm{u}_{{\rm grasp},\min}}}
+\def\normPlanUmin{\bm{u}_{{\rm grasp},\min}}
+\def\normPlanU{\bm{u}_{\rm grasp}}
+\def\distPlaneN{\pi_{\bm{n}_{\rm grasp}}}
+\def\distPlaneV{\pi_{\bm{v}_{\rm grasp}}}
+\def\jacEndEff{\mathbf{J}^{\rm ee}}
+\def\jacEndEffDot{\mathbf{\dot{J}}^{\rm ee}}
+\def\jacLinEndEff{\mathbf{J}^{\rm ee-lin}}
+\def\jacDotLinEndEff{\mathbf{\dot{J}}^{\rm ee-lin}}
+\def\jacRotEndEff{\mathbf{J}^{\rm ee-rot}}
+\def\jacDotRotEndEff{\mathbf{J}^{\rm ee-rot}}
+\def\taskStiffness{\mathbf{K}^{\fkin}_{\rm s}}
+\def\taskDamping{\mathbf{K}^{\fkin}_{\rm d}}
+\def\taskIntegralDamping{\mathbf{K}^{\fkin}_{\rm i}}
+\def\taskStiffnessi{\mathbf{K}^{\fkini}_{\rm s}}
+\def\taskDampingi{\mathbf{K}^{\fkini}_{\rm d}}
+\def\taskIntegralDampingi{\mathbf{K}^{\fkini}_{\rm i}}
+\def\taskGains{\mathbf{K}^{\fkin}}
+\def\taskGainsPsi{\mathbf{L}^{\fkin}}
+\def\taskGainsPsii{\mathbf{L}^{\fkini}}
+\def\constraintStiffness{{K}^{h}_{\rm s}}
+\def\deltaConstraintStiffness{{K}^{h^{\delta}}_{\rm s}}
+\def\constraintDamping{{K}^{h}_{\rm d}}
+\def\deltaConstraintDamping{{K}^{h^{\delta}}_{\rm d}}
+\def\constraintIntegralDamping{{K}^{h}_{\rm i}}
+\def\constraintGains{{\mathbf{K}}^{h}}
+\def\constraintGainsPsi{{\mathbf{L}}^{h}}
+%\def\constraintVelDamping{{K}^{\dot{h}}_{\rm d}}
+\def\constraintVelDamping{{K}^{{h}^v}}
+\def\deltaT{\Delta t}
+\def\deltaTheta{\delta \theta}
+\def\constraintDampingEq{{K}^{h}_{{\rm d}_{\rm eq}}}
+\def\deltaConstraintDampingEq{{K}^{h^\delta}_{{\rm d}_{\rm eq}}}
+\def\constraintStiffnessEq{{K}^{h}_{{\rm s}_{\rm eq}}}
+\def\deltaConstraintStiffnessEq{{K}^{h^\delta}_{{\rm s}_{\rm eq}}}
+\def\constraintStiffnessDisp{{K}^{h}_{{\rm s}_{\rm disp}}}
+\def\deltaConstraintStiffnessDisp{{K}^{h^\delta}_{{\rm s}_{\rm disp}}}
+\def\constraintDampingDisp{{K}^{h}_{{\rm d}_{\rm disp}}}
+\def\deltaConstraintDampingDisp{{K}^{h^\delta}_{{\rm d}_{\rm disp}}}
+\def\desJacContact{\mathbf{J}_\mathrm{d}^{\mathrm{c}}}
+\def\actJacContact{\mathbf{J}^{\mathrm{c}}}
+\def\desJacContactDot{\mathbf{\dot{J}}_\mathrm{d}^{\mathrm{c}}}
+\def\actJacContactDot{\mathbf{\dot{J}}^{\mathrm{c}}}
+\def\fkini{\fkin_{i}}
+\def\weighti{\weight_{\fkini}}
+\def\taskPsii{\boldsymbol{\psi}^{\fkini}}
+\def\desJacTaski{\mathbf{J}^{\fkini}_{\rm d}}
+\def\desJacDotTaski{\mathbf{\dot{J}}^{\fkini}_{\rm d}}
+
+\def\endEffPose{\boldsymbol{\xi}_{\rm ee}}
+\def\endEffPoseDot{\boldsymbol{\alpha}_{\endEffPose}}
+\def\endEffPoseDDot{\boldsymbol{\dot{\alpha}}_{\endEffPose}}
+\def\endEffPosition{\bm{p}_{\rm ee}}
+\def\endEffPositionDot{\bm{\dot{p}}_{\rm ee}}
+\def\endEffPositionDDot{\bm{\ddot{p}}_{\rm ee}}
+\def\endEffOrient{\quaternion_{\rm ee}}
+\def\endEffOrientDot{\boldsymbol{\omega}_{\rm ee}}
+\def\endEffOrientDDot{\boldsymbol{\dot{\omega}}_{\rm ee}}
+\def\objPose{\boldsymbol{\xi}_{\rm obj}}
+\def\objPoseDot{\boldsymbol{\alpha}_{\objPose}}
+\def\objPoseDDot{\boldsymbol{\dot{\alpha}}_{\objPose}}
+\def\objPosition{\bm{p}_{\rm obj}}
+\def\objPositionDot{\bm{\dot{p}}_{\rm obj}}
+\def\objPositionDDot{\bm{\ddot{p}}_{\rm obj}}
+\def\objOrient{\quaternion_{\rm obj}}
+\def\objOrientDot{\boldsymbol{\omega}_{\rm obj}}
+\def\objOrientDDot{\boldsymbol{\dot{\omega}}_{\rm obj}}
+\def\obsPose{\boldsymbol{\xi}_{\rm obs}}
+\def\obsPoseDot{\boldsymbol{\alpha}_{\obsPose}}
+\def\obsPoseDDot{\boldsymbol{\dot{\alpha}}_{\obsPose}}
+\def\obsPosition{\bm{p}_{\rm obs}}
+\def\obsPositionDot{\bm{\dot{p}}_{\rm obs}}
+\def\obsPositionDDot{\bm{\ddot{p}}_{\rm obs}}
+\def\obsOrient{\quaternion_{\rm obs}}
+\def\obsOrientDot{\boldsymbol{\omega}_{\rm obs}}
+\def\obsOrientDDot{\boldsymbol{\dot{\omega}}_{\rm obs}}
+
+\def\graspPose{\boldsymbol{\xi}_{\rm grasp}}
+\def\graspPoseDot{\boldsymbol{\alpha}_{\graspPose}}
+\def\graspPoseDDot{\boldsymbol{\dot{\alpha}}_{\graspPose}}
+\def\graspPosition{\bm{p}_{\rm grasp}}
+\def\graspPositionDot{\bm{\dot{p}}_{\rm grasp}}
+\def\graspPositionDDot{\bm{\ddot{p}}_{\rm grasp}}
+\def\graspOrient{\quaternion_{\rm grasp}}
+\def\graspOrientDot{\boldsymbol{\omega}_{\rm grasp}}
+\def\graspOrientDDot{\boldsymbol{\dot{\omega}}_{\rm grasp}}
+
+\def\trajTrackPose{\boldsymbol{\xi}_{\rm tt}}
+\def\trajTrackPoseDot{\boldsymbol{\alpha}_{\trajTrackPose}}
+\def\trajTrackPoseDDot{\boldsymbol{\dot{\alpha}}_{\trajTrackPose}}
+\def\trajTrackPosition{\bm{p}_{\rm tt}}
+\def\trajTrackPositionDot{\bm{\dot{p}}_{\rm tt}}
+\def\trajTrackPositionDDot{\bm{\ddot{p}}_{\rm tt}}
+\def\trajTrackOrient{\quaternion_{\rm tt}}
+\def\trajTrackOrientDot{\boldsymbol{\omega}_{\rm tt}}
+\def\trajTrackOrientDDot{\boldsymbol{\dot{\omega}}_{\rm tt}}
+
+\def\observTaskErr{\bm{e}_{\rm obs}}
+\def\observTaskErrDot{\boldsymbol{\alpha}_{\observTaskErr}}
+\def\observTaskErrDDot{\boldsymbol{\dot{\alpha}}_{\observTaskErr}}
+\def\observTaskErrFeedback{\boldsymbol{\mu}_{\rm obs}}
+
+\def\trajTrackTaskErr{\bm{e}_{\rm tt}}
+\def\trajTrackTaskErrDot{\boldsymbol{\alpha}_{\trajTrackTaskErr}}
+\def\trajTrackTaskErrDDot{\boldsymbol{\dot{\alpha}}_{\trajTrackTaskErr}}
+\def\trajTrackTaskErrFeedback{\boldsymbol{\mu}_{\rm tt}}
+
+\def\lineSegPosition{\bm{p}_{\rm ls}}
+\def\lineSegPositionDot{\bm{\dot{p}}_{\rm ls}}
+\def\lineSegPositionDDot{\bm{\ddot{p}}_{\rm ls}}
+\def\lineSegTrackTaskErrFeedback{\boldsymbol{\mu}_{\rm lst}}
+
+
+
+\def\postureTaskFeedback{\boldsymbol{\mu}_{\rm posture}}
+\def\postureTaskState{\boldsymbol{\eta}_{\rm posture}}
+\def\postureTaskStateDot{\boldsymbol{\dot{\eta}}_{\rm posture}}
+\def\postureTaskErr{\bm{e}_{\rm posture}}
+\def\postureTaskErrDot{\bm{\dot{e}}_{\rm posture}}
+\def\jac{\mathbf{J}}
+\def\jacDot{\mathbf{\dot{J}}}
+\def\gravity{\boldsymbol{\tau}_g}
+
+\newcommand{\state}{\bm{x}}
+\newcommand{\stateDot}{\bm{\dot{x}}}
+\newcommand{\out}{\bm{y}}
+\newcommand{\matriceA}{\mathbf{A}}
+\newcommand{\matriceB}{\mathbf{B}}
+\newcommand{\matriceC}{\mathbf{C}}
+\newcommand{\matriceP}{\mathbf{P}}
+\newcommand{\matriceQ}{\mathbf{Q}}
+\newcommand{\matriceK}{\mathbf{K}}
+\newcommand{\matriceR}{\mathbf{R}}
+\newcommand{\matriceM}{\mathbf{M}}
+%t
+\newcommand{\command}{\bm{u}}
+\newcommand{\stackCommand}{\bm{\underline{u}}}
+\newcommand{\Ad}{\mathbf{A}_d}
+\newcommand{\Bd}{\mathbf{B}_d}
+\newcommand{\stackAd}{\mathbf{\underline{A}}}
+\newcommand{\stackBd}{\mathbf{\underline{B}}}
+%\newcommand{\directionVector}{\mathbf{v}}
+%\newcommand{\vectorV}{\mathbf{v}}
+%\newcommand{\vectorW}{\mathbf{w}}
+\newcommand{\eeposition}{\bm{p}}
+\newcommand{\eepositionRef}{\eeposition_{\mathrm{ref}}}
+\newcommand{\eepositionOpt}{\eeposition^*}
+\newcommand{\eepositionUpperBound}{\bar{\eeposition}}
+\newcommand{\eepositionLowerBound}{\ubar{\eeposition}}
+\newcommand{\eevelocity}{\bm{\dot{p}}}
+\newcommand{\eevelocityRef}{\eevelocity_{\mathrm{ref}}}
+\newcommand{\eevelocityOpt}{\eevelocity^*}
+\newcommand{\eevelocityUpperBound}{\bm{\dot{\bar{p}}}}
+\newcommand{\eevelocityLowerBound}{\bm{\dot{\ubar{p}}}}
+\newcommand{\eeacceleration}{\bm{\ddot{p}}}
+\newcommand{\eeaccelerationRef}{\eeacceleration_{\mathrm{ref}}}
+\newcommand{\eeaccelerationOpt}{\eeacceleration^*}
+\newcommand{\eeaccelerationUpperBound}{\bm{\ddot{\bar{p}}}}
+\newcommand{\eeaccelerationLowerBound}{\bm{\ddot{\ubar{p}}}}
+\newcommand{\eejerk}{\bm{\dddot{p}}}
+\newcommand{\eejerkUpperBound}{\bm{\dddot{\bar{p}}}}
+\newcommand{\eejerkLowerBound}{\bm{\dddot{\ubar{p}}}}
+\newcommand{\REF}[1]{{#1}_{\mathrm{ref}}}
+\newcommand{\DES}[1]{{#1}_{\mathrm{des}}}
+\newcommand{\CUR}[1]{{#1}_{\mathrm{cur}}}
+\newcommand{\PD}[1]{{#1}_{\mathrm{pd}}}
+\newcommand{\red}[1]{{\color{red}{#1}}}
+\newcommand{\green}[1]{{\color{green}{#1}}}
+\newcommand{\blue}[1]{{\color{blue}{#1}}}
+\newcommand{\orange}[1]{{\color{orange}{#1}}}
+\newcommand{\purple}[1]{{\color{purple}{#1}}}
+\newcommand{\yellow}[1]{{\color{yellow}{#1}}}
+\newcommand{\conf}{\bm{q}}
+\newcommand{\confDot}{\bm{\dot{q}}}
+\newcommand{\confDDot}{\bm{\ddot{q}}}
+\newcommand{\confDDDot}{\bm{\dddot{q}}}
+\newcommand{\confOpt}{\bm{q}^*}
+\newcommand{\confDotOpt}{\bm{\dot{q}}^*}
+\newcommand{\confDDotOpt}{\bm{\ddot{q}}^*}
+\newcommand{\confDDDotOpt}{\bm{\dddot{q}}^*}
+%r
+%s
+\renewcommand{\time}{t}
+\newcommand{\mytime}{t}
+\newcommand{\sampletime}{\Delta \mytime} 
+\newcommand{\timestep}{\Delta \mytime} 
+\newcommand{\qpositions}{\bm{\qposition}}
+\newcommand{\qpositionsUpperBound}{\bm{\bar{\qposition}}}
+\newcommand{\qpositionsLowerBound}{\bm{\ubar{\qposition}}}
+%\newcommand{\qvelocity}{\dot{\qposition}} %->scalar
+\newcommand{\qvelocities}{\mathbf{\qvelocity}}
+\newcommand{\qvelocitiesUpperBound}{\bm{\dot{\bar{\qposition}}}}
+\newcommand{\qvelocitiesLowerBound}{\bm{\dot{\ubar{\qposition}}}}
+%\newcommand{\qacceleration}{\ddot{\qposition}} %->scalar
+\newcommand{\qaccelerations}{\mathbf{\qacceleration}}
+\newcommand{\qaccelerationsUpperBound}{\bm{\ddot{\bar{\qposition}}}}
+\newcommand{\qaccelerationsLowerBound}{\bm{\ddot{\ubar{\qposition}}}}
+%\newcommand{\qjerk}{\ddot{\qjerk}} %->scalar
+\newcommand{\qjerks}{\mathbf{\qjerk}}
+\newcommand{\qjerksUpperBound}{\bm{\dddot{\bar{\qposition}}}}
+\newcommand{\qjerksLowerBound}{\bm{\dddot{\ubar{\qposition}}}}
+\newcommand{\eeJac}{\mathbf{J}^{\eeposition}}
+\newcommand{\eeJacDot}{\mathbf{\dot{J}}^{\eeposition}}
+%\newcommand{\eye}{\mathbf{I}}
+
+\newcommand{\pseudoEEJac}{\boldsymbol{\cal J}_{\eeacceleration}}
+\newcommand{\pseudoJAccJac}{\boldsymbol{\cal J}_{\confDDot}}
+
+
+\newcommand{\fracOneTwo}{\frac{1}{2}}
+% Math specific
+\newcommand{\eye}{\mathbf{I}}
+\newcommand{\zeros}{\mathbf{0}}
+
+\newcommand{\distJac}{\mathbf{J}^{h^\delta}}
+\newcommand{\distJacDot}{\mathbf{\dot{J}}^{h^\delta}}
+\newcommand{\velJac}{\mathbf{J}^{h^v}}
+\newcommand{\velJacDot}{\mathbf{\dot{J}}^{h^v}}
+
+
+\newcommand{\vect}[1]{\mathbf{#1}}                  %vector
+\newcommand{\greekvect}[1]{\bm{#1}}                 %greek letter vector
+\newcommand{\const}[1]{\mb{#1}}                     %constante
+\newcommand{\inv}{^{\text{-}1}}                     %inverse
+\newcommand{\tp}{\ensuremath{^{\mathsf{T}}}}		%transpose
+\newcommand{\superM}{^{\text{-}}}                   %Superscript minus
+\newcommand{\superP}{^{\text{+}}}                   %Superscript plus
+\newcommand{\minus}{\text{-}}                       %Minus in front
+%\renewcommand{\exp}[1]{\mathrm{e}^{#1}}             %Exponential
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\card}{card}
+
+\newcommand{\nextinc}{^{(k+1)}}
+\DeclareMathOperator*{\mini}{min.}
+\DeclareMathOperator*{\lexmin}{lexmin.}
+%\newcommand\myeq{\hspace{3pt}\stackrel{\mathclap{\normalfont\mbox{def}}}{=}\hspace{3pt}}
+\newcommand\myeq{\hspace{3pt}\stackrel{\text{def}}{=}\hspace{3pt}}
+\definecolor{light-gray}{gray}{0.95}
+\definecolor{dark-gray}{gray}{0.5}
+\newcommand{\BIN}{\begin{bmatrix}}
+\newcommand{\BOUT}{\end{bmatrix}}
+\newcommand{\cur}{^{(k)}}
+\newcommand{\pre}{^{(k-1)}}
+\newcommand{\nextopt}{^{(k+1)*}}
+\newcommand{\ue}{\underline{e}}
+\newcommand{\uw}{\underline{w}}
+\newcommand{\uJ}{\underline{J}}
+\newcommand{\uH}{\underline{H}}
+\newcommand{\ulambda}{\underline{\lambda}}
+\newcommand{\uA}{\underline{A}}
+\newcommand{\ub}{\underline{b}}
+\newcommand{\norm}[1]{\begin{Vmatrix}
+		#1
+\end{Vmatrix}}
+\newcommand{\skewMat}[1]{\begin{bmatrix}
+		#1\times
+\end{bmatrix}}
+\newcommand{\mcrtc}{\texttt{mc\_rtc}}
+\newcommand{\inR}{\in \mathbb{R}}
+%\theoremstyle{theorem} 
+\newtheorem{theorem}{Theorem}%[section]
+\newtheorem{corollary}{Corollary}%[theorem]
+\newtheorem{proposition}{Proposition}
+%\newtheorem{definition}{Definition}
+\newtheorem{property}{Property}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+%\newtheorem{lemma}{Lemma}
+%\theoremstyle{theorem}
+\newtheorem*{inner}{\innerheader}
+\newcommand{\innerheader}{}
+\newenvironment{custumProof}[1]
+{\renewcommand\innerheader{#1}\begin{inner}}
+	{\end{inner}}
+\newtheorem{innerCounter}{\innerheader}
+%\newcommand{\innerheader}{}
+\newenvironment{experiment}[1]
+{\renewcommand\innerheader{#1}\begin{innerCounter}}
+	{\end{innerCounter}}
+\newcounter{mycounter} 	
+%\newcommand\showmycounter{\stepcounter{mycounter}\themycounter}
+%\newcommand{\showmycounter}[1]{\refstepcounter{mycounter}\label{#1}}
+\DeclareRobustCommand{\showmycounter}[1]{%
+	\refstepcounter{mycounter}%
+	\themycounter\label{#1}}
+% Writing command
+\newtheorem{Def}{Definition}
+\def\al{~\textit{et al. }}
+\def\eg{\textit{e.g.}~}
+\def\ie{\textit{i.e.} }
+\def\resp{\textit{resp.} }
+
+% Reference command
+\newcommand{\Annref}[1]{Appendix~\ref{#1}}
+\newcommand{\Eqref}[1]{Eq.~\eqref{#1}}
+\newcommand{\Eqrefand}[2]{Eq.~\eqref{#1} and~\eqref{#2}}
+\newcommand{\Eqrefrange}[2]{Eq.~\eqref{#1}~\text{--}~\eqref{#2}}
+\newcommand{\Figref}[1]{Fig.~\ref{#1}}
+\newcommand{\Figrefand}[2]{Fig.~\ref{#1} and~\ref{#2}}
+\newcommand{\Figrefrange}[2]{Fig.~\ref{#1}~\text{--}~\ref{#2}}
+\newcommand{\SubFigref}[1]{(\subref{#1})}
+\newcommand{\SubFigrefrange}[2]{(\subref{#1})~\text{--}~(\subref{#2})}
+\newcommand{\Chpref}[1]{Chapter~\ref{#1}}
+\newcommand{\Secref}[1]{Section~\ref{#1}}
+\newcommand{\Secrefand}[2]{Section~\ref{#1} and~\ref{#2}}
+\newcommand{\Secrefrange}[2]{Section~\ref{#1}~\text{--}~\ref{#2}}
+\newcommand{\Problemref}[1]{Problem~(\ref{#1})}
+\newcommand{\Algoref}[1]{Algorithm~(\ref{#1})}
+\newcommand{\Appref}[1]{Appendix~\ref{#1}}
+\newcommand{\Tableref}[1]{Table~(\ref{#1})}
+
+%\floatname{algorithm}{Algorithm}
+%\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+%\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\pgfdeclarelayer{bg1}   
+\pgfdeclarelayer{bg}  
+\pgfsetlayers{bg1,bg,main}  
+
+\setcounter{secnumdepth}{3}  
+\setcounter{tocdepth}{3}     
+
+\definecolor{orange}{rgb}{0.99,0.69,0.07}
+\definecolor{lightgray}{gray}{0.85}
+\definecolor{light-gray}{gray}{0.95}
+\definecolor{dark-gray}{gray}{0.5}
+
+
+\tikzset{cross/.style={cross out, draw=black, minimum size=2*(#1-\pgflinewidth), inner sep=0pt, outer sep=0pt},
+%default radius will be 1pt. 
+cross/.default={1pt}}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+%\theoremstyle{lemma}
+\newtheorem{lemma}{Lemma}[section]
+
+
+% Modification notice
+\newcommand{\aRemplir}[1]{------------------------------------ A remplir : #1-----------------------------------------}
+\newenvironment{todo}{\color{blue}\%}{\%}
+\newcommand{\afaire}[1]{{\color{blue}\%TODO. #1}}
+
+ \makeatletter
+ \newcommand\fs@spaceruled{\def\@fs@cfont{\bfseries}\let\@fs@capt\floatc@ruled
+   \def\@fs@pre{\vspace{5pt}\hrule height.8pt depth0pt \kern2pt}%
+   \def\@fs@post{\kern2pt\hrule\relax}%
+   \def\@fs@mid{\kern2pt\hrule\kern2pt}%
+   \let\@fs@iftopcapt\iftrue}
+ \makeatother

@@ -1,0 +1,239 @@
+\newacronym{qp}{QP}{Quadratic Programming}
+\newacronym{wbqp}{WBQP}{Whole-Body QP}
+\newacronym{eom}{EoM}{Equation of Motion}
+\newacronym{dof}{DoF}{Degree-of-Freedom}
+\newacronym{com}{CoM}{Center-of-Mass}
+\newacronym{fov}{FoV}{Field-of-View}
+\newacronym{odi}{ODI}{Ordinary Differential Inequality}
+\newacronym{ode}{ODE}{Ordinary Differential Equality}
+\newacronym{pd}{PD}{Propotional-Derivative}
+\newacronym{fsm}{FSM}{Finite-State-Machine}
+\newacronym{iss}{ISS}{Input-to-State Stable}
+\newacronym{rguas}{RGUAS}{Robust Global Uniform Asymptotic Stability}
+\newacronym{imu}{IMU}{Inertial Measurement Unit}
+\newacronym{ub}{UB}{Ultimately Bounded}
+\newacronym{uub}{UUB}{Uniformly Ultimately Bounded}
+\newacronym{bf}{BF}{Barrier Function}
+\newacronym{cbf}{CBF}{Control Barrier Function}
+%\newacronym{cbf}{CBF}{Uniformly Ultimately Bounded}
+\newacronym{ecbf}{ECBF}{Exponential Control Barrier Function}
+\newacronym{recbf}{RECBF}{Robust Exponential Control Barrier Function}
+\newacronym{wrt}{w.r.t}{with respect to}
+\newacronym{are}{ARE}{Algebraic Reccati Equation}
+\newacronym{siso}{SISO}{Single-Input/Single-Output}
+\newacronym{lqr}{LQR}{Linear-Quadratic-Regulator}
+\newacronym{hol}{HOL}{HandOver Location} 
+\newacronym{dmp}{DMP}{Dynamic Movement Primitives}
+\newacronym{mpc}{MPC}{Model Predictive Controller}
+\newacronym{clf}{CLF}{Control Lyapunov Function}
+\newacronym{ik}{IK}{Inverse-Kinematics}
+\newacronym{id}{ID}{Inverse-Dynamics}
+\newacronym{darpa}{DARPA}{Defense Advanced Research Projects Agency}
+\newacronym{drc}{DRC}{DARPA Robotic Challenge}
+\newacronym{rpy}{RPY}{Roll-Pitch-Yaw angles}
+%%% variables
+\glssetcategoryattribute{common}{nohyper}{true}
+\newglossaryentry{Re}
+{
+	name={\ensuremath{\Re(\lambda)}},
+	description={Partie réelle de la valeur propre $\lambda$}, 
+	category={common}
+}
+\newglossaryentry{jac}
+{
+    name={\ensuremath{\mathbf{J}}},
+    description={Jacobian matrix}, 
+    category={common}
+}
+\newglossaryentry{n}
+{
+    name={\ensuremath{n}},
+    description={Number of actuated joints},
+    category={common}
+}
+\newglossaryentry{gen-q}
+{
+    name={\ensuremath{\bm{q}}},
+    description={Generalized robot position state (joint positions and floating-base pose)},
+    category={common}
+}
+\newglossaryentry{gen-vel-acc}
+{
+    name={\ensuremath{\boldsymbol{\alpha_{*}},\boldsymbol{\dot{\alpha}}_{*}}},
+    description={Velocity of $*$ and time derivative of $\boldsymbol{\alpha}_{*}$, respectively},
+    category={common}
+}
+\newglossaryentry{massMat}
+{
+    name={\ensuremath{\mathbf{M}(\bm{q})}},
+    description={Mass matrix},
+    category={common}
+}
+\newglossaryentry{corilis-gravMat}
+{
+	name={\ensuremath{\mathbf{N}(\bm{q},\boldsymbol{\alpha}_{\bm{q}})}},
+	description={Coriolis-centrifugal matrix},
+	category={common}
+}
+\newglossaryentry{gravTorque}
+{
+	name={\ensuremath{\boldsymbol{\tau}_g}},
+	description={Gravity torque acting at the joints},
+	category={common}
+}
+\newglossaryentry{tau}
+{
+    name={\ensuremath{\boldsymbol{\tau}}},
+    description={Joint torque},
+    category={common}
+}
+\newglossaryentry{force}
+{
+    name={\ensuremath{\bm{f}}},
+    description={Contact frictional forces},
+    category={common}
+}
+\newglossaryentry{h}
+{
+    name={\ensuremath{h}},
+    description={Distance to the collision},
+    category={common}
+}
+\newglossaryentry{decVec}
+{
+	name={\ensuremath{\decisionVector}},
+	description={QP decision variables vector},
+	category={common}
+}
+\newglossaryentry{nFricCone}
+{
+	name={\ensuremath{n_{\rm c}}},
+	description={Number of linearized friction-cone vertices},
+	category={common}
+}
+\newglossaryentry{taskDoF}
+{
+	name={\ensuremath{m}},
+	description={Task dimension},
+	category={common}
+}
+\newglossaryentry{floatingBase}
+{
+	name={\ensuremath{\FB}},
+	description={Floating-base position and orientation},
+	category={common}
+}
+\newglossaryentry{floatingBaseDot}
+{
+	name={\ensuremath{\FBDot,\FBDDot}},
+	description={Floating-base linear and angular velocity and acceleration},
+	category={common}
+}
+%\newglossaryentry{floatingBaseDDot}
+%{
+%	name={\ensuremath{\mathbf{\dot{v}}}},
+%	description={Floating-base linear and angular acceleration},
+%	category={common}
+%}
+\newglossaryentry{taskState}
+{
+	name={\ensuremath{\fkin(\genActConf)}},
+	description={Forward kinematics of a given task},
+	category={common}
+}
+\newglossaryentry{taskStateRefs}
+{
+	name={\ensuremath{\fkinRef,\fkinRefDot,\fkinRefDDot}},
+	description={Task references},
+	category={common}
+}
+\newglossaryentry{eigenValues}
+{
+	name={\ensuremath{\underline{\lambda}(\mathbf{A}),\overline{\lambda}(\mathbf{A})}},
+	description={Minimum and maximum eigenvalues of $\mathbf{A}$},
+	category={common}
+}
+\newglossaryentry{timeStep}
+{
+	name={\ensuremath{\deltaT}},
+	description={Discrete time step},
+	category={common}
+}
+\newglossaryentry{jointDisturbance}
+{
+	name={\ensuremath{\jointDisturbIn}},
+	description={Joint-space disturbance torque},
+	category={common} 
+}
+\newglossaryentry{quaternion}
+{
+	name={\ensuremath{\quaternion}},
+	description={Unit quaternion},
+	category={common} 
+}
+\newglossaryentry{jointPosVel}
+{
+	name={\ensuremath{\actConf,\actConfDot,\actConfDDot}},
+	description={Joint position, velocity and acceleration},
+	category={common} 
+}
+\newglossaryentry{trans}
+{
+	name={\ensuremath{\trans(\FB)}},
+	description={Cartesian coordinates of $\FB$},
+	category={common} 
+}
+\newglossaryentry{quat}
+{
+	name={\ensuremath{\quat(\FB)}},
+	description={Quaternion coordinates of $\FB$},
+	category={common} 
+}
+\newglossaryentry{quatProd}
+{
+	name={\ensuremath{\otimes}},
+	description={Quaternion product},
+	category={common} 
+}
+\newglossaryentry{skew}
+{
+	name={\ensuremath{\left[\boldsymbol{\omega}\times\right]}},% {\ensuremath{\skewMat{\boldsymbol{\omega}}}},
+	description={Skew matrix associated with $\boldsymbol{\omega}\inR^3$},
+	category={common} 
+}
+\newglossaryentry{transpose}
+{
+	name={\ensuremath{{\tp}}},% {\ensuremath{\skewMat{\boldsymbol{\omega}}}},
+	description={Transpose},
+	category={common}  
+}
+\newglossaryentry{norm}
+{
+	name={$|.|, ||.||$},% {\ensuremath{\skewMat{\boldsymbol{\omega}}}},
+	description={Absolute value and Euclidean norm},
+	category={common}  
+} 
+\newglossaryentry{bounded}
+{
+	name={\ensuremath{||{\bm{r}}||_\infty}},% {\ensuremath{\skewMat{\boldsymbol{\omega}}}},
+	description={$\underset{t\geq0}{\sup}||{\bm{r}(t)}||$. $\bm{r}\in\mathbb{R}^{r}$ is said to be bounded if $||{\bm{r}}||_\infty<\infty$},
+	category={common}  
+}
+\newglossaryentry{point2setDist}
+{
+	name={\ensuremath{||{.}||_\Omega}},
+	description={Euclidean point-to-set distance: $\norm{\bm{r}}_\Omega={\rm{dist}}(\bm{r};\Omega)=\inf\left\{{\mathrm{dist}}(\bm{r},a)|a\in\Omega\right\}=\underset{a \in\Omega}{\inf}\norm{\bm{r} - a}$},
+	category={common}  
+}
+\newglossaryentry{frame}
+{
+	name={\ensuremath{\setR_{\star}}},
+	description={Reference frame rigidly attachted to body $\star$. The fixed world frame is denoted as $\setR_{\rm w}$},
+	category={common}  
+}
+\newglossaryentry{rotMat}
+{
+	name={\ensuremath{\mathbf{R}_{\star\star}^{\star}\in SO(3)}},
+	description={Rotation matrix of the frame $\setR_{\star\star}$ w.r.t the frame $\setR_{\star}$. If $\setR_{\star}$ is the world-frame $\setR_{\rm w}$ then the superscript $\star$ is dropped $\mathbf{R}_{\star\star}^{\rm w} = \mathbf{R}_{\star\star}$},
+	category={common}  
+}

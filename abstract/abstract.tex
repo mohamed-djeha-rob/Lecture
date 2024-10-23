@@ -1,0 +1,53 @@
+\thispagestyle{empty}
+
+
+
+\noindent \hrule\vspace{3pt}
+\par\nobreak
+\noindent\textbf{\textsc{Title: Unified Control/Observers of Complex Multi-Robot Systems using Multi-Objectives Quadratic Programming with Constraints}}
+\noindent \vspace{3pt}\hrule\vspace{3pt}
+\noindent
+\textbf{\textsc{Abstract:}}
+
+\noindent
+%The first use of quadratic programming (QP) in the context of robotic control dates back to the early 90's. It has been presented as a promising alternative to Jacobian null-space-projection based methods in order to solve redundancies while accounting for unilateral constraints.  Since then, 
+%Quadratic programming (QP) has become the standard in task-space control, and has risen a suitable tool for combining and unifying control objectives with either soft or strict prioritization schemes.
+%Leveraging powerful CPUs, quadratic programming controllers have been successfully implemented in real-time  on robotic arms, humanoids, bipeds, quadrupeds, aerial robots, underwater vehicles, etc., performing very complex scenarios, pushing further the robotics  frontiers to include many human-life aspects. 
+%However, QP controllers still have some limitations that are acknowledged in the robotics community. In this thesis, our goal is two fold: (i) address  a number of the QP control open problems, and (ii) unify control and observation via multi-objective QP control.  
+%In particular, kinematic constraints constitute a large class of unilateral constraints that cannot be directly included in QP. The research community proposed several solutions to write these constraints in terms of QP decision variables. Yet, none of them performed well in closed-loop because they are specific to joint-limits, non-robustness against non-modeled dynamics, and leak of theoretic grounding. First, we address this topic by proposing a general formulation that encompasses all kinematic constraints. Our solution is based on adaptive-gains ordinary differential inequality which enables us to formally prove constraints fulfillment forward in time even if they are on-the-fly introduced to QP.  
+%In this thesis, we address some of these limitations and to tackle two main facets in quadratic programming controllers: 
+The first use of quadratic programming (QP) in robotics control dates back to the 1990s. It was an alternative to Jacobian null-space-projection-based methods to solve redundancies while accounting for unilateral constraints. Since then, QP control has become a suitable tool for combining and mediating several control objectives with a soft or strict hierarchy. Nevertheless, QP controllers still have some limitations and open issues. In this thesis, our goal is twofold: (i) address a number of the QP control open problems, and (ii) unify control and observation via multi-objective QP control.
+
+\noindent
+Kinematic constraints constitute a large class of unilateral constraints that cannot be directly included in QP. Several solutions exist to write these constraints in terms of QP decision variables. Yet, none of them performed well in closed-loop because of their specificity to joint limits, non-robustness against non-modeled dynamics, and lack of theoretical grounding. We address this topic by proposing a general formulation encompassing all kinematic constraints. Our solution is based on adaptive-gains ordinary differential inequality with formal proofs of constraints fulfillment forward in time.
+
+\noindent
+%Next, we tackle the topic of stability of closed-loop QP control when the robot is kinematic-controlled, i.e., robots with high-gains joint-controllers with desired joint-position or velocity as input commands. Using a simple 1-degree of freedom system, we show how the closed-loop control scheme is prone to instability especially if the task and/or constraint gains are set to high values. This instability is due to non-robustness against non-modeled dynamics such as joint-dynamics, flexibilities, and external disturbances.  Then, we consider the more general case of a kinematic-controlled robot, and we propose a robust task and constraint formulation based on feedback integral terms that yield robust stability of the tasks and robust asymptotic stability of the set defined by the kinematic constraint. Our proposed solution is intended to be applied to any kinematic-controlled robots under practical assumptions.  
+We also investigate the stability of the closed-loop QP control scheme for robots controlled in kinematics, i.e., robots with high-gain joint-controllers having the desired joint position or velocity as input commands. Although these robots are widely used, the stability topic has not been explored. Using a simple 1-degree of freedom system, we show how the closed-loop control scheme is prone to instability, especially if the task and/or constraint gains are set to high values. Then, we propose a robust task and constraint formulation based on integral feedback terms that yield robust stability of the tasks and robust asymptotic stability of the set defined by the kinematic constraint. Our solution applies to any kinematic-controlled robot under practical assumptions.
+
+\noindent
+%Then, we address the topic of constraints compatibility. Constraints are incompatible if
+% they are in conflict in the sense that 
+% they cannot be met simultaneously. In such a case, the constraint-set becomes empty and QP cannot find a solution. For instance, if the deceleration required to stop the robot arm before getting into collision is higher than what the hardware limitation can provide. %, then QP cannot find a solution that satisfies both constraints. 
+%Dealing with potential conflicts is typically an anticipatory task that requires previewing the robot states. Hence, our solution consists on implementing a model predictive controller (MPC) as a layer on the top of QP. MPC model is constructed based on the closed-loop tasks and kinematic constraints dynamics. By accounting for the hardware limitations and kinematic constraints over a finite horizon, MPC computes the optimal task targets tracked by QP and which converge to the reference targets while satisfying all the constraints. 
+Then, we address the topic of constraints compatibility. Constraints are incompatible if they are in conflict. For example, if the deceleration required to stop the robot arm before getting into the collision is higher than what is currently allowed because of other constraints. Dealing with potential conflicts is typically an anticipatory task that requires a look-ahead on motions. Our solution consists of implementing a model predictive controller (MPC) as a layer on top of whole-body QP, to which we delegate the task of constraints compatibility. MPC model is constructed based on the closed-loop tasks and kinematic constraints dynamics. By accounting for the hardware limits and kinematic constraints over a finite time horizon, MPC outputs a sequence of optimal task targets tracked by whole-body QP, yielding a motion that satisfies all the constraints.  
+
+
+
+%Finally, we exploit the multi-objective control formulation to unify observations and control. %as two tasks of different natures. 
+%We propose the idea of interdependent tasks where the state of one task is forwarded as a reference target for another one task. This enables a proactive robot motion toward a given location without being priorly known.  In human-robot handover scenarios, the handover location is often not known in advance. Hence based on the idea of interdependent tasks, we propose a novel task-space formulation of human-robot handover. We only assume that the object pose is measured by a sensor. The full object-state in terms of pose, velocity, and acceleration is then constructed by the observation task. The estimated robot states are then tracked by a trajectory-tracking and which is then tracked by the trajectory-tracking task yielding to a seamless and fluid robot motion toward the object without any offline planning or prior knowledge on where to meet.
+\noindent
+Finally, we exploit the multi-objective control paradigm to unify two tasks of different natures: observation (estimation) and control (tracking). We formulate this unification through the concept of the interdependent tasks: the state of the observation task is forwarded as a reference for the tracking task, still via one compact QP controller. This novel formulation enables the generation of a motion toward an observed target. Typically in human-robot handover scenarios, the handover location is often not priorly known. Hence, we formulate a task-space human-robot handover QP controller where the full object-state in terms of pose, velocity, and acceleration is observed and forwarded as a reference for the tracking task. Our formulation yields a seamless and proactive robot motion toward the object without offline planning or prior knowledge of where to meet.
+
+
+\vspace{3pt}\hrule\vspace{3pt}
+\noindent 
+\textbf{\textsc{Keywords:}}
+Task-space control, QP control, Kinematic-controlled robots, Kinematic constraints formulation, Task robust stability, Set robust stability, Human-robot handover.
+\noindent \vspace{3pt}\hrule\vspace{3pt}
+\noindent \textbf{\textsc{Discipline~:}}
+Syst\`emes Avanc\'es et Micro\'electronique
+\noindent \vspace{3pt}\hrule\vspace{3pt}
+\noindent Laboratoire d'Informatique, de Robotique et de Micro\'electronique de Montpellier\\
+UMR 5506 CNRS/Universit\'e de Montpellier\\
+B\^atiment 5 - 860 rue de Saint Priest

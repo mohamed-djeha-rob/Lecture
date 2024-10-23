@@ -1,0 +1,364 @@
+\chapter{Appendix}\label{appendix}
+%\markboth{Appendix}{}
+%\addcontentsline{toc}{chapter}{Appendix}
+This appendix gathers the proofs of the different Propositions and Theorems proposed in \cref{chap:robust qp}.
+\section{Proof of \cref{prop 1}}\label{proof:prop1}
+\begin{custumProof}{Proof} 
+	The proof is established for $\desTaskOut $, the same steps apply for $\desBfuncOut $. Here, the dependency on time $(t)$ is made explicit. Given~\cref{eq:des task dyn}, let us assume  $\exists\taskCrtlIn\in\mathbb{R}^{m} \;|\; \desTaskOut (t)$ is bounded
+	\begin{align}\label{eq:boundedness of xi}
+		\begin{split}
+			\norm{\desTaskOut(t)} \leq M &\Rightarrow \left\{\begin{matrix}
+				\norm{\desTaskOut_1(t)}  \leq M\\ 
+				\norm{\desTaskOut_2(t)}  \leq M 
+			\end{matrix}\right., \forall t\geq0, \\
+			&\cref{eq:des output vector}\Leftrightarrow \left\{\begin{matrix}
+				\norm{\fkin(\genDesConf(t)) - \fkinRef(t)}  \leq M\\ 
+				\norm{\desJac\genDesConfDot(t) - \fkinRefDot(t) }  \leq M ,
+			\end{matrix}\right.
+		\end{split} 
+	\end{align} 
+	where $\fkinRef(t)$ and $\fkinRefDot(t)$ are obviously bounded. 
+	Let us prove that if $\desTaskOut_1(t) $ is bounded then $\genDesConf(t) $ is bounded. 
+	Let us define $\genRefConf(t)\in{\cal Q}$\footnote{In~\cref{eq:cal Q def}, $\fkinRef$ is assumed to be strictly reachable. Otherwise, we can define $\cal Q$ as ${\cal Q} =\left\{\genDesConf(t) \in\mathbb{R}^{7+n}:\genDesConf = \arg\min\norm{\fkin\left(\genDesConf(t) \right)-\fkinRef(t)}\right\}$ which leads to $\fkin\left(\genRefConf(t)\right) = \fkinRef(t) + \delta_{\fkin}(t)$, with $\delta_{\fkin}(t)\inR^{m}$ bounded. The remaining of the proof is not affected.} with
+	\begin{equation}\label{eq:cal Q def}
+		{\cal Q} =\left\{\genDesConf(t) \in\mathbb{R}^{7+n}:\fkin\left(\genDesConf(t) \right)=\fkinRef(t)\right\}.
+	\end{equation}
+	Thus, by putting $\Delta \genDesConf(t)= \genDesConf(t)  - \genRefConf(t)$, $\fkin\left(\genDesConf(t) \right)$  writes using Taylor expansion
+	\begin{align}\label{eq:DL y_d}
+		\begin{split}
+			\fkin\left(\genDesConf(t)\right) &= \fkin\left(\genRefConf(t) + \Delta \genDesConf(t)\right)\\
+			&= \fkinRef(t) + R(\Delta \genDesConf(t))\\ R(\Delta \genDesConf(t))&=\left.\begin{matrix}
+				\frac{\partial \fkin(\genDesConf(t))}{\partial \genDesConf(t)}
+			\end{matrix}\right|_{\genDesConf(t)=\check{\mathbf{q}}_{\mathrm{d}}(t)}\Delta \genDesConf(t)\\ %\frac{\partial y_d(\desConf)}{\partial \desConf}
+		\end{split}
+	\end{align} 
+	where $R(\Delta \genDesConf(t))$ is the Lagrange remainder with $\check{\genActConf}_{\mathrm{d}}(t)\!=\! \genRefConf(t)\!+\theta\Delta \genDesConf(t)$, $0\leq\theta\leq1$~\cite[Chapter IV, Section 6]{piskunov1969book}.
+	From~\cref{eq:boundedness of xi},~\cref{eq:DL y_d} we have
+	\begin{equation}
+		\norm{R\left(\Delta \genDesConf(t)\right)}\leq M
+	\end{equation}
+	If $\frac{\partial \fkin(\genDesConf(t))}{\partial \genDesConf(t)}$ is non-singular, then $\forall \theta$ with $0\leq\theta\leq1$ there exist $b,b_0$, $b\geq b_0>0$ such that~\cite{golub2013matrixComputations}
+	\begin{align}\label{eq:qd bounded}
+		\begin{split}
+			& \norm{R\left(\Delta \genDesConf(t)\right)}  = b \norm{\Delta \genDesConf(t)}  \Rightarrow  \norm{\Delta \genDesConf(t)} \leq \frac{M}{b} \\
+			&\Leftrightarrow  \norm{\genDesConf(t)}  -  \norm{\genRefConf(t)}  \leq  \norm{\Delta \genDesConf(t)} \leq \frac{M}{b} \\
+			&\Rightarrow  \norm{\genDesConf(t)}  \leq \frac{M}{b} + \norm{\genRefConf(t)} 
+		\end{split}
+	\end{align}
+	Given that $\genRefConf(t)$ is bounded, then $\genDesConf(t)$ is bounded.  %{\boldsymbol{\alpha}_{\genActConf}}
+	
+	Now, let us prove that if $\desTaskOut_2(t)$ is bounded then $\genDesConfDot(t)$ is bounded. 
+	$\genDesConfDot(t)$ can be written as $\genDesConfDot(t) = \hat{\boldsymbol{\alpha}}_{{\genActConf}_\mathrm{d}}(t) + \genDesConfDot^{\#}(t)$ such that  $\genDesConfDot^{\#}(t)\in\ker\{\desJac\}$ with $\genDesConfDot^{\#}(t) = \left(I-{\desJac}^{+}\desJac\right)\tilde{\boldsymbol{\alpha}}_{\genDesConf}(t)$, where ${\desJac}^{+}$ is the Moore-Penrose Jacobian inverse and $\boldsymbol{\nu}(t)\in\mathbb{R}^{6+n}$ denotes the remaining velocity redundancy.  In QP~\eqref{eq:robust QP for combination}, the redundancy state is bounded by a secondary (posture) task. Hence, $\boldsymbol{\nu}(t)$ is bounded. 		
+	Let us show the boundedness of $\hat{\boldsymbol{\alpha}}_{{\genActConf}_\mathrm{d}}(t)$. From~\cref{eq:boundedness of xi} 
+	\begin{align}
+		\begin{split}
+			\norm{\desJac\hat{\boldsymbol{\alpha}}_{{\genActConf}_\mathrm{d}}(t)} - \norm{\fkinRefDot(t)}\leq\norm{\desJac\hat{\boldsymbol{\alpha}}_{{\genActConf}_\mathrm{d}}(t) - \fkinRefDot(t) }  \leq M \\ 
+			\Rightarrow \norm{\desJac\hat{\boldsymbol{\alpha}}_{{\genActConf}_\mathrm{d}}(t)} \leq M + \norm{\fkinRefDot(t)}
+		\end{split}
+	\end{align}
+	Given that $\desJac$ is non-singular, then there exist $b',b'_0$ with $b'\geq b'_0>0$ such that~\cite{golub2013matrixComputations}
+	\begin{align}
+		\begin{split}
+			\norm{\desJac \hat{\boldsymbol{\alpha}}_{{\genActConf}_\mathrm{d}}(t)}  = b' \norm{\hat{\boldsymbol{\alpha}}_{{\genActConf}_\mathrm{d}}(t)}&\leq M+ \norm{\fkinRefDot(t)}\\ \Rightarrow  \norm{\hat{\boldsymbol{\alpha}}_{{\genActConf}_\mathrm{d}}(t)} &\leq \frac{M+ \norm{\fkinRefDot(t)}}{b'}
+		\end{split}
+	\end{align}
+	Hence, $\genDesConfDot(t)$ is bounded such that%, and thereby $\desConfDot(t)$. 
+	\begin{equation}\label{eq:dot_qd bounded}
+		\norm{\genDesConfDot(t)}\leq\norm{\hat{\boldsymbol{\alpha}}_{{\genActConf}_\mathrm{d}}(t)} + \norm{I-{\desJac}^{+}\desJac}\norm{\tilde{\boldsymbol{\alpha}}_{\genDesConf}(t)}
+	\end{equation}
+	From~\cref{eq:gen joint dyn def} and following from~\cref{eq:dot_qd bounded} and~\cref{eq:qd bounded} $\genDesJointDyn(t)$ is bounded %. Furthermore, from~\cref{eq:actuated DoF states}, $\desJointDyn$ is bounded as well. 
+	%		\begin{equation}\label{eq:boundedness of gen desJointDyn}
+		%			\norm{\genDesJointDyn(t)}\leq \norm{\genDesConf(t)} +\norm{\genDesConfDot(t)} 
+		%		\end{equation} 
+	implying that, given~\cref{eq:mapping mu to u},  $\exists\UgenDesJointDyn\in U$ such that $\genDesJointDyn(t)$ is bounded. % Furthermore, $\desJointDyn(t)$ is bounded.
+	%		Let us now assume $\exists\taskCrtlIn\in\mathbb{R}^m$ such that $\desTaskOut(t)$ is (uniformly) ultimately bounded. Then, there exists an ultimate bound $\varrho>0$, such that $\forall M>0$, $\exists T=T(M,\varrho)>0$ such that~\cite[Definition~4.6]{khalil2002NonLinearSystems}
+	%		\begin{equation}\label{eq:uniform ultimate boundedness def}
+		%			\norm{\desTaskOut(t_0)}\leq M \Rightarrow \norm{\desTaskOut(t)} \leq \varrho, \ \forall t\geq t_0 +T
+		%		\end{equation}
+	%		From~\cref{eq:boundedness of gen desJointDyn} and~\cref{eq:uniform ultimate boundedness def},  there exists an ultimate bound $\varrho'=\varrho(\frac{1}{b}+\frac{1}{b'})+\norm{\genRefConf}>0$ such that $\forall M'=M(\frac{1}{b}+\frac{1}{b'})+\norm{\genRefConf}>0$, $\exists T'=T'(M',\varrho')>0$ such that
+	%		\begin{equation}
+		%			\norm{\genDesJointDyn(t_0)}\leq M' \Rightarrow \norm{\genDesJointDyn(t)} \leq \varrho', \ \forall t\geq t_0 +T'
+		%		\end{equation}
+	%		Thus, given~\cref{eq:mapping mu to u}, $\exists\UgenDesJointDyn\in U$ such that $\genDesJointDyn(t)$ is (uniformly) ultimately bounded with ultimate bound $\varrho'$.
+	\qed\end{custumProof}
+
+\section{Proof of \cref{prop 2}}\label{proof:prop2}
+\begin{custumProof}{Proof}
+	As in \cref{prop 1} proof, \cref{prop 2} proof is established for $\desTaskOut $ (the same steps apply for $\desBfuncOut $) and the dependency on time $(t)$ is made explicit.
+	Let us assume that $\desTaskOut(t) $ is  bounded. Then following from \cref{prop 1} and~\eqref{eq:actuated DoF states}, the desired joint commands vector $\desJointDyn(t)$ is bounded. Directly following from \cref{assum1} and the joint-dynamics~\eqref{eq:joint-dynamics}, $\forall a >0$ such that $\norm{\jointDynTrackErr(t_0)}\leq a$ there exists $\sigma = \sigma(a,\norm{\jointDisturbIn}_\infty)>0$ such that  the robot joint state $\actJointDyn(t) $ bounded
+	\begin{align}\label{eq:boundedness of actJointDyn}
+		\norm{\jointDynTrackErr(t)} \!=\! \norm{\actJointDyn(t) \!-\! \desJointDyn(t)}\!\leq\! \sigma  	\!\Rightarrow\! \norm{\actJointDyn(t)} \leq \sigma + \norm{\desJointDyn(t)}  %\\
+		%\implies& \norm{\actJointDyn(t)} \leq \sigma + \norm{\desJointDyn(t)}.
+	\end{align}
+	In addition, the robot floating-base state $\actFBDyn(t) $ is bounded by assumption which leads to the boundedness of $\genActJointDyn$~\cref{eq:gen joint dyn def}. Thus from~\eqref{eq:act output vector}
+	\begin{align}\label{eq:actTaskOut boundedness}
+		\begin{split}
+			\norm{\actTaskOut(t)}&\!\leq\! \norm{\fkin(\genActConf(t))\!-\!\fkinRef(t)} \!+\! \norm{\actJac\genActConfDot(t)\!-\!\fkinRefDot(t)}, \\
+			&\!\leq\! \norm{\fkin(\genActConf(t))}\!+\!\norm{\fkinRef(t)} \!+\! \norm{\actJac}\!\norm{\genActConfDot(t)}\!+\!\norm{\fkinRefDot(t)}.
+		\end{split}	 
+	\end{align}
+	By assuming that the task-space mapping $\fkin(\genActConf(t))$ is bounded, then $\actTaskOut(t)$ is bounded given that $\fkinRef(t),\fkinRefDot(t), \genActConfDot(t)$ are bounded. 
+	% and from~\eqref{eq:DL act task}, we get $\taskTrackErr(t) $ bounded as well. 	
+	%		 then~\cite[Definition~4.6]{khalil2002NonLinearSystems}\cite[Definition~3.7]{miller2007odeBook} $\forall a>0$ there exists $b=b(a)>0$ such that
+	%		\begin{equation}\label{eq:uniform boundedness def}
+		%			\norm{\desTaskOut(t_0)}\leq a \Rightarrow \norm{\desTaskOut(t)} \leq b, \ \forall t\geq t_0
+		%		\end{equation}
+	%		%	 	$\actTaskOut(t)$ is expressed as 
+	%		%	 	\begin{align}\label{eq:z DL}
+		%		%	 		\begin{split}
+			%		%	 			\actTaskOut(t) &=\desTaskOut(t) +\taskTrackErr (t)
+			%		%	 		\end{split}
+		%		%	 	\end{align}
+	%		
+	%		From~\eqref{eq:DL act task},~\eqref{eq:uniform boundedness def} can be written in terms of $\actTaskOut(t)$   as 
+	%		\begin{equation}\label{eq:uniform boundedness def of actTaskOut}
+		%			\norm{\actTaskOut(t_0)}\leq a' \Rightarrow \norm{\actTaskOut(t)} \leq b', \ \forall t\geq t_0
+		%		\end{equation} with $ a'=a + \norm{\taskTrackErr(t_0)}$, and $b'=b + \norm{\taskTrackErr(t)}_\infty$.
+	%		From Corollary~\ref{corol 1}, $a'$ and $b'$ are bounded, then $\actTaskOut(t)$ is (uniformly) bounded. 
+	
+	Let us now consider system~\eqref{eq:des task dyn} and assume that there exists $\taskCrtlIn$ such that $\desTaskOut(t) $ is (uniformly) ultimately bounded. Then, there exists an ultimate bound $\varrho_{\desTaskOut}>0$, such that $\forall {M}_{\desTaskOut}>0$, $\exists T_{\desTaskOut}=T_{\desTaskOut}(M_{\desTaskOut},\varrho_{\desTaskOut})>0$ such that~\cite[Definition~4.6]{khalil2002NonLinearSystems}
+	\begin{equation}\label{eq:uniform ultimate boundedness def}
+		\norm{\desTaskOut(t_0)}\leq M_{\desTaskOut} \Rightarrow \norm{\desTaskOut(t) } \leq \varrho_{\desTaskOut}, \ \forall t\geq t_0 +T_{\desTaskOut}.
+	\end{equation}
+	From \cref{prop 1} proof in \cref{proof:prop1} and~\eqref{eq:uniform ultimate boundedness def}, it yields that there exists $\varrho_{\desJointDyn}=\varrho_{\desJointDyn}(\varrho_{\desTaskOut})>0$ such that $\norm{\desJointDyn(t)}\leq\varrho_{\desJointDyn}, \ \forall t\geq t_0 +T_{\desTaskOut}$. From~\eqref{eq:boundedness of actJointDyn}, we get 
+	\begin{equation}\label{eq:actJoinDyn UUB}
+		\norm{\actJointDyn(t)} \leq \sigma + \varrho_{\desJointDyn}, \ \forall t\geq t_0 +T_{\desTaskOut}.
+	\end{equation}
+	Thus, from~\eqref{eq:actJoinDyn UUB},~\eqref{eq:actTaskOut boundedness} and~\eqref{eq:DL act task}, 
+	%there exists an ultimate bound $\varrho_{\actTaskOut}=\varrho_{\actTaskOut}(\sigma,\varrho_{\desTaskOut})>0$ such that $\forall t\geq t_0 +T_{\desTaskOut}$, $\norm{\actTaskOut(t)}\leq \varrho_{\actTaskOut}$, i.e., $\actTaskOut(t)$ is (uniformly) ultimately bounded.
+	there exists an ultimate bound $\varrho_{\actTaskOut}= \varrho_{\desTaskOut} +\norm{\taskTrackErr }_\infty>0$, such that $\forall {M}_{\actTaskOut}=M_{\desTaskOut} + \norm{\taskTrackErr(t_0)}>0$, there exists $ T_{\actTaskOut}=T_{\actTaskOut}({M}_{\actTaskOut},\varrho_{\actTaskOut})>0$ such that 
+	\begin{equation}
+		\norm{\actTaskOut(t_0)}\leq {M}_{\actTaskOut} \Rightarrow \norm{\actTaskOut(t)} \leq \varrho_{\actTaskOut}, \ \forall t\geq t_0 + T_{\actTaskOut},
+	\end{equation} which yields to $\actTaskOut(t) $ is (uniformly) ultimately bounded.
+	\qed\end{custumProof}
+\section{Proof of \cref{thm:heterogeneous feedback}}\label{proof:thm hetero feedback}
+\begin{custumProof}{Proof}
+	Replacing~\cref{eq:heterogeneous feedback mu} in~\cref{eq:des task dyn} yields to 
+	%		\begin{align}\label{eq:des task dynamics around equilibrium-hetero approach} 
+		%			\desTaskOutDot = A^{\text{H-CL}}_\desTaskOut(\desTaskOut-\desTaskOutEq), \  \desTaskOutEq = \begin{bmatrix}
+			%				-K_p^{-1}K\taskTrackErr \\0
+			%			\end{bmatrix}
+		%		\end{align}
+	\begin{align}\label{eq:des task dynamics around equilibrium-hetero approach} 
+		\desTaskOutDot = \mathbf{A}^{\text{H-CL}}_\desTaskOut \desTaskOut-\BdesTaskOut \taskGains\taskTrackErr
+	\end{align} where $\mathbf{A}^{\text{H-CL}}_\desTaskOut$ and $\taskGains$ are defined as in~\cref{thm:heterogeneous feedback} and~\cref{eq:mu output feedback}, respectively.
+	Let us consider the following Lyapunov function associated to~\cref{eq:des task dynamics around equilibrium-hetero approach}
+	%Assuming sufficiently bounded $\jointTrackErr$, let us consider output linearization~\cref{eq:z equals xi} which yield to
+	%\begin{equation}\label{eq:}
+	%	\desTaskOutDot = \AdesTaskOut\desTaskOut,  \	\AdesTaskOut=
+	%	\begin{bmatrix}
+		%		0 	 & I \\
+		%		-K_p & -(K_v+L_v)
+		%	\end{bmatrix}\in\mathbb{R}^{2m \times 2m}
+	%\end{equation}
+	%which implies that $\AdesTaskOut$ is Hurwitz~\cite{khalil2002NonLinearSystems}. Following from Lyapunov's indirect method~\cite{khalil2002NonLinearSystems,slotine1991applied,vidyasagar2002NonlinearSystemAnalysis}, the system~\cref{eq:internal dynamics with heterogeneous feedback} is locally asymptotically sta\mathbf{A}^{\text{H-CL}}ble. Let us investigate $\desTaskOut$ without linearization. By
+	%considering output formulation~\cref{eq:linear approximation z},~\cref{eq:internal dynamics with heterogeneous feedback} becomes
+	%\begin{align}\label{eq:internal dynamics heterogeneous with linearized z}
+	%	\begin{split}
+		%		\desTaskOutDot_1 &\!=\! \desTaskOut_2\\ 
+		%		\desTaskOutDot_2 &\!=\!-(K_v \!+\! L_v)\desTaskOut_2  -K_p\desTaskOut_1 +K_p\desTaskOut_1^\text{eq}%- K\desTaskOut^{\jointTrackErr} 
+		%	\end{split}
+	%\end{align}
+	%with $\desTaskOutEq$ as in~\cref{eq:internal dynamics around equilibrium-naive approach}.
+	%Let us consider the following Lyapunov function candidate 
+	\begin{align}\label{eq:Lyapunov function xi heterogeneous feedback}
+		\gamma_1\left(\norm{\desTaskOut}\right)\leq V(\desTaskOut) = \frac{1}{2}\desTaskOut\tp\mathbf{P}_\desTaskOut\desTaskOut\leq\gamma_2\left(\norm{\desTaskOut}\right)%\\\label{eq:bounds on V(xi)}
+		%			\gamma_1\left(\norm{\desTaskOut}\right)\leq V\leq\gamma_2\left(\norm{\desTaskOut}\right)%,\ 
+	\end{align}
+	where $\gamma_1\left(\norm{\desTaskOut}\right)=\frac{\underline{\lambda}(\mathbf{P}_\desTaskOut)}{2}\norm{\desTaskOut}^2$ and $\gamma_2\left(\norm{\desTaskOut}\right)=\frac{\overline{\lambda}(\mathbf{P}_\desTaskOut)}{2}\norm{\desTaskOut}^2$ are class $\cal K_\infty$ functions, and $\mathbf{P}_\desTaskOut=\mathbf{P}_\desTaskOut\tp$ positive-definite is the solution of the following Algebraic Riccati Equation (ARE)
+	\begin{equation}\label{eq:riccati eq for heterogeneous feedback}
+		\mathbf{A}^{\text{H-CL}\tp}\mathbf{P}_\desTaskOut + \mathbf{P}_\desTaskOut \mathbf{A}^{\text{H-CL}} = -\mathbf{Q}_\desTaskOut = -\begin{bmatrix}
+			\taskIntegralDamping & \mathbf{0} \\ \mathbf{0} & \taskIntegralDamping
+		\end{bmatrix}
+	\end{equation}
+	Given~\cref{eq:riccati eq for heterogeneous feedback}, $\dot{V} = -\frac{1}{2}\desTaskOut\tp\mathbf{Q}_\desTaskOut \desTaskOut - \desTaskOut\tp\mathbf{P}_\desTaskOut \BdesTaskOut \taskGains\taskTrackErr$.  
+	%	\begin{align}
+		%		\begin{split}
+			%			
+			%		\end{split}
+		%	\end{align}
+	Given that $\norm{\BdesTaskOut}=1$,  $\norm{\mathbf{P}_\desTaskOut}=\overline{\lambda}(P_\desTaskOut)>0$ and $\underline{\lambda}(\mathbf{Q}_\desTaskOut) =\underline{\lambda}(\taskIntegralDamping)>0$, and using Rayleight-Ritz~\cref{eq:rayleight-ritz inequality} and Schwartz~\cref{eq:schwartz inequality} inequalities, $\dot{V}$ is bounded such that
+	\begin{align}
+		\begin{split}
+			\dot{V}&\leq -\frac{1-\vartheta}{2}\underline{\lambda}(\taskIntegralDamping)\norm{\desTaskOut}^2
+			- \frac{\vartheta}{2}\underline{\lambda}(\taskIntegralDamping)\norm{\desTaskOut}\left(\norm{\desTaskOut}-\frac{2\overline{\lambda}(\mathbf{P}_\desTaskOut)\norm{\taskGains}\norm{\taskTrackErr}}{\vartheta\underline{\lambda}(\taskIntegralDamping)}\right)
+		\end{split}
+	\end{align} with $0<\vartheta<1$.
+	Thus, if $\taskIntegralDamping$ is chosen such that
+	\begin{equation}\label{eq:cdt on norm - Lv}
+		\norm{\desTaskOut}\geq\frac{2\overline{\lambda}(\mathbf{P}_\desTaskOut)\norm{\taskGains}}{\vartheta\underline{\lambda}(\taskIntegralDamping)}\norm{\taskTrackErr}_\infty
+	\end{equation}
+	%	\begin{equation}\label{eq:bound condition on Lv}
+		%		\norm{\desTaskOut}\geq\frac{2\overline{\lambda}(P_\desTaskOut)\norm{K}}{\vartheta\underline{\lambda}(L_v)}\norm{\taskTrackErr}_\infty
+		%	\end{equation}   %$\theta\geq0$,
+	then $\dot{V}\leq-\frac{1-\vartheta}{2}\underline{\lambda}(\taskIntegralDamping)\norm{\desTaskOut}^2$.
+	By the virtue of~\cite[Theorem~4.18]{khalil2002NonLinearSystems}, $\desTaskOut $ is ultimately bounded with ultimate bound $\varrho= \sqrt{\frac{\overline{\lambda}(\mathbf{P}_\desTaskOut)}{\underline{\lambda}(\mathbf{P}_\desTaskOut)}}\frac{2\overline{\lambda}(\mathbf{P}_\desTaskOut)\norm{\taskGains}}{\vartheta\underline{\lambda}(\taskIntegralDamping)}\norm{\taskTrackErr}_\infty$.
+	%	\begin{equation}
+		%		\varrho = \sqrt{\frac{\overline{\lambda}(P_\desTaskOut)}{\underline{\lambda}(P_\desTaskOut)}}\frac{2\overline{\lambda}(P_\desTaskOut)\norm{K}}{\vartheta\underline{\lambda}(L_v)}\norm{\taskTrackErr}_\infty
+		%	\end{equation}L_v
+	Furthermore, $\forall \norm{\desTaskOut(t_0)} \leq M$ there exist $T= T(M,\varrho)>0$, a class $\classKL$ function $\beta$, and a closed set  $\Omega_\desTaskOut = \left\{\desTaskOut \in H^{\fkin}\norm{\desTaskOut }\leq\varrho\right\}$  such that %$\forall \desTaskOut(t_0) \in H$ %the ultimate boundedness can be expressed as
+	\begin{align}\label{eq:UB des task state}
+		\begin{split}
+			\norm{\desTaskOut(t)}_{\Omega_\desTaskOut}&\leq\beta(\norm{\desTaskOut(t_0)}_{\Omega_\desTaskOut},t-t_0), \ \forall t_0\leq t \leq t_0 +T \\
+			\norm{\desTaskOut(t) }_{\Omega_\desTaskOut} &=0, \ \forall t \leq t_0 +T
+		\end{split}
+	\end{align}
+	%\begin{align}
+	%	\norm{\desTaskOut(t)}_{\Omega_\desTaskOut}&\leq\beta(\norm{\dL_vesTaskOut(0)}_{\Omega_\desTaskOut},t)
+	%\end{align}
+	%	with $\Omega_\desTaskOut \!=\! \left\{\desTaskOut \!\in\!L_v H:\norm{\desTaskOut }\!\leq\!\varrho\right\}$. 
+	Given~\cref{eq:cdt on norm - Lv}, the residual set $\Omega_\desTaskOut$  can be made arbitrarily small by $\taskIntegralDamping$. Hence,  $\desTaskOut $ is robustly practically stable w.r.t $\Omega_\desTaskOut$~\cite[Defintion~3.2]{freeman1996bookRobustNNlinearControl}.
+	\qed\end{custumProof}
+
+\section{Proof of \cref{thm:RECBF}}\label{proof:RECBF}
+\begin{custumProof}{Proof}
+	The matrix gain $\check{\mathbf{K}}^{\bfunc}$ in \cref{thm:RECBF} is chosen according to ECBF definition to ensure that $\desBfunc$ is ECBF for the nominal system $\bfuncTrackErr=0$. %The remaining of the proof is structured in two steps: we show that considering the integral term $\constraintIntegralDamping\desBfuncOut_2$ leads to $\desBfunc$  RECBF; then we show, by the virtue of \cref{prop 2}, that this yields to robust safety of $\setC$.
+	
+	%	Let us consider 
+	%	\begin{align}\label{eq:RECBF control}
+		%		\begin{split}
+			%			\bfuncCrtlIn&\geq-\KBfunc'\bfuncPsi\\
+			%			&\geq-\left(\dampingBfunc+\constraintIntegralDamping\right)\desBfuncOut_2 - \stiffBfunc\desBfuncOut_1 + \bfuncDisturbIn
+			%		\end{split}
+		%	\end{align} with $\bfuncDisturbIn = -\KBfunc\bfuncTrackErr$.
+	%	Let us first consider the nominal system $\bfuncDisturbIn=0$. Let us show that the proposed construction of $\KBfunc'$ guarantees that $\desBfunc$ is an ECBF.
+	%	Eq~\cref{eq:RECBF control} becomes 
+	%	\begin{equation}
+		%		\bfuncCrtlIn \geq -\KBfunc''\desBfuncOut
+		%	\end{equation} with $\KBfunc'' = \begin{bmatrix}
+		%		\stiffBfunc & \dampingBfunc + \constraintIntegralDamping
+		%	\end{bmatrix}$. By putting $\constraintIntegralDamping = \theta\dampingBfunc$ with $\theta>0$, and from~\cref{eq:K for ECBF}, $\KBfunc''$ becomes
+	%	\begin{equation}
+		%		\KBfunc'' = \begin{bmatrix}
+			%			\frac{(1+\theta)^2\dampingBfunc^2}{4\zeta^2} & (1+\theta)\dampingBfunc
+			%		\end{bmatrix}
+		%	\end{equation}
+	%	Accordingly,
+	%	\begin{align}
+		%		\begin{split}
+			%			\lambda_{1,2}(\AdesBfuncOut^{\text{H-CL}})=(1+\theta)\lambda_{1,2}(\AdesBfuncOut^{\text{CL}})\\\Rightarrow
+			%			\left\{\begin{matrix}
+				%				\lambda_1(\AdesBfuncOut^{\text{H-CL}})<\lambda_1(\AdesBfuncOut^{\text{CL}})\\ 
+				%				\lambda_2(\AdesBfuncOut^{\text{H-CL}})<\lambda_2(\AdesBfuncOut^{\text{CL}})
+				%			\end{matrix}\right.
+			%		\end{split}
+		%	\end{align} with $\AdesBfuncOut^{\text{H-CL}}= \AdesBfuncOut-\BdesBfuncOut\KBfunc''$, which implies that  $\KBfunc'$  construction ensures that $\desBfunc$ is an ECBF.
+	%	
+	%	Now let us consider the perturbed system $\bfuncDisturbIn\neq0$. 
+	Now, let us prove that $\desBfuncOut $ is uniformly ultimately bounded. Inequality~\cref{eq:RECBF formulation} can be expressed as
+	\begin{equation}\label{eq:mu for RECBF}
+		\bfuncCrtlIn = -\constraintGainsPsi\bfuncPsi + \bfuncDelta(t), \ 0\leq\bfuncDelta(t)\leq\bfuncDeltaMax
+	\end{equation}
+	with $\bfuncDelta(t)$ is a slack variable that facilitates the manipulation of~\cref{eq:RECBF formulation}. Given~\cref{eq:mu for RECBF}, system~\cref{eq:Bfunc transverse dyn} becomes
+	\begin{equation}\label{eq:bfunc des dynamics - perturbed system}
+		\desBfuncOutDot = \AdesBfuncOut^{\text{H-CL}}\desBfuncOut + \BdesBfuncOut\left(-\constraintGains\bfuncTrackErr+\bfuncDelta(t)\right) 
+	\end{equation}
+	where $\constraintGains$ defined as in~\cref{eq:ECBF gains}, and $\AdesBfuncOut^{\text{H-CL}}= \AdesBfuncOut-\BdesBfuncOut\check{\mathbf{K}}^{\bfunc}$. Let us consider the following Lyapunov function~\cite{xu2015ifac}
+	\begin{equation}\label{eq:Lyapunov function for RECBF}
+		V= \left\{\begin{matrix}
+			0, \text{ if } \genDesJointDyn\in\setCd\\
+			\frac{1}{2}\desBfuncOut\tp\PdesBfuncOut\desBfuncOut, \text{ otherwise } %\desJointDyn\in\setD\setminus\setCd
+		\end{matrix}\right.
+	\end{equation}
+	where $\setCd$ defined as~\cref{eq:des C}--\cref{eq:int des C} and $\PdesBfuncOut=\PdesBfuncOut\tp$ positive-definite is the solution of the following ARE
+	\begin{equation}\label{eq:riccati eq for RECBF}
+		\AdesBfuncOut^{{\text{H-CL}}\tp}\PdesBfuncOut + \PdesBfuncOut \AdesBfuncOut^{\text{H-CL}} = -\QdesBfuncOut = -\begin{bmatrix}
+			\constraintIntegralDamping & 0 \\ 0 & \constraintIntegralDamping
+		\end{bmatrix}
+	\end{equation}
+	The goal is to show that there exists a set $\setCd_{\sigma}\supseteq\setCd$ defined as~\cref{eq:des C_sigma}--\cref{eq:int set C_sigma} such that $\dot{V}<0,  \forall \genDesJointDyn \in \mathbb{R}^{13+2n}\setminus \setCd_{\sigma}$.  
+	Using~\cref{eq:riccati eq for RECBF},  $\dot{V}$ is computed as 
+	\begin{align}\label{eq:Vdot RECBF 1}
+		\begin{split}
+			\dot{V}= -\frac{1}{2}\desBfuncOut^T\QdesBfuncOut\desBfuncOut + \desBfuncOut^T\PdesBfuncOut\BdesBfuncOut\left(-\constraintGains\bfuncTrackErr+\bfuncDelta(t)\right)
+		\end{split}
+	\end{align}
+	Using Rayleight-Ritz~\cref{eq:rayleight-ritz inequality} and Schwartz~\cref{eq:schwartz inequality} inequalities,~\cref{eq:Vdot RECBF 1} becomes
+	\begin{align}
+		\begin{split}
+			\dot{V}&\leq -\frac{1}{2}\underline{\lambda}(\QdesBfuncOut)\norm{\desBfuncOut}^2 + \norm{\desBfuncOut}\norm{\PdesBfuncOut}\norm{\BdesBfuncOut}\left(\norm{\constraintGains}\norm{\bfuncTrackErr}+\norm{\bfuncDelta(t)}\right)
+		\end{split}
+	\end{align}
+	By putting $\varphi = \norm{\constraintGains}\norm{\bfuncTrackErr}+\norm{\bfuncDelta(t)}$, and  given that $\underline{\lambda}(\QdesBfuncOut)=\constraintIntegralDamping>0$, $\norm{\PdesBfuncOut}=\overline{\lambda}(\PdesBfuncOut)$, $\norm{\BdesBfuncOut} = 1$,  then 
+	\begin{align}
+		\begin{split}
+			%	\dot{V}&\leq -\frac{1}{2}\underline{\lambda}(\constraintIntegralDamping)\norm{\desBfuncOut}^2 + \overline{\lambda}(\PdesBfuncOut)\norm{\desBfuncOut}\varphi\\
+			\dot{V}&\leq-\frac{1-\vartheta}{2}\constraintIntegralDamping\norm{\desBfuncOut}^2 
+			-\frac{\vartheta}{2}\constraintIntegralDamping\norm{\desBfuncOut}\left(\norm{\desBfuncOut}-\frac{2\overline{\lambda}(\PdesBfuncOut)}{\vartheta\constraintIntegralDamping}\varphi\right)
+		\end{split}
+	\end{align} with $0<\vartheta<1$. 
+	Hence, if $\constraintIntegralDamping$ is chosen such that
+	\begin{equation}\label{eq:cdt on Lv RECBF}
+		\norm{\desBfuncOut}\geq\frac{2\overline{\lambda}(\PdesBfuncOut)}{\vartheta\constraintIntegralDamping}\varphi_\infty, \ \varphi_\infty = \norm{\KBfunc}\norm{\bfuncTrackErr}_\infty+\bfuncDeltaMax
+	\end{equation}  then $\dot{V}\leq  -\frac{1}{2}\constraintIntegralDamping\norm{\desBfuncOut}^2$. 
+	By the virtue of~\cite[Theorem~4.18]{khalil2002NonLinearSystems}, $\desBfuncOut $ is uniformly ultimately bounded with ultimate bound $\sigma=\sqrt{\frac{\overline{\lambda}(\PdesBfuncOut)}{\underline{\lambda}(\PdesBfuncOut)}}\frac{2\overline{\lambda}(\PdesBfuncOut)}{\vartheta\constraintIntegralDamping}\varphi_\infty$. From~\cref{eq:des Bfunc state}, $\norm{\desBfuncOut }\leq\sigma\Rightarrow\desBfunc +\sigma\geq0$. 
+	In addition, there exists a closed set $\setCd_{\sigma}$  defined as~\cref{eq:des C_sigma}--\cref{eq:int set C_sigma} which is asymptotically stable and forward invariant\footnote{Forward invariance and asymptotic stability follow from the uniform ultimate boundedness property of $\desBfuncOut$.}.
+	%Since $\desBfunc$ depends on $\genDesJointDyn$ and given $V$ definition in~\cref{eq:Lyapunov function for RECBF}, then  $\exists\UgenDesJointDyn\in U$~\cref{eq:RECBF constraint} such that $\genDesJointDyn$ converges to a closed forward invariant and asymptotically stable set $\setCd_{\sigma}$  defined as~\cref{eq:des C_sigma}--\cref{eq:int set C_sigma}\footnote{Forward invariance and asymptotic stability follow from the uniform ultimate boundedness property of $\desBfuncOut$.}.	
+	Given that $\setCd\subseteq\setCd_{\sigma}$ then following from \cref{def:RS-sigma}, $\setCd$ defined as~\cref{eq:des C}--\cref{eq:int des C} is robustly stable, and thereby from \cref{def:RECBF}, $\desBfunc$ is a RECBF.	\qed
+	%	It is then straightforward to show that $\setC$ is robustly safe.
+	%	Since $\desBfuncOut $ is uniformly ultimately bounded with ultimate bound $\sigma$ then, directly following from ~\cref{prop 2},  $\actBfuncOut $ is uniformly ultimately bounded with ultimate bound $\tilde{\sigma}=\sigma + \norm{\bfuncTrackErr}_\infty$. Following the same reasoning in~\cref{eq:UUB of xd in beta'}, $\setC_\sigma$ defined as~\cref{eq:act C_sigma}--\cref{eq:int act C_sigma} is closed forward invariant and asymptotically stable. Finally following from \cref{def:RS-sigma}, the set $\setC\subseteq\setC_\sigma$ defined as~\cref{eq:act C}--\cref{eq:int act C} is RS-$\sigma'$ and therefore robustly safe.
+	%		\begin{align}\label{eq:UUB of xd in beta'}
+		%			\begin{split}
+			%				\norm{\genDesJointDyn(t) }_{\setCd_{\sigma}}&\!\leq\!\beta\left(\norm{\genDesJointDyn(t_0)}_{\setCd_{\sigma}}\!,t \!- \! t_0\right), \forall t_0\!\leq t \!\leq t_0 \!+\! T \\
+			%				\norm{\genDesJointDyn(t) }_{\setCd_{\sigma}}&\!=\!0 ,\forall  t \geq t_0 +T
+			%			\end{split}
+		%		\end{align} 
+	%		$\forall \genDesJointDyn(t_0)\in\mathbb{R}^{9+k+2n}$ where $\setCd_{\sigma}$ is a closed forward invariant and asymptotically stable set defined as~\cref{eq:des C_sigma}--\cref{eq:int set C_sigma}\footnote{Forward invariance and asymptotic stability  properties follow from the negativity of $\dot{V}$ for $\norm{\desBfuncOut}\!\geq\!\sigma\geq\frac{2\overline{\lambda}(\PdesBfuncOut)}{\vartheta\constraintIntegralDamping}\varphi_\infty$. Namely, $\genDesJointDyn$ is attracted to $\setCd_{\sigma}$ and cannot escape from it.}.
+	
+	%		Following from Proposition~\ref{prop 1} and~\cref{eq:RECBF constraint}, there exists $\UgenDesJointDyn$ such that $\genDesJointDyn(t)$ is uniformly ultimately bounded. Thus, there exists
+	%		Thus, there exist a closed and forward invariant\footnote{Forward invariance property follows from the negativity of $\dot{V}$ for $\norm{\desBfuncOut}\!\geq\!\sigma\geq\frac{2\overline{\lambda}(\PdesBfuncOut)}{\vartheta\constraintIntegralDamping}\varphi_\infty$.} set $\Sigma\subset\mathbb{R}^2$ defined as $\Sigma =\left\{\desBfuncOut(t)\in{_{\mathrm{b}}{H}}:\norm{\desBfuncOut(t)}\leq\sigma\right\}$, and a class $\classKL$ function $\beta$ such that $\forall\desBfuncOut(t_0)\in{_{\mathrm{b}}{H}}$%=\CdesBfuncOut\desBfuncOut(t_0)$
+	%		\begin{equation}\label{eq:UUB of des bfunc in beta}
+		%			\norm{\desBfuncOut(t)}_\Sigma\leq\beta\left(\norm{\desBfuncOut(t_0)}_\Sigma,t-t_0\right)
+		%		\end{equation}
+	%		From~\cref{eq:UUB of des bfunc in beta} and~\cref{eq:asymptotic stability of a set}, $\Sigma$ is asymptotically stable. Given~\cref{eq:des Bfunc state}, then $\desBfunc + \sigma\geq0$ when $\desBfuncOut$ reaches the set $\Sigma$. 
+	%		Following from Proposition~\ref{prop 1} and~\cref{eq:RECBF constraint}, there exists $\UgenDesJointDyn$ such that $\genDesJointDyn(t)$ is uniformly ultimately bounded and  (correspondingly to the existence of $\Sigma$)  there exist a closed, forward invariant and asymptotically stable set $\setCd_{\sigma}\subset\mathbb{R}^{9+k+2n}$ defined as~\cref{eq:des C_sigma}--\cref{eq:int set C_sigma}, and a class $\classKL$ function $\beta'$ such that 
+	%		\begin{equation}\label{eq:UUB of xd in beta'}
+		%			\norm{\genDesJointDyn(t)}_{\setCd_{\sigma}}\leq\beta'\left(\norm{\genDesJointDyn(t_0)}_{\setCd_{\sigma}},t-t_0\right)
+		%		\end{equation}
+	%		Given that $\setCd\subseteq\setCd_{\sigma}$ then following from \cref{def:RS-sigma}, $\setCd$ is RS-$\sigma$, and thereby from \cref{def:RECBF}, $\desBfunc$ is a RECBF.	
+	%It is then straightforward to show that $\setC$ is robustly safe.
+	%Since $\desBfuncOut $ is uniformly ultimately bounded with $\sigma$ then from \cref{prop 2} and~\cref{eq:bfunc track err},  $\actBfuncOut $ is uniformly ultimately bounded with ultimate bound $\tilde{\sigma}=\sigma + \norm{\bfuncTrackErr}_\infty$. Hence from~\cref{eq:act Bfunc state}, $\norm{\actBfuncOut}\leq\tilde{\sigma}\Rightarrow\bfunc+\tilde{\sigma}\geq0$. Furthermore, $\genActJointDyn$ converges to the closed forward invariant and asymptotically stable set $\setC_{\tilde{\sigma}}$ defined as~\cref{eq:act C_sigma}--\cref{eq:int act C_sigma}. Finally following from \cref{def:RS-sigma}, the set $\setC\subseteq\setC_{\tilde{\sigma}}$ defined as~\cref{eq:act C}--\cref{eq:int act C} is RS-$\tilde{\sigma}$ and is therefore robustly safe.
+	%	Following the same reasoning in~\cref{eq:UUB of xd in beta'}, $\setC_\sigma$ defined as~\cref{eq:act C_sigma}--\cref{eq:int act C_sigma} is closed forward invariant and asymptotically stable. Finally following from \cref{def:RS-sigma}, the set $\setC\subseteq\setC_\sigma$ defined as~\cref{eq:act C}--\cref{eq:int act C} is RS-$\sigma'$ and therefore robustly safe.
+	%	Following the same reasoning above, $\setC_{\tilde{\sigma}}$ defined as~\cref{eq:act C_sigma}--\cref{eq:int act C_sigma} is closed forward invariant and asymptotically stable. Finally following from \cref{def:RS-sigma}, the set $\setC\subseteq\setC_{\tilde{\sigma}}$ defined as~\cref{eq:act C}--\cref{eq:int act C} is RS-$\tilde{\sigma}$ and therefore robustly safe.
+	%Exploiting the first part of the proof, let us now prove the existence of $\sigma'>0$ such that $\setC$ is RS-$\sigma'$. This is mainly achieved by showing that $\actBfuncOut(t)$ is UUB. , then $\forall a>0$ there exists $T=T(a,\sigma)>0$ such that~\cite{khalil2002NonLinearSystems,yoshizawa1966bookStabilityTheorybyLyapunov,miller2007odeBook}
+	%\begin{equation}
+	%	\norm{\desBfuncOut(t_0)}\leq a \Rightarrow \norm{\desBfuncOut(t)} \leq \sigma, \ \forall t \geq t_0 + T
+	%\end{equation}  
+	%Using~\cref{eq:bfunc track err}, then there exists an ultimate bound $\sigma'$ such that $\forall a'>0$ there exists $T'=T'(a',\sigma')>0$ such that
+	%\begin{equation}
+	%	\norm{\actBfuncOut(t_0)}\leq a' \Rightarrow \norm{\actBfuncOut(t)} \leq \sigma', \ \forall t \geq t_0 + T'
+	%\end{equation} 
+	%where $a'= a + \norm{\bfuncTrackErr(t_0)}$ and $\sigma'=\sigma + \norm{\bfuncTrackErr}_\infty$, implying that $\actBfuncOut(t)$ is UUB. 
+	%	Consequently, there exist a closed set $\Sigma'\subset\mathbb{R}$ and a class $\classKL$ function $\beta'$ such that
+	%	\begin{equation}\label{eq:UUB of act bfunc in beta}
+		%		\norm{\bfunc(t)}_{\Sigma'}\leq\beta'\left(\norm{\bfunc(t_0)}_{\Sigma'},t-t_0\right)
+		%	\end{equation}
+	%	where $\Sigma'=\left\{\bfunc\in\mathbb{R}:\bfunc+\sigma'\geq0\right\}$. It is clear from~\cref{eq:UUB of act bfunc in beta} that the set $\Sigma'$ is asymptotically stable and forward invariant.  Equivalently to the existence of $\Sigma'$ and~\cref{eq:UUB of act bfunc in beta}, there exist a closed set $\setC_{\sigma'}\subset\mathbb{R}^{2n}$ defined as~\cref{eq:act C_sigma}, and a class $\classKL$ function $\beta'$ (with a slight abuse of notation) such that 
+	%	\begin{equation}
+		%		\norm{\actJointDyn(t)}_{\setC_{\sigma'}}\leq\beta'\left(\norm{\actJointDyn(t_0)}_{\setC_{\sigma'}},t-t_0\right)
+		%	\end{equation}
+	%	which implies that $\setC_{\sigma'}$ is asymptotically stable and forward invariant.  Given that $\setC\subset\setC_{\sigma'}$ then following from Definition~\ref{def:robust safety}, $\setC$ is RS-$\sigma'$ and therefore robustly safe. 
+\end{custumProof}
+
+\section{Proof of \cref{prop:relaxed heterogeneous feedback}}\label{proof:prop3}
+\begin{custumProof}{Proof}
+	The superscript $^i$ is dropped for sake of clarity.
+	Substituting~\cref{eq:heterogeneous feedback relaxed} in~\cref{eq:des task dyn} yields to 
+	\begin{align}%\label{eq:desire task dynamics with heteregeneous feedback relaxed}
+		\begin{split}
+			\desTaskOutDot&=\AdesTaskOut^{\text{H-CL}}\desTaskOut-\BdesTaskOut K\taskTrackErr+\BdesTaskOut\delta(t).%\\
+			%	&=f_\desTaskOut(\desTaskOut,\taskDisturbIn,t)
+		\end{split}
+	\end{align}
+	Let us consider Lyapunov function $V$ in~\cref{eq:Lyapunov function xi heterogeneous feedback} such that~\cref{eq:riccati eq for heterogeneous feedback} holds. Following the same steps in \cref{thm:heterogeneous feedback} proof, $\dot{V}$ is bounded such that
+	\begin{align}\label{eq:bounds on Vdot for relaxed task}
+		\begin{split}
+			\dot{V} & \leq -\frac{1}{2}(1-\vartheta)\underline{\lambda}(\taskIntegralDamping)\norm{\desTaskOut}^2  
+			-\frac{\vartheta\underline{\lambda}(\taskIntegralDamping)}{2}\norm{\desTaskOut}\left(\norm{\desTaskOut}-\frac{2\overline{\lambda}(P_\desTaskOut)}{\vartheta\underline{\lambda}(\taskIntegralDamping)}\left(\norm{K}\norm{\taskTrackErr}+\norm{\delta(t)}\right)\right).
+		\end{split}
+	\end{align}
+	If $\taskIntegralDamping$ is chosen such that
+	\begin{equation}
+		\norm{\desTaskOut}\geq\frac{2\overline{\lambda}(\mathbf{P}_\desTaskOut)}{\vartheta\underline{\lambda}(\taskIntegralDamping)}\left(\norm{K}\norm{\taskTrackErr}_\infty+\delta_{\max}\right)
+	\end{equation} then $\dot{V}\leq -\frac{1}{2}(1-\vartheta)\underline{\lambda}(\taskIntegralDamping)\norm{\desTaskOut}^2$. From~\cite[Theorem~4.18]{khalil2002NonLinearSystems}, it follows that $\desTaskOut$ is uniformly ultimately bounded with ultimate bound $\varrho= \sqrt{\frac{\overline{\lambda}(P_\desTaskOut)}{\underline{\lambda}(P_\desTaskOut)}}\frac{2\overline{\lambda}(P_\desTaskOut)}{\vartheta\underline{\lambda}(\taskIntegralDamping)}\left(\norm{K}\norm{\taskTrackErr}_\infty + \delta_{\max}\right)$. Following the same steps in~\cref{eq:UB des task state}, $\desTaskOut$ is robustly practically stable w.r.t the residual set $\Omega_\desTaskOut = \{\desTaskOut\in H: \norm{\desTaskOut}\leq\varrho\}$.% and \cref{prop 2}, $\desTaskOut $ and $\actTaskOut $ are uniformly ultimately bounded, respectively.
+	\qed\end{custumProof}

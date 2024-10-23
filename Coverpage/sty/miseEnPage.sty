@@ -1,0 +1,205 @@
+%%% Chargement des packages
+\usepackage{aeguill}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm,amsfonts}
+\usepackage{a4wide}
+\usepackage[english,francais,frenchb]{babel}
+\usepackage[tableposition=top,textfont=sl,font=small,aboveskip=5pt,belowskip=0pt,labelfont=bf]{caption}
+\usepackage{color}
+\usepackage[mathscr]{euscript}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage[colorlinks,citecolor=blue,urlcolor=blue,filecolor=blue,backref=page]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{lettrine}
+\usepackage{lineno}
+\usepackage{lmodern}
+\usepackage{makeidx}
+\usepackage{multirow}
+\usepackage[french,refpage,intoc]{nomencl}%pour la table des notations
+\usepackage{setspace}
+\usepackage{textcomp}
+\usepackage{xspace}
+%\usepackage{frmath}
+%\usepackage{fancyheadings}
+%\usepackage[numbers,sort&compress]{natbib}
+%\usepackage[numbers]{natbib}
+%\usepackage{xcolor}
+%\usepackage[french,linesnumbered,lined,boxed,ruled]{algorithm2e}
+%\usepackage{thumbpdf}
+%\usepackage[lm]{mathptmx}
+%\usepackage[scaled=0.90]{helvet}
+
+%%% Option de certains packages
+\selectlanguage{french}
+\hypersetup{colorlinks = true,linkcolor = black,anchorcolor = DarkOliveGreen3,
+   citecolor = blue,filecolor = IndianRed1,pagecolor =IndianRed1, urlcolor=blue,
+   breaklinks=true,plainpages=false}
+\geometry{hmargin=2.5cm, vmargin=2cm}
+
+%%% Definition de couleurs (de Coralie)
+%\definecolor{plum}{rgb}{0.8418741, 0.6162518, 0.8418741}
+%\definecolor{plum2}{rgb}{.932,.684,.932}
+\definecolor{mediumpurple2}{rgb}{.624,.475,.932}
+\definecolor{lightsalmon1}{rgb}{1,.628,.48}
+\definecolor{DarkOliveGreen3}{rgb}{.635,.804,.352}
+\definecolor{IndianRed1}{rgb}{1,.415,.415}
+%\definecolor{plum2}{rgb}{0.5853658, 0.4292683, 0.5853658}
+
+%%% Mes couleurs
+\definecolor{ao}{rgb}{0.0, 0.5, 0.0}
+\definecolor{cadmiumgreen}{rgb}{0.0, 0.42, 0.24}
+\definecolor{darkspringgreen}{rgb}{0.09, 0.45, 0.27}
+\definecolor{dartmouthgreen}{rgb}{0.05, 0.5, 0.06}
+\definecolor{forestgreen(web)}{rgb}{0.13, 0.55, 0.13}
+\definecolor{cssgreen}{rgb}{0.0, 0.5, 0.0}
+
+%%% Definition theorem style
+\theoremstyle{plain}
+\newtheorem{thm}{Théorème}[chapter]
+\newtheorem*{thm*}{Théorème}
+\newtheorem{pro}[thm]{Proposition}
+\newtheorem{lem}[thm]{Lemme}
+\newtheorem{coro}[thm]{Corollaire}
+\theoremstyle{definition}
+\newtheorem{defi}{Définition}[chapter]
+\newtheorem{exemple}{Exemple}
+\theoremstyle{remark}
+\newtheorem*{rmq}{Remarque}
+%\newtheorem{demo}{Démonstration}[chapter]
+%\newtheorem{prop}{Propriété}[chapter]
+
+%%% Definition de commandes
+\renewcommand{\floatpagefraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\LettrineFontHook}{\color{-red!70!green}}
+
+\newcommand\HUGE{\@setfontsize\Huge{45}{55}} 
+
+%%% Make des trucs
+\makeindex
+\makenomenclature
+
+
+% ------------------------------------------------------------------------
+% 		Définition du style des chapitre (Alex)
+% ------------------------------------------------------------------------
+% 		Marche avec la classe de document book
+\makeatletter
+\iffalse  % ancien template utilité par coralie
+\definecolor{gris_chap}{gray}{0.85}
+\def\@makechapterhead#1{%
+ \vspace*{20\p@}%
+ {\parindent \z@ \raggedright \normalfont
+   \ifnum \c@secnumdepth >\m@ne
+     \if@mainmatter
+       \raggedleft\scalebox{7}{\huge\bfseries\textsf{\textcolor{gray}{\thechapter~}}}  %\textsc{}
+
+       \par\nobreak
+       \vskip 30\p@
+
+       \vspace{-3cm}
+
+     \fi
+   \fi
+   \interlinepenalty\@M
+   \Huge \bfseries \textsf{ #1}\par\nobreak
+   \vskip 40\p@
+ }}
+\makeatother
+
+\makeatletter
+\def\@makeschapterhead#1{%
+ \vspace*{20\p@}%
+ {\if@mainmatter
+  \parindent \z@ \raggedleft
+   \normalfont
+   \interlinepenalty\@M
+   \Huge \bfseries  #1\par\nobreak
+   \vskip 30\p@
+  \else
+  \parindent \z@ \raggedright
+   \normalfont
+   \interlinepenalty\@M
+   \Huge \bfseries  #1\par\nobreak
+   \vskip 40\p@
+  \fi
+ }}
+\makeatother
+\fi
+% fin Alex chapitres
+
+% nouveau templace chapitre
+\def\thickhrule{\leavevmode \leaders \hrule height 1ex \hfill \kern \z@}
+\def\position{\centering}
+%% Note the difference between the commands the one is 
+%% make and the other one is makes
+\renewcommand{\@makechapterhead}[1]{%
+  \vspace*{10\p@}%
+  {\parindent \z@ \position \reset@font
+        {\HUGE  \scshape  \romannumeral \thechapter }
+        \par\nobreak
+        \vspace*{10\p@}%
+        \interlinepenalty\@M
+        \thickhrule
+        \par\nobreak
+        \vspace*{2\p@}%
+        {\Huge \bfseries #1\par\nobreak}
+        \par\nobreak
+        \vspace*{2\p@}%
+        \thickhrule
+    \vskip 40\p@
+    \vskip 40\p@
+  }}
+
+%% This uses makes
+
+\iffalse
+\def\@makeschapterhead#1{%
+  \vspace*{10\p@}%
+  {\parindent \z@ \position \reset@font
+        {\Huge \scshape \vphantom{\thechapter}}
+        \par\nobreak
+        \vspace*{10\p@}%
+        \interlinepenalty\@M
+        \thickhrule
+        \par\nobreak
+        \vspace*{2\p@}%
+        {\Huge \bfseries #1\par\nobreak}
+        \par\nobreak
+        \vspace*{2\p@}%
+        \thickhrule
+    \vskip 100\p@
+  }}
+\fi
+
+% Pour avoir des pages réellement vides entre les chapitres
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+\hbox{}
+\vspace*{\fill}
+\vspace{\fill}
+\thispagestyle{empty}
+\newpage
+\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+
+
+% En-tête et pieds de page avec fancyhdr
+\headheight=14.85pt
+% pour récupérer les noms de section en minuscule
+\renewcommand{\chaptermark}[1]{\Makelowercase \markboth{\thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\fancyhf{}
+\fancyhead[RO]{\bfseries\rightmark}
+\fancyhead[LE]{\bfseries\leftmark}
+\fancyfoot[LE,RO]{\bfseries\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\addtolength{\headheight}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhead{}\renewcommand{\headrulewidth}{0pt}}
+
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

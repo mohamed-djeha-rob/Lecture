@@ -1,0 +1,159 @@
+\chapter{Annex}\label{annex}
+%\markboth{Annex}{}
+%\addcontentsline{toc}{chapter}{Annex}
+This annex encompasses the formal definitions gathered from the literature and necessary for the self-sufficiency of this thesis.
+\section{Comparison Functions}
+\begin{definition}\label{def:comparison functions}
+	\cite[Definitions~4.2--4.3]{khalil2002NonLinearSystems}
+	\begin{itemize}
+		\item $\gamma:[0,a)\rightarrow \mathbb{R}^+$ for some $a>0$ is a class $\cal K$  function if it is continuous, strictly increasing and $\gamma(0)=0$,
+		\item $\gamma:(-b,a)\rightarrow \mathbb{R}^+$ for some $a,b>0$ is an extended class $\cal K$  function if it is continuous, strictly increasing and $\gamma(0)=0$,
+		\item $\gamma:\mathbb{R}^+\rightarrow \mathbb{R}^+$ is a class $\cal K_\infty$  function if it is continuous, strictly increasing, $\gamma(0)=0$ and $\gamma(s)\overset{s \rightarrow\infty}{\longrightarrow} \infty$,
+		\item $\beta:\mathbb{R}^{+}\times\mathbb{R}^{+}\rightarrow \mathbb{R}^{+}$ is a class $\cal KL$  function if for each fixed $t \geq0$, $\beta(s,t)$ is a class $\cal K$ function, and for each fixed $s \geq0$, it  decreases to $0$ as $t \rightarrow\infty$.
+	\end{itemize}
+\end{definition}
+\section{Rayleight Inequality}\label{app:rayghleight}
+\begin{definition}
+	~\cite{rugh1996LinearSystemTheory}
+	Given a symmetric matrix $\mathbf{A}\in\mathbb{R}^{r\times r}$ the following inequality  holds $\forall \bm{r}\in\mathbb{R}^r$:
+	\begin{equation}\label{eq:rayleight-ritz inequality}
+		\underline{\lambda}(\mathbf{A})\norm{\bm{r}}^2\leq \bm{r}\tp\mathbf{A}\bm{r}\leq\overline{\lambda}(\mathbf{A})\norm{\bm{r}}^2 
+	\end{equation}
+\end{definition}
+\section{Schwartz Inequality}\label{app:schwartz}
+\begin{definition}
+	~\cite{strang1988bookLinearAlgebra}
+	$\forall \bm{r},\bm{p} \in\mathbb{R}^p$ the following inequality holds:
+	\begin{equation}\label{eq:schwartz inequality}
+		|\bm{r}^T\bm{p}|\leq\norm{\bm{r}}\norm{\bm{p}}
+	\end{equation}
+\end{definition}
+
+\section{Uniform Boundedness and Ultimate Uniform Boundedness}\label{app:boundedness}
+\begin{definition}\label{def-app:boundedness}~\cite{khalil2002NonLinearSystems}
+	Let us consider the system 
+	\begin{equation}\label{eq:system with time}
+		\bm{\dot{x}} = f_{\bm{x}} (\bm{x},t)
+	\end{equation}
+The solutions of system~\cref{eq:system with time} are 
+\begin{itemize}
+	\item uniformly bounded of there exists a positive constraint $c$, independent of $t_0$, and for every $0<a<c$, there exists $b=b(a)>0$, independent of $t_0$, such that
+	\begin{equation}
+		\norm{\bm{x}(t_0)}\leq a \implies \norm{\bm{x}(t)}\leq b.
+	\end{equation}
+	\item uniformly ultimately bounded with ultimate bound $b$ if there exist $b,c>0$, independent of $t_0$, and for every $0<a<c$, there is $T=T(a,b)$, independent of $t_0$, such that
+		\begin{equation}
+		\norm{\bm{x}(t_0)}\leq a \implies \norm{\bm{x}(t)}\leq b, \ \forall t\geq t_0 +T.
+	\end{equation}
+\end{itemize}
+\end{definition}
+\section{Set Forward Invariance and Asymptotic Stability}\label{sec-app:forward invariance}
+\begin{definition}\label{def-app:forward invariance}
+	~\cite{blanchini1999automatica,xu2015ifac}
+	Let us consider the system 
+	\begin{equation}\label{eq:system with input}
+		\bm{\dot{x}} = f_{\bm{x}} (\bm{x},\bm{u})
+	\end{equation} 
+	where $\bm{x}\in\mathbb{R}^p$ and $\bm{u}\in\mathbb{R}^q$. 
+	For any initial condition $\bm{x}(t_0)\in\mathbb{R}^p$, there exists a maximum time interval $I(\bm{x}(t_0))=[t_0,t_{\max}]$ such that $\bm{x}(t)$ is the unique solution of~\cref{eq:system with input} on $I(\bm{x}(t_0))$. If $t_{\max}=\infty$ then $f_{\bm{x}}$ is forward complete. System~\cref{eq:system with input} is said to be \emph{autonomous} when $\bm{u}=\zeros$.  A set $\setS\subset\mathbb{R}^p$ is called \emph{forward invariant} w.r.t autonomous system~\cref{eq:system with input} if 
+	\begin{equation}\label{eq:forward invariance}
+		\forall \bm{x}(t_0)\in\setS \implies \bm{x}(t)\in\setS, \ \forall t\in I(x(t_0)). 
+	\end{equation}
+	In addition, a closed and forward invariant set ${\setS}\subset\mathbb{R}^p$ is asymptotically stable for a forward-complete autonomous system~\cref{eq:system with input} if there exist on open set $\cal R\supseteq\setS$, and a class $\classKL$ function $\beta$ such that
+	\begin{equation}\label{eq:asymptotic stability of a set}
+		\norm{\bm{x}(t)}_{\setS}\leq\beta\left(\norm{\bm{x}(t_0)}_{\setS},t-t_0\right), \ \forall\bm{x}(t_0)\in\cal R.
+	\end{equation}
+	As shown in~\cite{xu2015ifac} and from~\cref{eq:forward invariance}--\cref{eq:asymptotic stability of a set}, the asymptotic stability of a set implies its forward invariance.
+\end{definition}
+\section{Comparison Lemma (or Petrovitch Theorem)}\label{app:comparison lemma}
+\begin{lemma}\label{def-app:comparison lemma}~\cite{khalil2002NonLinearSystems,mitrinovic1991inequalityBook}
+	Consider the system \cref{eq:system with time} with scalar $x\inR$ where $f_{{x}}({x},t)$ is continuous in $t$, and locally Lipschitz in ${x}$ for all $t\geq0$ and all ${x}\inR$. Let $y(t)$ be a continuous function whose time-derivative $\dot{y}(t)$ satisfies the differential inequality
+	\begin{equation}
+		\dot{y}(t) \leq f_{{x}}({x},t), \ y(t_0) \leq x(t_0),
+	\end{equation}
+	with $y(t)\inR$ for all $t\in I(x(t_0))$  in~\cref{def-app:forward invariance}. Then $y(t)\leq x(t)$, $\forall t\in I(x(t_0))$.
+\end{lemma}
+\section{Barrier Function}
+\begin{definition}\label{def:BF}~\cite{ames2017tac,xu2015ifac}
+	Let us define the set $\setC$ defined as 
+	\begin{align}
+		\label{eq-app:setC}	\setC &= \left\{\bm{x}\inR^p: h(\bm{x})\geq0\right\} \\
+		\label{eq-app:int setC}		\INT\setC &= \left\{\bm{x}\inR^p: h(\bm{x})>0\right\} \\
+		\label{eq-app:border setC}		\partial\setC &= \left\{\bm{x}\inR^p: h(\bm{x})=0\right\}
+	\end{align}
+	For the autonomous system \cref{eq:system with input}, a continuously differentiable function $h:\mathbb{R}^p\rightarrow\mathbb{R}$ is a BF for the set $\setC$ defined by \cref{eq-app:setC,eq-app:int setC,eq-app:border setC}, if there exist an extended class $\classK$ function $\gamma$ and a set $\setD$ with $\setC\subseteq\setD\inR^p$ such that, $\forall\bm{x}\in\setD$
+	\begin{equation}\label{eq-app:BF}
+		\dot{h}(\bm{x})\geq-\gamma\left(\bfunc(\bm{x})\right)
+	\end{equation}
+\end{definition}
+\section{Control Barrier Function}
+\begin{definition}\label{def:CBF}~\cite{ames2017tac,xu2015ifac}
+	Let us consider control-affine the system
+	\begin{equation}
+		\bm{\dot{x}} = f_{\bm{x}}(\bm{x}) + g_{\bm{x}}(\bm{x})\bm{u}, \ \bm{x}\inR^p, \ \bm{u}\inR^q.
+	\end{equation}
+	Given a set $\setC$ defined by \cref{eq-app:setC,eq-app:int setC,eq-app:border setC}  for a continuously differentiable function $h:\mathbb{R}^p\rightarrow\mathbb{R}$, the function $\bfunc$ is called a CBF defined on a set $\setD$ with $\setC\subseteq\setD\inR^n$, if there exists an extended class $\classK$ function $\gamma$ such that 
+	\begin{equation}\label{eq-app:CBF}
+		\underset{\bm{u}\inR^q}{\sup}\left[L_{f_{\bm{x}}}h(\bm{x}) + L_{g_{\bm{x}}}h(\bm{x})\bm{u} + \gamma\left(\bfunc(\bm{x})\right)\right] \geq0, \ \forall\bm{x}\in\setD.
+	\end{equation}
+\end{definition}
+\section{Input-to-State-Stability}\label{ann:ISS}
+\begin{definition}
+	~\cite{sontag1995scl,sontag2008springer,dashkovskiy2011springer} 
+	%	Let us consider the system 
+	%	\begin{equation}\label{eq:system with input}
+		%		\dot{x} = f_x (x,u)
+		%	\end{equation} 
+	The system~\eqref{eq:system with input} is \emph{Input-to-State Stable} (ISS) if there exist a class ${\cal KL}$  function $\beta$ and a class ${\cal K}$  function $\gamma$ such that for any initial state $\bm{x}(t_0)$ and any bounded input $\bm{u}(t)$, the solution $\bm{x}(t)$ exists $\forall t\geq t_0$ and satisfies
+	\begin{equation}\label{eq:ISS defintion}
+		\norm{\bm{x}(t)}\leq\beta\left(\norm{\bm{x}(t_0)},t\right)+\gamma\left(\norm{\bm{u}}_\infty\right).
+	\end{equation}
+	Note that if $\bm{u}=\zeros$ then the above ISS definition~\eqref{eq:ISS defintion} implies that the system~\eqref{eq:system with input} is globally asymptotically stable.
+\end{definition}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.45\columnwidth]{RGUAS_woSize.pdf}
+	\caption{RGUAS-$\Omega$ illustrative scheme. Two state trajectories are shown: the red one starts (squares) outside the residual set $\Omega$ then it converges to $\Omega$ over time, whereas the yellow one starts inside $\Omega$ and remains within it.} %The initial conditions are denoted with squares. $\varrho$ is the size of $\Omega$.}
+\label{fig:RGUAS}
+\end{figure}
+\section{Robust Global Uniform Asymptotic Stability}
+\begin{definition}\label{def:RGUAS}
+~\cite{freeman1994cdc,freeman1996bookRobustNNlinearControl} Consider the system
+\begin{equation}\label{eq:xi def in general}
+	\bm{\dot{x}} =f_{\bm{x}}(\bm{x},\bm{u},\bm{w},t)
+\end{equation}
+\begin{itemize}
+	\item Fix a control $\bm{u}$, and let be $\Omega\subset \cal X$ a compact set containing the origin. The solutions of the system~\cref{eq:xi def in general} are Robustly Globally Uniformly Asymptotically Stable w.r.t $\Omega$ (RGUAS-$\Omega$) when there exists class ${\cal KL}$ function $\beta$ such that for all admissible measurements, admissible disturbance $w$, and initial conditions $(\bm{x}(t_0),t_0)\in {\cal X}\times\mathbb{R}$, all solutions $\bm{x}(t)$ exist and satisfy
+	\begin{equation}\label{eq:def of RGUAS-omega}
+		\norm{\bm{x}(t)}_\Omega\leq \beta(\norm{\bm{x}(t_0)}_\Omega,t-t_0).
+	\end{equation} 
+	\item System~\cref{eq:xi def in general} is \textbf{robustly stabilizable} when there exist an admissible control and a compact set $\Omega\subset {\cal X}$ satisfying $0\in\Omega$ such that the solutions $\bm{x}(t)$ are RGUAS-$\Omega$.
+	\item System~\cref{eq:xi def in general} is \textbf{robustly practically stabilizable} when $\forall \epsilon>0$ there exist an admissible control and a compact set $\Omega\subset{\cal X}$ satisfying $0\in\Omega\subset\epsilon \cal B$, with $\cal B$ is the unit ball set, such that the solutions  $\bm{x}(t)$ are RGUAS-$\Omega$.
+	\item System~\cref{eq:xi def in general} is \textbf{robustly asymptotically stabilizable} when there exists an admissible control such that the solutions $\bm{x}(t)$ are RGUAS.
+\end{itemize}
+\end{definition}
+Robust asymptotic stability is stronger than (and implies) robust stability in the sense that, for the former, the residual set $\Omega$ is shrinked to the origin.
+An illustrative scheme of RGUA-Stability is shown in~\cref{fig:RGUAS}.
+
+\section{Quaternion Product}\label{sec-app:quaternion product}
+Let us consider a unit quaternion $\quaternion= \begin{bmatrix}
+\varepsilon\\ \boldsymbol{\theta}
+\end{bmatrix}\inR^4$ where $\varepsilon\inR$  and $\boldsymbol{\theta}\inR^3$ are the scalar and vector parts of $\quaternion$ such that $\varepsilon^2+\boldsymbol{\theta}\tp\boldsymbol{\theta}=1$. $\quaternion^{-1}$ is denoted as $\quaternion^{-1} = \begin{bmatrix}
+\varepsilon \\ -\boldsymbol{\theta}
+\end{bmatrix}$. 
+Let us consider two unit quaternions $\quaternion_1,\quaternion_2= \begin{bmatrix}
+\varepsilon_{1,2} \\ \boldsymbol{\theta}_{1,2}
+\end{bmatrix}\inR^4$ where $\varepsilon_{i}\inR$  and $\boldsymbol{\theta}_{i}\inR^3$ are the scalar and vector parts of the unit quaternion $i=\{1,2\}$ such that $\varepsilon_{i}^2+\boldsymbol{\theta}_{i}\tp\boldsymbol{\theta}_{i}=1$. 
+The quaternion product is defined as 
+\begin{equation}\label{eq:vector part quaternion prod}
+\quaternion_1\otimes\quaternion_2 = \begin{bmatrix}
+	\varepsilon_{1}\varepsilon_{2} - \boldsymbol{\theta}_1\tp\boldsymbol{\theta}_{2}\\ \varepsilon_{2}\boldsymbol{\theta}_{1} + \varepsilon_{1}\boldsymbol{\theta}_{2} + \skewMat{\boldsymbol{\theta}_1}\boldsymbol{\theta}_2
+\end{bmatrix}
+\end{equation}
+The vector part of~\cref{eq:vector part quaternion prod} is denoted as 
+\begin{equation}
+\quaternion_1\ominus\quaternion_2 = \varepsilon_{2}\boldsymbol{\theta}_{1} + \varepsilon_{1}\boldsymbol{\theta}_{2} + \skewMat{\boldsymbol{\theta}_1}\boldsymbol{\theta}_2
+\end{equation} 
+It is easy to see that if $\quaternion_2=\quaternion_1^{-1}$ then $\quaternion_1\otimes\quaternion_2=\begin{bmatrix}
+1 \\ \bm{0}
+\end{bmatrix}$~\cite{siciliano2010robotics}.
