@@ -324,6 +324,7 @@
 
 \newcommand{\state}{\bm{x}}
 \newcommand{\stateDot}{\bm{\dot{x}}}
+\newcommand{\stateEq}{\bm{x}_{\rm eq}}
 \newcommand{\out}{\bm{y}}
 \newcommand{\matriceA}{\mathbf{A}}
 \newcommand{\matriceB}{\mathbf{B}}
@@ -485,11 +486,12 @@
 	\refstepcounter{mycounter}%
 	\themycounter\label{#1}}
 % Writing command
-\newtheorem{Def}{Definition}
+
 \def\al{~\textit{et al. }}
 \def\eg{\textit{e.g.}~}
 \def\ie{\textit{i.e.} }
 \def\resp{\textit{resp.} }
+\def\cad{\text{ç.a.d.} }
 
 % Reference command
 \newcommand{\Annref}[1]{Appendix~\ref{#1}}
@@ -531,8 +533,8 @@
 %default radius will be 1pt. 
 cross/.default={1pt}}
 
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
+\theoremstyle{définition}
+\newtheorem{definition}{Définition}[section]
 %\theoremstyle{lemma}
 \newtheorem{lemma}{Lemma}[section]
 

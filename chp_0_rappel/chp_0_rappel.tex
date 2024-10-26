@@ -10,10 +10,68 @@
 	\item $\matriceA\inR^{n\times n}$ est une matrice semi-définie négative si $-\matriceA$ est semi-définie positive
 \end{itemize}
 \section{Systèmes linéaires et nonlinéaires}
-\section{Point d'équilibre et point de fonctionnnement}
+De manière générale, un système nonlinéaire s'écrit comme suit 
+\begin{align}\label{eq-chap1:generic nnlinear sys}
+	\begin{split}
+		\dot{\state} &= f(t,\state,\command), t\geq0\\
+		\out &= h(t,\state)
+	\end{split},
+\end{align}
+tel que $\state\inR^{n}$ est l'état du système, $\command\inR^m$ est la commande, $\out\inR^p$ est la sortie du système, et $f$ représente la dynamique du système. Quand la dépendance par rapport au temps est explicite, ce système est dit \emph{non-autonome}. En contre partie, quand cette dépendance est implicite, et le système s'écrit sous la forme
+\begin{align}\label{eq-chap1:autonomous system}
+	\begin{split}
+		\dot{\state} &= f(\state),\\
+		\out &= h(\state)
+	\end{split},
+\end{align}
+alors, il est dit \emph{autonome}. Ceci veut dire que la dynamique du système (ç.a.d, son évolution dans le temps) dépend complètement de l'état $\state$. Par contre, la forme~\eqref{eq-chap1:autonomous system} ne veut pas dire forcément que la commande $\command$ est nulle. En effet,  la forme~\eqref{eq-chap1:autonomous system} peut être aussi obtenue en mettant $\command = \gamma(\state)$ dans~\eqref{eq-chap1:generic nnlinear sys}.
+
+Pour l'étude des systèmes autonomes, on s'intérésse aux points d'équilibre.
+%Quand le système est linéaire, la forme~\eqref{eq-chap1:autonomous system} devient 
+%\begin{align}\label{eq-chap1:linear system}
+%	\begin{split}
+%		\dot{\state} &= \matriceA\state+\matriceB\command,\\
+%		\out &= \matriceC\state
+%	\end{split},
+%\end{align}
+%où la linéarité est par rapport à l'état et aussi par rapport à la commande.
+
+
+\section{Point d'équilibre}
+Considérons le système autonome~\eqref{eq-chap1:autonomous system} où $f:\setD\rightarrow\mathbb{R}^n$ avec le domaine $\setD\subset\mathbb{R}^n$. $\stateEq\in\setD$ est appelé un point d'équilibre si $\stateDot=f(\stateEq)=0$. L'importance de l'étude des points d'équilibre prend tout son sens: le système ne va pas changer d'état dans le futur si il est au point d'équilibre. Néanmoins, que peut-il se passer lorsque le système est au voisinage de son point d'équilibre ? Dans ce cas on s'intérésse à la stabilité du point d'équilibre. Par soucis de généralisation, les définitions de stabilité sont établies pour un point d'équilibre à l'origine $\stateEq=0$.  Si $\stateEq\neq0$, on peut toujour se ramener l'origine en  posant $\bar{\state} = \state - \stateEq$. En dérivant $\bar{\state}$, on obtient
+\begin{equation}
+	\bm\dot{\bar{\state}} = \stateDot = f(\bar{\state}+\stateEq) =g(\bar{\state}),  
+\end{equation} 
+où $g(0)=0$.
+\subsection{Stabilité du point d'équilibre au sens de Lyapunov}
+On suppose que le système~\eqref{eq-chap1:autonomous system} a un point d'équilibre à l'origine $\stateEq=0$.
+\begin{definition}\label{def:Stability}\cite[Définition~4.1]{khalil2002NonLinearSystems}
+	Le point d'équilibre $\stateEq$ du système~\eqref{eq-chap1:autonomous system} est 
+	\begin{itemize}
+		\item stable (ou Lyapunov stable) si pour chaque $\epsilon>0$ il existe $\delta=\delta(\epsilon)>0$ tel que
+		\begin{equation}\label{eq-chap1:lyapunov stable}
+			\norm{\state(0)}<\delta\Rightarrow\norm{\state(t)}<\epsilon.
+		\end{equation}
+		\item asymptotiquement stable si il est stable, et $\delta$ peut être choisi telque 
+		\begin{equation}\label{eq-chap1:asymptotic stable}
+			\norm{\state(0)}<\delta\Rightarrow\underset{t\rightarrow\infty}{\lim}\norm{\state(t)}=0.
+		\end{equation}
+		\item exponentiellement stable si il est stable, et ils existent $\alpha,\lambda>0$ tel que
+		\begin{equation}\label{eq-chap1:exp stable}
+			\norm{\state(t)}\leq\alpha\norm{\state(0)}e^{-\lambda t}.
+		\end{equation}
+	\end{itemize}
+\end{definition}
+Quand le point d'équilibre est Lyapunov stable celà veut dire simplement que les trajectoires d'état sont bornées et confinées dans une boule dans $\mathbb{R}^n$ de rayon $\epsilon$. C'est la forme la plus legère de stabilité. La stabilité est un peu plus fortifiée quand elle est asymptotique:  les trajectoires d'état convergent vers le point d'équilibre (l'origine) quand $t$ tend vers l'infini. Il est à noter que, malgré cette convergence, la stabilité au sens de lyapunov est nécéssaire pour que garantir que les trajectoires d'état restent bornées. Finalement, la stabilité exponentielle fortifie d'avantage la stabilité asymptotique en imposant un profil de convérgence exponentielle au trajectoire d'état vers le point d'équilibre.
+
+Bien que la \cref{def:Stability} aide à comprendre la notion de stabilité au sens de Lyapunov, elle necéssite la résolution du système nonlinéaire~\eqref{eq-chap1:autonomous system}. Souvent, ceci n'est pas possible. Dans la \cref{sec:stability analysis}, on étudiera des méthodes de Lyapunov pour la caractérisation de la stabilité du point d'équilibre sans la nécessité de résoudre le système nonlinéaire~\eqref{eq-chap1:autonomous system}. 
 \section{Linéarisation}
-\section{Notions de stabilité au sens de Lyapunov}
-\section{Analyse de stablité}
+\begin{itemize}
+	\item linearisation autour du point d'équilibre.
+	\item linearisation autour du point de fonctionnement
+\end{itemize}
+\subsection{Point de fonctionnement}
+\section{Analyse de stablité}\label{sec:stability analysis}
 \subsection{Première méthode de Lyapunov (méthode indirecte)}
 \subsection{Deuxième méthode de Lyapunov (méthode directe)}
 \section{Stabilisation d'un système nonlinéaire avec la méthode indirecte de Lyapunov}
