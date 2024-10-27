@@ -39,16 +39,29 @@ Pour l'étude des systèmes autonomes, on s'intérésse aux points d'équilibre.
 
 \section{Point d'équilibre}
 Considérons le système autonome~\eqref{eq-chap1:autonomous system} où $f:\setD\rightarrow\mathbb{R}^n$ avec le domaine $\setD\subset\mathbb{R}^n$. $\stateEq\in\setD$ est appelé un point d'équilibre si $\stateDot=f(\stateEq)=0$. L'importance de l'étude des points d'équilibre prend tout son sens: le système ne va pas changer d'état dans le futur si il est au point d'équilibre. Pour trouver tous les points d'équilibre, il faut résoudre l'équation algébrique $f(\stateEq)=0$. L'une des caractéristiques des systèmes nonlinéaires est la multiplicité des points d'équilibre. 
-\begin{exemple}[Pendule simple]
+\begin{example}\label{expl:pendule simple} 
+	Soit le système suivant qui représente le modèle d'un pendule simple en présence de frottement
 	\begin{align*}
 		\begin{split}
 			\dot{x}_1 &= x_2\\
 			\dot{x}_2 &=-ax_2 -b\sin(x_1)
-		\end{split}
+		\end{split}.
 	\end{align*}
-	Les points d'équilibre sont 
-\end{exemple}
-Néanmoins, que peut-il se passer lorsque le système est au voisinage de son point d'équilibre ? Dans ce cas on s'intérésse à la stabilité du point d'équilibre. Par soucis de généralisation, les définitions de stabilité sont établies pour un point d'équilibre à l'origine $\stateEq=0$.  Si $\stateEq\neq0$, on peut toujour se ramener l'origine en  posant $\bar{\state} = \state - \stateEq$. En dérivant $\bar{\state}$, on obtient
+	Les points d'équilibre sont situés aux points $\stateEq=\begin{bmatrix}
+	n\pi\\0
+	\end{bmatrix}$, $n\in\mathbb{Z}$. Physiquement, ils représentent les deux positions verticales du pendule où le couple due à la force de gravité est nulle. Si le pendule est initialement à ces deux positions, il va y rester dans le futur.
+\end{example}
+\begin{example}
+Soit le système suivant 
+\begin{align*}
+	\begin{split}
+		\dot{x}_1 &=x_1(x_1^2+x_2^2-1) \\ 
+		\dot{x}_2 &=-x_2(-x_1^2-x_2^2+1)
+	\end{split}.
+\end{align*}
+Les points d'équilibre sont l'origine $(0,0)$ et tout le cercle centré de rayon 1. Cet exemple montre que les points d'équilibre ne sont pas forcément des points isolés, mais peuvent être aussi des surfaces.
+\end{example}
+Revenons à l'Exemple~\ref{expl:pendule simple}. Bienque, exactement aux deux points d'équilibre, le pendule maintient son état en restant fixe, sont comportement est complètement lorsqu'il est au voisinage de ces deux points. En effet, si le pendule est au voisinage de l'origine, il va y converger. Par contre, il ne pourra jamais revenir au point d'équilibre qui représente la position inversée. Ceci montre qu'un système nonlinéaire peut avoir un comportement différent suivant le point d'équilibre. Ceci nous motive à s'intérésser à la stabilité du point d'équilibre. Néanmoins, que peut-il se passer lorsque le système est au voisinage de son point d'équilibre ? Dans ce cas on s'intérésse à la stabilité du point d'équilibre. Par soucis de généralisation, les définitions de stabilité sont établies pour un point d'équilibre à l'origine $\stateEq=0$.  Si $\stateEq\neq0$, on peut toujour se ramener l'origine en  posant $\bar{\state} = \state - \stateEq$. En dérivant $\bar{\state}$, on obtient
 \begin{equation}
 	\bm\dot{\bar{\state}} = \stateDot = f(\bar{\state}+\stateEq) =g(\bar{\state}),  
 \end{equation} 
