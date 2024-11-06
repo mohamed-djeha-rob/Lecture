@@ -92,7 +92,7 @@ Dans ce cas, l'interval d'integration de la fonction-coût dans~\eqref{eq-chap2:
 \end{align}
 Dans la fonction-coût de~\eqref{eq-chap2:FH-LQR optimal problem}, le terme ${\cal J}_{\left[0,t_f	\right]}=\fracOneTwo\int_0^{t_f}\state^T\matriceQ\state + \command^T\matriceR\command$ englobe le coût total sur la trajectoire et la commande, tandis que le terme ${\cal L}_f=\fracOneTwo\state(t_f)^T\matriceQ_f\state(t_f)$ représente le coût sur l'état final tel que $\matriceQ_f$ est une matrice symmétrique semi-définie positive. Le second terme peut être homis si il n'y pas de contrainte particulière qui nécéssite la pénalisation du dernier terme de l'horizon $\state(t_f)$ (ce qui explique pourquoi la matrice $\matriceQ_f$ n'est que \textbf{semi-}définie positive).
 
-\subsubsection{Solution du problème LQR à horizon fini}
+\subsubsection{Solution du problème LQR à horizon fini}\label{subsubsec-chap2:solution FT-LQR}
 Le problème LQR à horizon-fini~\eqref{eq-chap2:FH-LQR optimal problem} est un problème d'optimisation sous contrainte d'égalité. Pour la résolution, on utilise les multiplicateurs de Lagrange.  
 
 Soit la fonction-coût augmentée : 
@@ -169,7 +169,7 @@ où $\matriceK(t)$ doit être calculée à chaque intération correspondamment �
 
 La solution à rebours  de l'équation différentielle de Riccati~\eqref{eq-chap2:Riccati equation lqr} stable ($\matriceP(t)$ converge vers une matrice constante symmétrique définie positive. Cette matrice correspond à la solution de~\eqref{eq-chap2:Riccati equation lqr} quand $\boldmath{\dot{\matriceP}}=0$. Ceci est exactement la solution du problème LQR à horizon infini et sera abordée dans la \cref{subsec-chap2:LQR infini}) si le système~\eqref{eq-chap2:syslin_commande} est commandable.
 
-En examinant la forme de la commande optimale $\command$ dans~\eqref{eq-chap2:forme commande optimale}, on remarque que 
+En examinant la forme de la commande optimale $\command$ dans~\eqref{eq-chap2:forme commande optimale}, on remarque que \textbf{[Citation Expected: Rus Tedrake's lecture]}
 \begin{itemize}
 	\item $-\matriceP(t)$ projette $\state$ dans la direction qui minimise la fonction-coût~\eqref{eq-chap2:augmented cost-func}
 	\item $-\matriceB^T\matriceP(t)$ projette cette direction dans l'espace de commande
@@ -252,7 +252,10 @@ Par conséquent,~\eqref{eq-chap2:inf LQR cost-func dev} devient
 		\end{split}
 	\end{align}
 	Étant donné que $\matriceQ + \matriceK^T\matriceR\matriceK$ est une matrice définie positive~\cite[Théorème~4.2.1, pp. 160]{golub2013matrixComputations}, l'équation de Lyapunov~\eqref{eq-chap2:LyapEq} est vérifiée. Par conséquent, le système $\stateDot=\left(\matriceA-\matriceB\matriceK\right)\state$ st asymptotiquement stable (voir \cref{subsec-chap2:CNS stabilité syslin}). 
-	\item La condition de $(\matriceA,\matriceB)$ commandable est nécéssaire pour assurer l'existence d'une commande $\command$ qui stabilise le système~\eqref{eq-chap2:syslin_commande}, tandis que la condition $(\matriceA,\matriceM)$ observable est mise pour s'assurer que tous les modes de trajectoires d'état $\state$ sont refletés dans la fonction-coût ${\cal J}$~\eqref{eq-chap2:inf LQR cost-func}~\cite{brunton2019book}. En effet, considérons le système $\stateDot = \state +\command$, avec ${\cal J} = \fracOneTwo\int_{0}^{\infty}\command^2d\tau$ ($\matriceA=1, \ \matriceB=1, \ \matriceQ=0, \ \matriceR=1$). La paire $\left(\matriceA, \matriceB\right)$ est commandable, mais la paire $\left(\matriceA,\matriceM\right)$ est non-observable. La commande $\command=0$ minimise la fonction-coût ${\cal J}$ et elle est finie. Donc, $\command$ est une commande optimale. Cependant, elle ne stabilise pas le système en boucle fermée (le système $\stateDot=\state$ est instable car il a un pôle instable). 
+	\item La condition de $(\matriceA,\matriceB)$ commandable est nécéssaire pour assurer l'existence d'une commande $\command$ qui stabilise le système~\eqref{eq-chap2:syslin_commande}, tandis que la condition $(\matriceA,\matriceM)$ observable est mise pour s'assurer que tous les modes de trajectoires d'état $\state$ sont refletés dans la fonction-coût ${\cal J}$~\eqref{eq-chap2:inf LQR cost-func}~\cite{brunton2019book}. Ce cas est illustré dans l'exemple qui suit.
+	\begin{example}
+		Considérons le système $\stateDot = \state +\command$, avec ${\cal J} = \fracOneTwo\int_{0}^{\infty}\command^2d\tau$ ($\matriceA=1, \ \matriceB=1, \ \matriceQ=0, \ \matriceR=1$). La paire $\left(\matriceA, \matriceB\right)$ est commandable, mais la paire $\left(\matriceA,\matriceM\right)$ est non-observable. La commande $\command=0$ minimise la fonction-coût ${\cal J}$ et elle est finie. Donc, $\command$ est une commande optimale. Cependant, elle ne stabilise pas le système en boucle fermée (le système $\stateDot=\state$ est instable car il a un pôle instable). 
+	\end{example}
 	\item Les conditions de commandabilité et d'observabilité peuvent être relaxées par la stabilisabilité et la détectabilité~\cite{gopal2010book}. 
 	\item La règle de Bryson permet de selectionner les matrices $\matriceQ$ et $\matriceR$ étant donné les valeurs max de $x_i$ et $u_i$ tel que 
 	\begin{align}
@@ -271,7 +274,7 @@ Par conséquent,~\eqref{eq-chap2:inf LQR cost-func dev} devient
 	\end{align}
 \end{itemize}
 
-\section{Régulation de la sortie par la commande LQR}
+\subsection{Régulation de la sortie par la commande LQR}
 On considère le système~\eqref{eq-chap2:syslin_commande}. Parfois, on est amené à minimiser la norme pondérée de la sortie $\out$ au lieu de celle de l'état $\state$ dans la fonction-coût. Dans ce cas, cette dernière s'écrit comme 
 \begin{equation}\label{eq-chap2:cost-func output}
 		{\cal J} = \fracOneTwo\int_{0}^{t}\left(\out^T\matriceQ\out + \command^T\matriceR\command\right) d\tau
@@ -284,7 +287,7 @@ En utilisant~\eqref{eq-chap2:syslin_commande},~\eqref{eq-chap2:cost-func output}
 	\end{split}	
 \end{align}
 Après cette étape, le problème de régulation de la sortie suit les mêmes étapes  des techniques LQR (à horizons fini ou infini, et avec les mêmes conditions nécéssaires et suffisantes d'existance discutées auparavant).  
-\section{Cas d'un système nonlinéaire}
+\subsection{Cas d'un système nonlinéaire}
 Bienque la commande LQR est établie pour les systèmes linéaires, elle peut être aussi appliquée pour le systèmes nonlinéaires
 \begin{align}\label{eq-chap2:sysnnlin}
 	\begin{split}
@@ -305,15 +308,137 @@ Bienque la commande LQR est établie pour les systèmes linéaires, elle peut ê
 	\Delta\out =\matriceC\state
 \end{matrix},	
 \end{align}
-avec $\matriceA=\frac{\partial f(\state,\command)}{\partial\state}{|_{\state=\state_{\rm f},\command=\command_{\rm f}}}$,  $\matriceB=\frac{\partial f(\state,\command)}{\partial\command}{|_{\state=\state_{\rm f},\command=\command_{\rm f}}}$,  $\matriceC=\frac{\partial \out(\state)}{\partial\state}{|_{\state=\state_{\rm f}}}$. Après celà, la commande $\Delta\command$ est synthétisée avec la commande LQR (à horizons fini ou infini, et avec les mêmes conditions nécéssaires et suffisantes d'existance discutées auparavant) avec les paramètres du système linéarisé, puis la commande $\command=\command_{\rm f}+\Delta\command$ est appliquée au système nonlinéaire~\eqref{eq-chap2:sysnnlin}. Dans le cas où le point de fonctionnement est variable danbs le temps (c.à.d une trajectoire), la linéarisation~\eqref{eq-chap2:linearization} est effectuée à chaque itération, et les matrices $\matriceA$, $\matriceB$ et $\matriceC$ deviennent variable en fonction du temps.
-\section{Commande LQR par modèle de référence}
-Parfois, il est difficile de trouver les matrice de poids $\matriceQ$ et $\matriceR$ adéquates pour une dynamique désirée du système en boucle fermée. En d'autre terme, comment choisir $\matriceQ$ et $\matriceR$ qui résulte en une matrice $\matriceK$ tel que le système en boucle fermée (c.à.d la matrice $\matriceA-\matriceB\matriceK$) aie des pôles désirée. Pour résoudre ce problème,  
-\section{Limitations de la commande LQR}
+avec $\matriceA=\frac{\partial f(\state,\command)}{\partial\state}{|_{\state=\state_{\rm f},\command=\command_{\rm f}}}$,  $\matriceB=\frac{\partial f(\state,\command)}{\partial\command}{|_{\state=\state_{\rm f},\command=\command_{\rm f}}}$,  $\matriceC=\frac{\partial \out(\state)}{\partial\state}{|_{\state=\state_{\rm f}}}$. Après celà, la commande $\Delta\command$ est synthétisée avec la commande LQR (à horizons fini ou infini, et avec les mêmes conditions nécéssaires et suffisantes d'existance discutées auparavant) avec les paramètres du système linéarisé, puis la commande $\command=\command_{\rm f}+\Delta\command$ est appliquée au système nonlinéaire~\eqref{eq-chap2:sysnnlin}. Dans le cas où le point de fonctionnement est variable dans le temps (c.à.d une trajectoire), la linéarisation~\eqref{eq-chap2:linearization} est effectuée à chaque itération, et les matrices $\matriceA$, $\matriceB$ et $\matriceC$ deviennent variable en fonction du temps.
+\subsection{Commande LQR pour la poursuite d'un modèle de référence}
+Parfois, il est difficile de trouver les matrice de poids $\matriceQ$ et $\matriceR$ adéquates pour une dynamique désirée du système en boucle fermée. En d'autre terme, comment choisir $\matriceQ$ et $\matriceR$ qui résulte en une matrice $\matriceK$ tel que le système en boucle fermée (c.à.d la matrice $\matriceA-\matriceB\matriceK$) aie des pôles désirée. Pour résoudre ce problème,  on formule un problème LQR pour que le système à commander poursuive un modèle de référence
+\begin{equation}\label{eq-chap2:reference model}
+	\stateDot_m = \matriceA_m\state_m,
+\end{equation} tel que la matrice $\matriceA_m$ représente la dynamique du modèle de référence ayant des pôles stables et résultant en une réponse désirée. Soit $\error=\state-\state_m$, et donc
+\begin{align}\label{eq-chap2:error dynamics}
+	\begin{split}
+		\errorDot &= \stateDot-\stateDot_m = \matriceA\state+\matriceB\command-\matriceA_m\state_m \\
+		&=\matriceA\error+\matriceB\command+\left(\matriceA-\matriceA_m\right)\state_m
+	\end{split}
+\end{align}
+En définissant $\underline{\state} = \begin{bmatrix}\error \\ \state_m\end{bmatrix}$, et à partir de~\eqref{eq-chap2:reference model} et~\eqref{eq-chap2:error dynamics}, on obtient le système augmenté
+\begin{equation}\label{eq-chap2:error-state dynamics}
+	\dot{\underline{\state}}=\begin{bmatrix}
+	\matriceA & \matriceA-\matriceA_m \\ \zeros & \matriceA_m 
+	\end{bmatrix}\underline{\state} + \begin{bmatrix}
+	\matriceB \\ \zeros  
+	\end{bmatrix}\command = \underline{\matriceA}\ \underline{\state}+\underline{\matriceB}\command.
+\end{equation}
+Finalement, la commande $\command$ qui stabilise le  système~\eqref{eq-chap2:syslin_commande} tout en poursuivant le modèle de référence~\eqref{eq-chap2:reference model} peut être obtenue en formulant une commande LQR $\command$ qui stablise le système augmenté~\eqref{eq-chap2:error-state dynamics} ($\underline{\state}\rightarrow0\Rightarrow\error\rightarrow0$). 
+\subsection{Limitations de la commande LQR}
 \begin{itemize}
 	\item Le système doit être linéaire. Une linéarisation est toujours possible dans le cas d'un système nonlinéaire, mais ce dernier est seulement \emph{localement stable} en boucle  fermée.
 	\item Malgré la méthode de Bryson, les  contraintes explicites sur l'état et la commande ne peuvent pas être considérées. 
-	\item La commande LQR est une commande par retour d'état. De ce fait, l'état $\state$ est supposé mesurable. Cependant, une mesure complète de l'état $\state$ est souvent cher, voire technologiquement impossible.
+	\item La commande LQR est une commande par retour d'état. De ce fait, l'état $\state$ est supposé mesurable. Cependant, une mesure complète de l'état $\state$ est souvent cher, voire technologiquement impossible surtout pour les systèmes d'ordre superieur. Dans ce cas, l'implémentation d'un observateur s'impose pour construire une éstimation  de  l'état $\state$. Ceci est discuté dans la \cref{sec-chap2:optimal estimation}.
 \end{itemize}
+\section{Estimation optimale de l'état}\label{sec-chap2:optimal estimation}
+%La commande linéaire Gaussienne (anglais : Linear Quadratic Gaussian (LQG)) 
+L'estimation optimale de l'état consiste en l'implémentation d'un observateur optimal pour avoir une éstimation complète de l'état en ayant des mesures $\out$ bruités. Cette éstimation est toujours possible si la paire $(\matriceA,\matriceC)$ du système~\eqref{eq-chap2:syslin_commande} est observable. 
+%\subsection{Cas déterministe : observateur de Luenberger} 
+
+Dans le cas déterministe (absence de bruit), l'observateur de Luenberger~\eqref{eq-chap2:luenberger observer} peut être utilisé
+\begin{align}\label{eq-chap2:luenberger observer}
+	\begin{split}
+		\estStateDot &= \matriceA\estState+\matriceB\command-\matriceL(\estOut-\out)\\
+		 &=\matriceA\estState+\matriceB\command-\matriceL\matriceC(\estState-\state)
+	\end{split}
+\end{align}
+où $\matriceL\inR^{n\times p}$ est la matrice des gains d'observation.
+En définissant l'erreur d'éstimation $\estError=\estState-\state$, on montrer que l'on peut choisir  $\matriceL$ tel que $\estError$ converge exponentiellement vers l'origine 
+\begin{align}
+	\begin{split}
+		\estErrorDot &=  \matriceA\estState+\matriceB\command-\matriceL\matriceC\left(\estState-\state\right) - \left(\matriceA\state+\matriceB\command\right)\\
+		&=\left(\matriceA-\matriceL\matriceC\right)\estError
+	\end{split}
+\end{align}
+où $\matriceA-\matriceL\matriceC$ doit être Hurwitz.
+
+Cependant en pratique, des bruits de mesure $\measureNoise$ peuvent infecter la sortie. De plus, il y a des bruits  sur l'état, $\modelNoise$,  et  qui repésentent les erreurs de modélisation. Considérons le système suivant
+\begin{align}\label{eq-chap2:syslin_commande_noise}
+	\begin{split}
+		\stateDot &= \matriceA\state+\matriceB\command+\modelNoise, \ \modelNoise\inR^n\\
+		\out &= \matriceC\state + \measureNoise, \ \measureNoise\inR^{p}
+	\end{split}.
+\end{align}
+où $\modelNoise$ et $\measureNoise$ sont des variables aléatoires qui suivent la distribution d'un bruit blanc Gaussien décorrélé tel que $\modelNoise\sim{\cal N}(0,\sigma_w)$, $\measureNoise\sim{\cal N}(0,\sigma_n)$, $E[\modelNoise(t)\modelNoise^T(\tau)]=\matriceQ\delta(t-\tau)$, $E[\measureNoise(t)\measureNoise^T(\tau)]=\matriceR\delta(t-\tau)$ où $\delta(.)$ est la fonction de Dirac,  $\matriceQ$ et $\matriceR$ sont les matrices de corrélation tel que $\matriceQ$ est une matrice symétrique semi-définie positive, et $\matriceR$ est une matrice symétrique définie positive. De plus, $E[\modelNoise(t)\measureNoise^T(\tau)]=\zeros$.
+
+Dans ce cas, la dynamique de l'erreur d'estimation devient
+\begin{align}\label{eq-chap2:estimation error dynamics random case}
+	\begin{split}
+		\estErrorDot &=  \matriceA\estState+\matriceB\command-\matriceL\left(\matriceC\estState-\matriceC\state-\measureNoise\right) - \left(\matriceA\state+\matriceB\command+\modelNoise\right)\\
+		&=\left(\matriceA-\matriceL\matriceC\right)\estError + \matriceL\measureNoise-\modelNoise
+	\end{split}
+\end{align}
+De~\eqref{eq-chap2:estimation error dynamics random case}, il est clair que le gain d'observation $\matriceL$ affecte la qualité d'estimation : de faibles gains diminuent l'effet du bruit de mesure mais mène à une convergence  plus lente de l'observateur; par contre avec forts gains, le bruit de mesure est amplifié et la qualité de l'estimation est mauvaise. 
+Par conséquent, le choix des gains d'observation $\matriceL$ doit se faire de manière \emph{optimale} afin d'assurer un compromis entre le bruit de mesure et le bruit de modélisation. Un tel observateur est appelé  un \emph{filtre de Kalman}. 
+
+La formulation du filtre de Kalman est basée sur les objectifs suivants 
+ \begin{itemize}
+ 	\item avoir une estimation non-biaisée $E[\estErrorDot(t)]\equiv E[\estError(t)] \equiv E[\estError(t_0)]\equiv0$. Par ailleurs,  $E[\estError(t_0)]=E[\estState(t_0) - \state(t_0)]=0 \Rightarrow\estState(t_0)=E[\state(t_0)]$.
+ 	\item trouver $\matriceL$ tel que la variance de l'erreur d'estimation est minimale.
+ \end{itemize}
+\subsection{Calcul du gain d'observation optimal}
+Posons $\matriceP(t)=E[\estError(t)\estError(t)^T]$ la matrice de covariance de l'erreur d'estimation. Alors,
+\begin{align}\label{eq-chap2:covariance matrix derivative}
+	\begin{split}
+		\dot{\matriceP}(t)=\frac{d}{dt}\matriceP(t)&=E[\frac{d}{dt}\left(\estError(t)\estError(t)^T\right)] \\	
+		&=E[\estErrorDot(t)\estError(t)^T] + E[\estError(t)\estErrorDot(t)^T], \ \res(t) =\matriceL\measureNoise(t)-\modelNoise 	(t) \\
+		\eqref{eq-chap2:estimation error dynamics random case} \Rightarrow 	\dot{\matriceP} &= E[\left(\left(\matriceA-\matriceL\matriceC\right)\estError(t) + \res(t)\right)\estError^T(t)]+E[\estError(t)\left(\left(\matriceA-\matriceL\matriceC\right)\estError(t) + \res(t)\right)^T]\\
+		&=\left(\matriceA-\matriceL\matriceC\right)\matriceP(t) + \matriceP(t)\left(\matriceA-\matriceL\matriceC\right)^T+ E[\res(t)\estError^T(t)] + E[\estError(t)\res^T(t)]
+	\end{split}	
+\end{align}
+De~\eqref{eq-chap2:estimation error dynamics random case}, la solution $\estError(t)$ peut s'écrire sous la forme 
+\begin{align}
+	\begin{split}
+		\estError(t) &= \phi(t,t_0)\estError(t_0)+\int_{t_0}^{t}\phi(t,\tau)\res(\tau)d\tau \\
+		\Rightarrow \estError(t)\res^T(t) &= \phi(t,t_0)\estError(t_0)\res^T(t)+\int_{t_0}^{t}\phi(t,\tau)\res(\tau)\res^T(t)d\tau\\
+		\Rightarrow E[\estError(t)\res^T(t)] &=\phi(t,t_0)E[\estError(t_0)\res^T(t)] + \int_{t_0}^{t}\phi(t,\tau)E[\res(\tau)\res^T(t)]d\tau
+	\end{split}
+\end{align}
+$\estError(t_0)$ et $\res(t)$ sont supposés décorrélés, donc $E[\estError(t_0)\res^T(t)]=0$. De plus, on a
+\begin{equation}
+	E[\res(\tau)\res^T(t)] = E[\left(\matriceL\measureNoise(\tau)-\modelNoise 	(\tau)\right)\left(\matriceL\measureNoise(t)-\modelNoise 	(t)\right)^T] = \left(\matriceQ+\matriceL\matriceR\matriceL^T\right)\delta(t-\tau)
+\end{equation}
+Par conséquent,
+\begin{align}\label{eq-chap2:estError res covar}
+	\begin{split}
+	 E[\estError(t)\res^T(t)] &= \int_{t_0}^{t}\phi(t,\tau)\left(\matriceQ+\matriceL\matriceR\matriceL^T\right)\delta(t-\tau)d\tau \\ 
+	 &=\fracOneTwo\phi(t,t)\left(\matriceQ+\matriceL\matriceR\matriceL^T\right)\\
+	 &=\fracOneTwo\left(\matriceQ+\matriceL\matriceR\matriceL^T\right) = E[\res(t)\estError^T(t)]
+	\end{split}
+\end{align}
+De~\eqref{eq-chap2:estError res covar},~\eqref{eq-chap2:covariance matrix derivative} devient
+\begin{equation}\label{eq-chap2:diff riccati eq for observation}
+	\dot{\matriceP}(t) = \left(\matriceA-\matriceL\matriceC\right)\matriceP(t) + \matriceP(t)\left(\matriceA-\matriceL\matriceC\right)^T+\matriceQ+\matriceL\matriceR\matriceL^T
+\end{equation}
+ Trouver $\matriceL$ qui minimise la covariance de l'erreur d'estimation revient à résoudre 
+\begin{equation}
+	\underset{\matriceL}{\min}~\trace(\matriceP(t)) = \underset{\matriceL}{\min}~\int_{t_0}^{t}\trace\left(\dot{\matriceP}(t)\right)
+\end{equation}
+Similaire au calcul variationnel effectué dans la \cref{subsubsec-chap2:solution FT-LQR}, la condition nécéssaire est 
+\begin{align}\label{eq-chap2:kalman filter gain}
+	\begin{split}
+		\frac{\partial \trace\left(\dot{\matriceP}(t)\right)}{\partial \matriceL}&=0\\
+		\Leftrightarrow -\matriceP(t)\matriceC^T+ \matriceL\matriceR&=0 \\ 
+		\matriceL &= \matriceP(t)\matriceC^T\matriceR^{-1}
+	\end{split}
+\end{align}
+La matrice de gain optimal d'observation  $\matriceL$ dans~\eqref{eq-chap2:kalman filter gain} est appelé le \emph{gain de Kalman} (en temps continu) et cet observateur est appelé le \emph{filtre de Kalman}. De plus,~\eqref{eq-chap2:diff riccati eq for observation} devient 
+\begin{equation}
+	\dot{\matriceP}(t) = \matriceA\matriceP(t) + \matriceP(t)\matriceA^T+\matriceQ-\matriceP(t)\matriceC^T\matriceR^{-1}\matriceC\matriceP(t),
+\end{equation}
+qui est une équation différentielle de Riccati similaire à~\eqref{eq-chap2:Riccati equation lqr}. La solution de~\eqref{eq-chap2:diff riccati eq for observation} atteint son régime permanent ($\dot{\matriceP}(t)=0$, et~\eqref{eq-chap2:diff riccati eq for observation} devient l'équation algébrique de Riccati similairement à~\eqref{eq-chap2:algebraic Riccati equation}) quand $t_0\rightarrow-\infty$. Ceci veut dire que l'on a suffisemment de données passées de la sortie $\out(t)$. Sinon,~\eqref{eq-chap2:diff riccati eq for observation} est résolue avec la condition initiale $\matriceP(t_0)=E[\estError(t_0)\estError(t_0)^T]$.
+\section{Commande linéaire quadratique Gaussienne}
+La commande linéaire quadratique Gaussienne (anglais : Linear Quadratic Gaussian (LQG)) consiste à reguler le système~\eqref{eq-chap2:syslin_commande_noise} par une commande LQR avec l'état estimé  
+\begin{equation}
+	\command=-K\estState
+\end{equation}
+où $\estState$ est estimé avec un filtre de Kalman.
+\subsection{Principe de séparation}
 \section{Exercices}
 \begin{enumerate}
 	\item Soit le système suivant 
@@ -359,10 +484,8 @@ Parfois, il est difficile de trouver les matrice de poids $\matriceQ$ et $\matri
 	\end{align} avec un point de fonctionnement défini par $\state_{\rm f}^T = \left[{\pi}/{3} \quad 0\right]$  et $u_{\rm f} = \alpha\sin(\pi/3)=\alpha\sqrt{3}/2$.
 	\begin{itemize}
 		\item Linéariser le système~\eqref{eq-chap2:sys_exo3} autour du point de fonctionnement en calculant les expressions des matrices $\matriceA$ et $\matriceB$.
-		\item Résoudre symboliquement l'équation de Riccati.
-		\item En posant $\alpha=1$, $\beta=0$, $\matriceQ = \begin{bmatrix}
-			1 &0\\0&1
-		\end{bmatrix}$ et $\matriceR=1$, résoudre numériquement l'équation de Riccati, et calculer la commande LQR à horizon infini qui stabilise le système linéaire obtenu.
+		\item En posant $\matriceQ=\diag\left(\left[q_1 \quad q_2\right]\right)$ et $\matriceR=r$, résoudre symboliquement l'équation de Riccati.
+		\item En posant $\alpha=1$, $\beta=0$, $q_1=q_2=1$ et $r=1$, résoudre numériquement l'équation de Riccati, et calculer la commande LQR à horizon infini qui stabilise le système linéaire obtenu.
 		\item Calculer la commande totale $u$ qui stabilise le système nonlinéaire~\eqref{eq-chap2:sys_exo3}.
 		\item En posant $q_1=1$, et $q_2=0$, montrer que ce cas correspond au problème de régulation de la sortie $y=x_1$.
 		\item Vérifier que les conditions suffisantes pour l'existance de la commande LQR sont remplies.

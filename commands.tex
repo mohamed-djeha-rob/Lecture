@@ -326,6 +326,9 @@
 \newcommand{\stateDot}{\bm{\dot{x}}}
 \newcommand{\stateEq}{\bm{x}_{\rm eq}}
 \newcommand{\out}{\bm{y}}
+\newcommand{\estState}{\bm{\hat{x}}}
+\newcommand{\estStateDot}{\bm{\dot{\hat{x}}}}
+\newcommand{\estOut}{\bm{\hat{y}}}
 \newcommand{\matriceA}{\mathbf{A}}
 \newcommand{\matriceB}{\mathbf{B}}
 \newcommand{\matriceC}{\mathbf{C}}
@@ -334,8 +337,17 @@
 \newcommand{\matriceK}{\mathbf{K}}
 \newcommand{\matriceR}{\mathbf{R}}
 \newcommand{\matriceM}{\mathbf{M}}
+\newcommand{\matriceL}{\mathbf{L}}
 %t
 \newcommand{\command}{\bm{u}}
+\newcommand{\error}{\bm{e}}
+\newcommand{\estError}{\bm{\hat{e}}}
+\newcommand{\errorDot}{\bm{\dot{e}}}
+\newcommand{\estErrorDot}{\bm{\dot{\hat{e}}}}
+\newcommand{\modelNoise}{\bm{w}}
+\newcommand{\measureNoise}{\bm{n}}
+\newcommand{\res}{\bm{r}}
+\newcommand{\trace}{\rm{trace}}
 \newcommand{\stackCommand}{\bm{\underline{u}}}
 \newcommand{\Ad}{\mathbf{A}_d}
 \newcommand{\Bd}{\mathbf{B}_d}
@@ -533,9 +545,10 @@
 %default radius will be 1pt. 
 cross/.default={1pt}}
 
-\theoremstyle{theorem} 
-%\theoremstyle{définition}
+\theoremstyle{theorem}
 \newtheorem{definition}{Définition}[section]
+\theoremstyle{definition}
+
 \newtheorem{example}{Exemple}[section]
 %\theoremstyle{lemma}
 \newtheorem{lemme}{Lemme}[section]

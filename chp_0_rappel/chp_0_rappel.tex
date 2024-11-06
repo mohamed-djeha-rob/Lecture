@@ -51,6 +51,7 @@ Considérons le système autonome~\eqref{eq-chap1:autonomous system} où $f:\set
 	n\pi\\0
 	\end{bmatrix}$, $n\in\mathbb{Z}$. Physiquement, ils représentent les deux positions verticales du pendule où le couple due à la force de gravité est nulle. Si le pendule est initialement à ces deux positions, il va y rester dans le futur.
 \end{example}
+Il est à noter que les points d'équilibre ne sont pas forcément des points isolés, mais peuvent être aussi des surfaces.
 \begin{example}
 Soit le système suivant 
 \begin{align*}
@@ -59,7 +60,7 @@ Soit le système suivant
 		\dot{x}_2 &=-x_2(-x_1^2-x_2^2+1)
 	\end{split}.
 \end{align*}
-Les points d'équilibre sont l'origine $(0,0)$ et tout le cercle centré de rayon 1. Cet exemple montre que les points d'équilibre ne sont pas forcément des points isolés, mais peuvent être aussi des surfaces.
+Les points d'équilibre sont l'origine $(0,0)$ et tout le cercle centré de rayon 1. 
 \end{example}
 Revenons à l'Exemple~\ref{expl:pendule simple}. Bienque, exactement aux deux points d'équilibre, le pendule maintient son état en restant fixe, sont comportement est complètement lorsqu'il est au voisinage de ces deux points. En effet, si le pendule est au voisinage de l'origine, il va y converger. Par contre, il ne pourra jamais revenir au point d'équilibre qui représente la position inversée. Ceci montre qu'un système nonlinéaire peut avoir un comportement différent suivant le point d'équilibre. Ceci nous motive à s'intérésser à la stabilité du point d'équilibre. Néanmoins, que peut-il se passer lorsque le système est au voisinage de son point d'équilibre ? Dans ce cas on s'intérésse à la stabilité du point d'équilibre. Par soucis de généralisation, les définitions de stabilité sont établies pour un point d'équilibre à l'origine $\stateEq=0$.  Si $\stateEq\neq0$, on peut toujour se ramener l'origine en  posant $\bar{\state} = \state - \stateEq$. En dérivant $\bar{\state}$, on obtient
 \begin{equation}
