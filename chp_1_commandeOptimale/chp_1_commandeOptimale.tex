@@ -355,7 +355,13 @@ En définissant l'erreur d'éstimation $\estError=\estState-\state$, on montrer 
 		&=\left(\matriceA-\matriceL\matriceC\right)\estError
 	\end{split}
 \end{align}
-où $\matriceA-\matriceL\matriceC$ doit être Hurwitz.
+où $\matriceA-\matriceL\matriceC$ doit être Hurwitz. Pour analyser la stabilité du système global (système à commander + observateur) en boucle fermée (c.à.d., $\command=-\matriceK\estState$), on définit l'état augmenté $\underline{\state} = \begin{bmatrix}\state\\\estError\end{bmatrix}$. La dynamique de l'état augmenté est donnée par 
+\begin{equation}
+	\underline{\stateDot} = \begin{bmatrix}
+		\matriceA-\matriceB\matriceK & -\matriceB\matriceK \\ \zeros & \matriceA-\matriceL\matriceC
+	\end{bmatrix}\underline{\state} = \underline{\matriceA}\ \underline{\state}.
+\end{equation}
+Les valeurs propres de  la matrice $\underline{\matriceA}$ dépendent des valeurs propres de  $\matriceA-\matriceB\matriceK$ et $\matriceA-\matriceL\matriceC$, ce qui signifie que le choix des gains $\matriceK$ et $\matriceL$ peut se faire de manière complètement indépendante, c'est le \emph{principe de séparation}.
 
 Cependant en pratique, des bruits de mesure $\measureNoise$ peuvent infecter la sortie. De plus, il y a des bruits  sur l'état, $\modelNoise$,  et  qui repésentent les erreurs de modélisation. Considérons le système suivant
 \begin{align}\label{eq-chap2:syslin_commande_noise}
@@ -364,7 +370,7 @@ Cependant en pratique, des bruits de mesure $\measureNoise$ peuvent infecter la 
 		\out &= \matriceC\state + \measureNoise, \ \measureNoise\inR^{p}
 	\end{split}.
 \end{align}
-où $\modelNoise$ et $\measureNoise$ sont des variables aléatoires qui suivent la distribution d'un bruit blanc Gaussien décorrélé tel que $\modelNoise\sim{\cal N}(0,\sigma_w)$, $\measureNoise\sim{\cal N}(0,\sigma_n)$, $E[\modelNoise(t)\modelNoise^T(\tau)]=\matriceQ\delta(t-\tau)$, $E[\measureNoise(t)\measureNoise^T(\tau)]=\matriceR\delta(t-\tau)$ où $\delta(.)$ est la fonction de Dirac,  $\matriceQ$ et $\matriceR$ sont les matrices de corrélation tel que $\matriceQ$ est une matrice symétrique semi-définie positive, et $\matriceR$ est une matrice symétrique définie positive. De plus, $E[\modelNoise(t)\measureNoise^T(\tau)]=\zeros$.
+où $\modelNoise$ et $\measureNoise$ sont des variables aléatoires qui suivent la distribution d'un bruit blanc Gaussien décorrélé tel que $\modelNoise\sim{\cal N}(0,\sigma_w)$, $\measureNoise\sim{\cal N}(0,\sigma_n)$, $E[\modelNoise(t)\modelNoise^T(\tau)]=\matriceVw\delta(t-\tau)$, $E[\measureNoise(t)\measureNoise^T(\tau)]=\matriceVn\delta(t-\tau)$ où $\delta(.)$ est la fonction de Dirac,  $\matriceVw\inR^{n\times n}$ et $\matriceVn\inR^{p\times p}$ sont les matrices de corrélation tel que $\matriceVw$ est une matrice symétrique semi-définie positive, et $\matriceVn$ est une matrice symétrique définie positive. De plus, $E[\modelNoise(t)\measureNoise^T(\tau)]=\zeros$.
 
 Dans ce cas, la dynamique de l'erreur d'estimation devient
 \begin{align}\label{eq-chap2:estimation error dynamics random case}
@@ -382,7 +388,7 @@ La formulation du filtre de Kalman est basée sur les objectifs suivants
  	\item trouver $\matriceL$ tel que la variance de l'erreur d'estimation est minimale.
  \end{itemize}
 \subsection{Calcul du gain d'observation optimal}
-Posons $\matriceP(t)=E[\estError(t)\estError(t)^T]$ la matrice de covariance de l'erreur d'estimation. Alors,
+Posons $\matriceP(t)=E[\estError(t)\estError(t)^T]$ la matrice de covariance de l'erreur d'estimation. Alors~\cite{athans1967tac},
 \begin{align}\label{eq-chap2:covariance matrix derivative}
 	\begin{split}
 		\dot{\matriceP}(t)=\frac{d}{dt}\matriceP(t)&=E[\frac{d}{dt}\left(\estError(t)\estError(t)^T\right)] \\	
@@ -391,6 +397,7 @@ Posons $\matriceP(t)=E[\estError(t)\estError(t)^T]$ la matrice de covariance de 
 		&=\left(\matriceA-\matriceL\matriceC\right)\matriceP(t) + \matriceP(t)\left(\matriceA-\matriceL\matriceC\right)^T+ E[\res(t)\estError^T(t)] + E[\estError(t)\res^T(t)]
 	\end{split}	
 \end{align}
+À ce stade, on doit évaluer $E[\res(t)\estError^T(t)]$.
 De~\eqref{eq-chap2:estimation error dynamics random case}, la solution $\estError(t)$ peut s'écrire sous la forme 
 \begin{align}
 	\begin{split}
@@ -401,44 +408,99 @@ De~\eqref{eq-chap2:estimation error dynamics random case}, la solution $\estErro
 \end{align}
 $\estError(t_0)$ et $\res(t)$ sont supposés décorrélés, donc $E[\estError(t_0)\res^T(t)]=0$. De plus, on a
 \begin{equation}
-	E[\res(\tau)\res^T(t)] = E[\left(\matriceL\measureNoise(\tau)-\modelNoise 	(\tau)\right)\left(\matriceL\measureNoise(t)-\modelNoise 	(t)\right)^T] = \left(\matriceQ+\matriceL\matriceR\matriceL^T\right)\delta(t-\tau)
+	E[\res(\tau)\res^T(t)] = E[\left(\matriceL\measureNoise(\tau)-\modelNoise 	(\tau)\right)\left(\matriceL\measureNoise(t)-\modelNoise 	(t)\right)^T] = \left(\matriceVw+\matriceL\matriceVn\matriceL^T\right)\delta(t-\tau)
 \end{equation}
 Par conséquent,
 \begin{align}\label{eq-chap2:estError res covar}
 	\begin{split}
-	 E[\estError(t)\res^T(t)] &= \int_{t_0}^{t}\phi(t,\tau)\left(\matriceQ+\matriceL\matriceR\matriceL^T\right)\delta(t-\tau)d\tau \\ 
-	 &=\fracOneTwo\phi(t,t)\left(\matriceQ+\matriceL\matriceR\matriceL^T\right)\\
-	 &=\fracOneTwo\left(\matriceQ+\matriceL\matriceR\matriceL^T\right) = E[\res(t)\estError^T(t)]
+	 E[\estError(t)\res^T(t)] &= \int_{t_0}^{t}\phi(t,\tau)\left(\matriceVw+\matriceL\matriceVn\matriceL^T\right)\delta(t-\tau)d\tau \\ 
+	 &=\fracOneTwo\phi(t,t)\left(\matriceVw+\matriceL\matriceVn\matriceL^T\right)\\
+	 &=\fracOneTwo\left(\matriceVw+\matriceL\matriceVn\matriceL^T\right) = E[\res(t)\estError^T(t)]
 	\end{split}
 \end{align}
 De~\eqref{eq-chap2:estError res covar},~\eqref{eq-chap2:covariance matrix derivative} devient
 \begin{equation}\label{eq-chap2:diff riccati eq for observation}
-	\dot{\matriceP}(t) = \left(\matriceA-\matriceL\matriceC\right)\matriceP(t) + \matriceP(t)\left(\matriceA-\matriceL\matriceC\right)^T+\matriceQ+\matriceL\matriceR\matriceL^T
+	\dot{\matriceP}(t) = \left(\matriceA-\matriceL\matriceC\right)\matriceP(t) + \matriceP(t)\left(\matriceA-\matriceL\matriceC\right)^T+\matriceVw+\matriceL\matriceVn\matriceL^T
 \end{equation}
  Trouver $\matriceL$ qui minimise la covariance de l'erreur d'estimation revient à résoudre 
 \begin{equation}
-	\underset{\matriceL}{\min}~\trace(\matriceP(t)) = \underset{\matriceL}{\min}~\int_{t_0}^{t}\trace\left(\dot{\matriceP}(t)\right)
+	\underset{\matriceL}{\min}\trace[\matriceP(t)] = \underset{\matriceL}{\min}~\int_{t_0}^{t}\trace\left[\dot{\matriceP}(\tau)\right]d\tau
 \end{equation}
-Similaire au calcul variationnel effectué dans la \cref{subsubsec-chap2:solution FT-LQR}, la condition nécéssaire est 
+Similairement au calcul variationnel effectué dans la \cref{subsubsec-chap2:solution FT-LQR}, la condition nécéssaire d'optimalité est\footnote{Rappel : $\frac{\partial\trace[\matriceA \state]}{\partial\state}=\matriceA^T$, $\frac{\partial\trace[\state^T\matriceA]}{\partial\state}=\matriceA$, $\frac{\partial\trace[\matriceA\state\matriceB\state]}{\partial\state}=\matriceA^T\state^T\matriceB^T+ \matriceB^T\state^T\matriceA^T$, $\frac{\partial\trace[\matriceA\state\matriceB\state]}{\partial\state^T}=\matriceA^T\state\matriceB^T+ \matriceA\state\matriceB$.}
 \begin{align}\label{eq-chap2:kalman filter gain}
 	\begin{split}
-		\frac{\partial \trace\left(\dot{\matriceP}(t)\right)}{\partial \matriceL}&=0\\
-		\Leftrightarrow -\matriceP(t)\matriceC^T+ \matriceL\matriceR&=0 \\ 
-		\matriceL &= \matriceP(t)\matriceC^T\matriceR^{-1}
+		\frac{\partial\trace\left[\dot{\matriceP}(t)\right]}{\partial \matriceL}&=0
+		\Leftrightarrow -\matriceP(t)\matriceC^T+ \matriceL\matriceVn=0 \\ 
+		\Rightarrow\matriceL &= \matriceP(t)\matriceC^T\matriceVn^{-1}
 	\end{split}
 \end{align}
 La matrice de gain optimal d'observation  $\matriceL$ dans~\eqref{eq-chap2:kalman filter gain} est appelé le \emph{gain de Kalman} (en temps continu) et cet observateur est appelé le \emph{filtre de Kalman}. De plus,~\eqref{eq-chap2:diff riccati eq for observation} devient 
 \begin{equation}
-	\dot{\matriceP}(t) = \matriceA\matriceP(t) + \matriceP(t)\matriceA^T+\matriceQ-\matriceP(t)\matriceC^T\matriceR^{-1}\matriceC\matriceP(t),
+	\dot{\matriceP}(t) = \matriceA\matriceP(t) + \matriceP(t)\matriceA^T+\matriceVw-\matriceP(t)\matriceC^T\matriceVn^{-1}\matriceC\matriceP(t),
 \end{equation}
-qui est une équation différentielle de Riccati similaire à~\eqref{eq-chap2:Riccati equation lqr}. La solution de~\eqref{eq-chap2:diff riccati eq for observation} atteint son régime permanent ($\dot{\matriceP}(t)=0$, et~\eqref{eq-chap2:diff riccati eq for observation} devient l'équation algébrique de Riccati similairement à~\eqref{eq-chap2:algebraic Riccati equation}) quand $t_0\rightarrow-\infty$. Ceci veut dire que l'on a suffisemment de données passées de la sortie $\out(t)$. Sinon,~\eqref{eq-chap2:diff riccati eq for observation} est résolue avec la condition initiale $\matriceP(t_0)=E[\estError(t_0)\estError(t_0)^T]$.
+qui est une équation différentielle de Riccati similaire à~\eqref{eq-chap2:Riccati equation lqr}. 
+\subsection{Discussion}
+La solution de~\eqref{eq-chap2:diff riccati eq for observation} atteint son régime permanent (c.à.d., $\dot{\matriceP}(t)=0$, et~\eqref{eq-chap2:diff riccati eq for observation} devient l'équation algébrique de Riccati similairement à~\eqref{eq-chap2:algebraic Riccati equation}) quand $t_0\rightarrow-\infty$. Ceci veut dire que l'on a suffisemment de données passées de la sortie $\out(t)$. Sinon,~\eqref{eq-chap2:diff riccati eq for observation} est résolue avec la condition initiale $\matriceP(t_0)=E[\estError(t_0)\estError(t_0)^T]$.
+
+De plus, le gain de Kalman~\eqref{eq-chap2:kalman filter gain} effectue un compromis entre une \emph{estimation agressive} et une \emph{atténuation de bruit}. En effet, si $\matriceVn$ assez grand comparativement à $\matriceVw$ (sortie fortement bruité, et modèle fiable), $\matriceL$ est faible ce qui mène à une atténuation des bruits de mesure, et l'observateur fera confiance au modèle pour construire $\estState$. Dans le cas contraire (sortie faiblement bruité, et modèle imprécis),  $\matriceL$ est grand, et l'observateur fera confiance au mesure.
 \section{Commande linéaire quadratique Gaussienne}
-La commande linéaire quadratique Gaussienne (anglais : Linear Quadratic Gaussian (LQG)) consiste à reguler le système~\eqref{eq-chap2:syslin_commande_noise} par une commande LQR avec l'état estimé  
-\begin{equation}
-	\command=-K\estState
-\end{equation}
-où $\estState$ est estimé avec un filtre de Kalman.
-\subsection{Principe de séparation}
+La commande linéaire quadratique Gaussienne (anglais : Linear Quadratic Gaussian (LQG)) consiste aux deux étapes suivantes (voir~\cref{fig:LQG control scheme}): 
+\begin{enumerate}
+	\item \textbf{Observation :} estimer l'état par un filtre de Kalman pour obtenir $\estState$.
+	\item \textbf{Commande :} commander le système~\eqref{eq-chap2:syslin_commande_noise} par une commande LQR tel que l'état estimé $\estState$ est utilisé pour le retour d'état
+	\begin{equation}\label{eq-chap2:LQG control}
+		\command = -\matriceK\estState.
+	\end{equation}
+\end{enumerate} 
+%reguler le système~\eqref{eq-chap2:syslin_commande_noise} par une commande LQR avec l'état estimé  
+%\begin{equation}
+%	\command=-K\estState
+%\end{equation}
+%où $\estState$ est estimé avec un filtre de Kalman.
+Analysons maintenant la stabilité du système global 
+\begin{equation}\label{eq-chap2:LQG augmanted system}
+	\underline{\stateDot} = \begin{bmatrix}
+		\matriceA-\matriceB\matriceK & -\matriceB\matriceK \\ \zeros & \matriceA-\matriceL\matriceC
+	\end{bmatrix}\underline{\state} + \begin{bmatrix}
+	\eye & \zeros \\ -\eye & \matriceL
+	\end{bmatrix}\begin{bmatrix}
+	\modelNoise\\\measureNoise
+	\end{bmatrix}.
+\end{equation} 
+Le système~\eqref{eq-chap2:LQG augmanted system} est stable au sens BIBO (Bounded-Input-Bounded-Output).
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+		\node [input, name=rinput] (rinput) {};
+		\node [tmp, right of=rinput, node distance = 0.0 cm](u){};
+		\node [tmp,right of=rinput, node distance = 0.0 cm](qd-in){};
+		\node [above of=rinput, node distance = 2 cm](taul-in){$\command$};
+		\node [block, right of = rinput, node distance=3 cm](sum) {$\begin{matrix}
+				-\matriceK \\ \text{(LQR)}
+			\end{matrix}$};
+		\node [block, above of=sum, node distance=2cm](load Gain) {$\begin{matrix}	\stateDot = \matriceA\state+\matriceB\command+\modelNoise \\ \out=\matriceC\state+\measureNoise\end{matrix}$};
+		\node [block, right of=sum, node distance=4cm] (PD controller) {$\begin{matrix}	\estStateDot = \matriceA\estState+\matriceB\command-\matriceL(\estOut-\out) \\ \estOut=\matriceC\estState\end{matrix}$ };
+		\node [sum, right of = PD controller, node distance=4cm](sum2) {};
+		\node [block, right of=sum2, node distance=2.5cm] (DC actuator) {$\begin{matrix}	-\matriceL\\ \text{(Filtre de Kalman)} \end{matrix}$};
+		\node [tmp, below of=PD controller, node distance = 1 cm](q){};
+		\node [tmp, below of=sum, node distance = 0.6 cm](belowSum){};
+		
+		\draw [<-] (sum) -- node{$\estState$}(PD controller);
+		\draw [-] (qd-in) -- node{$-\matriceK\estState$}(sum);
+		\draw [-] (qd-in) -- node{}(taul-in);
+		\draw [->] (taul-in) -- node{}(load Gain.west);
+		\draw [->] (PD controller) -- node[pos = 0.7, yshift=-1pt]{$+$}(sum2);
+		\draw [-] (PD controller) -- node[pos = 0.2, yshift=-1pt]{$\estOut$}(sum2);
+		\draw [->] (sum2) -- node{}(DC actuator);
+		\draw [-] (DC actuator.south) |- node[pos = 0.75, yshift=-1pt]{$-\matriceL(\estOut-\out)$}(q);
+		\draw [->] (q) -- node{}(PD controller);
+		\draw [->] (load Gain) -| node[pos = 0.8, xshift=-12pt]{$-$}(sum2);
+		\draw [-] (load Gain) -| node[pos = 0.1, xshift=-12pt]{$\out$}(sum2);
+	\end{tikzpicture}
+	
+	\caption{Schéma synoptique de la commande LQG.} 
+	\label{fig:LQG control scheme}
+\end{figure}
 \section{Exercices}
 \begin{enumerate}
 	\item Soit le système suivant 
