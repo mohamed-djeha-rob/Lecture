@@ -89,14 +89,37 @@ On suppose que le système~\eqref{eq-chap1:autonomous system} a un point d'équi
 Quand le point d'équilibre est Lyapunov stable celà veut dire simplement que les trajectoires d'état sont bornées et confinées dans une boule dans $\mathbb{R}^n$ de rayon $\epsilon$. C'est la forme la plus legère de stabilité. La stabilité est un peu plus fortifiée quand elle est asymptotique:  les trajectoires d'état convergent vers le point d'équilibre (l'origine) quand $t$ tend vers l'infini. Il est à noter que, malgré cette convergence, la stabilité au sens de lyapunov est nécéssaire pour que garantir que les trajectoires d'état restent bornées. Finalement, la stabilité exponentielle fortifie d'avantage la stabilité asymptotique en imposant un profil de convérgence exponentielle au trajectoire d'état vers le point d'équilibre.
 
 Bien que la \cref{def:Stability} aide à comprendre la notion de stabilité au sens de Lyapunov, elle necéssite la résolution du système nonlinéaire~\eqref{eq-chap1:autonomous system}. Souvent, ceci n'est pas possible. Dans la \cref{sec:stability analysis}, on étudiera des méthodes dites de Lyapunov pour la caractérisation de la stabilité du point d'équilibre sans la nécessité de résoudre le système nonlinéaire~\eqref{eq-chap1:autonomous system}. 
+\section{Analyse de stablité}\label{sec:stability analysis}
+\subsection{Première méthode de Lyapunov (méthode indirecte)}
+Soit le système nonlinéaire~\eqref{eq-chap1:autonomous system} ayant l'origine comme point d'équilibre. Soit $\Delta \state = \state-\stateEq$. Alors autour du point d'équilibre, le système~\eqref{eq-chap1:autonomous system} peut s'écrire
+\begin{align}
+\begin{split}
+\stateDot &= f(\state) = f(\stateEq+\Delta\state)\\
+&=f(\stateEq=\zeros) + \left.\begin{matrix}
+\frac{\partial f}{\partial\state}
+\end{matrix}\right|_{{\state = \zeros}}\Delta\state + \bm{o} \\
+\Rightarrow\stateDot&\approx\left.\begin{matrix}
+\frac{\partial f}{\partial\state}
+\end{matrix}\right|_{{\state = \zeros}}\Delta\state = \matriceA\Delta\state 
+\end{split}
+\end{align} 
+La première méthode de Lyapunov, aussi connue par la \emph{méthode indirecte de Lyapunov} est anoncé par le théorème suivant.
+\begin{theoreme}
+	Soit le système nonlinéaire~\eqref{eq-chap1:autonomous system} ayant l'origine comme point d'équilibre, et soit $\matriceA =\left.\begin{matrix}
+	\frac{\partial f}{\partial\state}
+	\end{matrix}\right|_{{\state = \zeros}}$. Alors,
+	\begin{enumerate}
+		\item L'origine est localement asymptotiquement stable si toutes les valeurs propres de $\matriceA$ sont à partie réelle négative $\left(\Leftrightarrow \forall\lambda_i(\matriceA): {\rm Re}\lambda_i(\matriceA)<0\right)$.
+		\item L'origine est instable si au moins une des valeurs propres de $\matriceA$ est à partie réelle positive $\left(\Leftrightarrow \exists\lambda_i(\matriceA): {\rm Re}\lambda_i(\matriceA)>0\right)$.
+	\end{enumerate}
+\end{theoreme} 
+\subsection{Deuxième méthode de Lyapunov (méthode directe)}
 \section{Linéarisation autour du point de fonctionnement}
-Soit le système nonlinéaire~\eqref{eq-chap1:autonomous system} ayant l'origine comme point d'équilibre. Soit $\Delta \state = \state-\stateEq$
+
 \begin{itemize}
 	\item linearisation autour du point d'équilibre.
 \end{itemize}
 
-\section{Analyse de stablité}\label{sec:stability analysis}
-\subsection{Première méthode de Lyapunov (méthode indirecte)}
-\subsection{Deuxième méthode de Lyapunov (méthode directe)}
+
 \section{Stabilisation d'un système nonlinéaire avec la méthode indirecte de Lyapunov}
 \subsection{Point de fonctionnement}
