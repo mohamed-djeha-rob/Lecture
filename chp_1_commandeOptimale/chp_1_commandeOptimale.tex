@@ -370,7 +370,10 @@ Cependant en pratique, des bruits de mesure $\measureNoise$ peuvent infecter la 
 		\out &= \matriceC\state + \measureNoise, \ \measureNoise\inR^{p}
 	\end{split}.
 \end{align}
-où $\modelNoise$ et $\measureNoise$ sont des variables aléatoires qui suivent la distribution d'un bruit blanc Gaussien décorrélé tel que $\modelNoise\sim{\cal N}(0,\sigma_w)$, $\measureNoise\sim{\cal N}(0,\sigma_n)$, $E[\modelNoise(t)\modelNoise^T(\tau)]=\matriceVw\delta(t-\tau)$, $E[\measureNoise(t)\measureNoise^T(\tau)]=\matriceVn\delta(t-\tau)$ où $\delta(.)$ est la fonction de Dirac,  $\matriceVw\inR^{n\times n}$ et $\matriceVn\inR^{p\times p}$ sont les matrices de corrélation tel que $\matriceVw$ est une matrice symétrique semi-définie positive, et $\matriceVn$ est une matrice symétrique définie positive. De plus, $E[\modelNoise(t)\measureNoise^T(\tau)]=\zeros$.
+où $\modelNoise$ et $\measureNoise$ sont des variables aléatoires qui suivent la distribution d'un bruit blanc Gaussien décorrélé tel que $\modelNoise\sim{\cal N}(\zeros,\boldsymbol{\sigma}_{\modelNoise})$, $\measureNoise\sim{\cal N}(\zeros,\boldsymbol{\sigma}_{\measureNoise})$, $E[\modelNoise(t)\modelNoise^T(\tau)]=\matriceVw\delta(t-\tau)$, $E[\measureNoise(t)\measureNoise^T(\tau)]=\matriceVn\delta(t-\tau)$ où $\delta(.)$ est la fonction de Dirac,  $\matriceVw\inR^{n\times n}$ et $\matriceVn\inR^{p\times p}$ tel que 
+\begin{equation}
+\matriceVw = \diag(\left[\sigma^2_{{\modelNoise}_1}\ldots\sigma^2_{{\modelNoise}_n}\right]), \quad \matriceVn = \diag(\left[\sigma^2_{{\measureNoise}_1}\ldots\sigma^2_{{\measureNoise}_p}\right]),
+\end{equation}sont les matrices de corrélation tel que $\matriceVw$ est une matrice symétrique semi-définie positive, et $\matriceVn$ est une matrice symétrique définie positive. De plus, $E[\modelNoise(t)\measureNoise^T(\tau)]=\zeros$.
 
 Dans ce cas, la dynamique de l'erreur d'estimation devient
 \begin{align}\label{eq-chap2:estimation error dynamics random case}
@@ -387,7 +390,7 @@ La formulation du filtre de Kalman est basée sur les objectifs suivants
  	\item avoir une estimation non-biaisée $E[\estErrorDot(t)]\equiv E[\estError(t)] \equiv E[\estError(t_0)]\equiv0$. Par ailleurs,  $E[\estError(t_0)]=E[\estState(t_0) - \state(t_0)]=0 \Rightarrow\estState(t_0)=E[\state(t_0)]$.
  	\item trouver $\matriceL$ tel que la variance de l'erreur d'estimation est minimale.
  \end{itemize}
-\subsection{Calcul du gain d'observation optimal}
+\subsection{Calcul du gain optimal d'observation}
 Posons $\matriceP(t)=E[\estError(t)\estError(t)^T]$ la matrice de covariance de l'erreur d'estimation. Alors~\cite{athans1967tac},
 \begin{align}\label{eq-chap2:covariance matrix derivative}
 	\begin{split}
@@ -440,9 +443,28 @@ La matrice de gain optimal d'observation  $\matriceL$ dans~\eqref{eq-chap2:kalma
 \end{equation}
 qui est une équation différentielle de Riccati similaire à~\eqref{eq-chap2:Riccati equation lqr}. 
 \subsection{Discussion}
-La solution de~\eqref{eq-chap2:diff riccati eq for observation} atteint son régime permanent (c.à.d., $\dot{\matriceP}(t)=0$, et~\eqref{eq-chap2:diff riccati eq for observation} devient l'équation algébrique de Riccati similairement à~\eqref{eq-chap2:algebraic Riccati equation}) quand $t_0\rightarrow-\infty$. Ceci veut dire que l'on a suffisemment de données passées de la sortie $\out(t)$. Sinon,~\eqref{eq-chap2:diff riccati eq for observation} est résolue avec la condition initiale $\matriceP(t_0)=E[\estError(t_0)\estError(t_0)^T]$.
+Quand $t_0\rightarrow-\infty$, la solution de~\eqref{eq-chap2:diff riccati eq for observation} atteint son régime permanent (c.à.d., $\dot{\matriceP}(t)=0$) et~\eqref{eq-chap2:diff riccati eq for observation} devient l'équation algébrique de Riccati similairement à~\eqref{eq-chap2:algebraic Riccati equation})  
+\begin{equation}\label{eq-chap2:algebric Riccati equation observation}
+\matriceA\matriceP(t) + \matriceP(t)\matriceA^T+\matriceVw-\matriceP(t)\matriceC^T\matriceVn^{-1}\matriceC\matriceP(t)=\zeros.
+\end{equation}
+Ceci veut dire que l'on a suffisemment de données passées de la sortie $\out(t)$. Sinon,~\eqref{eq-chap2:diff riccati eq for observation} est résolue avec la condition initiale $\matriceP(t_0)=E[\estError(t_0)\estError(t_0)^T]$.
 
-De plus, le gain de Kalman~\eqref{eq-chap2:kalman filter gain} effectue un compromis entre une \emph{estimation agressive} et une \emph{atténuation de bruit}. En effet, si $\matriceVn$ assez grand comparativement à $\matriceVw$ (sortie fortement bruité, et modèle fiable), $\matriceL$ est faible ce qui mène à une atténuation des bruits de mesure, et l'observateur fera confiance au modèle pour construire $\estState$. Dans le cas contraire (sortie faiblement bruité, et modèle imprécis),  $\matriceL$ est grand, et l'observateur fera confiance au mesure.
+Le gain de Kalman~\eqref{eq-chap2:kalman filter gain} effectue un compromis entre une \emph{estimation agressive} et une \emph{atténuation de bruit}. En effet, si $\matriceVn$ assez grand comparativement à $\matriceVw$ (sortie fortement bruité, et modèle fiable), $\matriceL$ est faible ce qui mène à une atténuation des bruits de mesure, et l'observateur fera confiance au modèle pour construire $\estState$. Dans le cas contraire (sortie faiblement bruité, et modèle imprécis),  $\matriceL$ est grand, et l'observateur fera confiance au mesure.
+
+Aussi, on remarque la dualité en entre l'observation et la commande et qui est visible à partir du calcul des gains optimaux $\matriceK$  et  $\matriceL$ notamment concernant les équations différentielles (respectivement, algébriques) de Riccati~\eqref{eq-chap2:Riccati equation lqr} (respectivement,~\eqref{eq-chap2:algebraic Riccati equation}) et~\eqref{eq-chap2:diff riccati eq for observation} (respectivement,~\eqref{eq-chap2:algebric Riccati equation observation}) comme illustré par le Tableau~\ref{tab:dualité LQR LQG}.
+\begin{table}
+	\centering
+	\caption{Dualité entre la commande et l'observation en termes de variables comme le montrent les équations de Riccati. }
+	\label{tab:dualité LQR LQG}
+	\begin{tabular}{|c|c|} \hline
+		 Commande & Observation \\ \hline \hline
+		$\matriceA$ & $\matriceA^T$\\ \hline
+		$\matriceB$ & $\matriceC^T$\\ \hline
+		$\matriceR$ & $\matriceVn$ \\ \hline
+		$\matriceQ$ & $\matriceVw$ \\ \hline
+	\end{tabular}
+\end{table}
+
 \section{Commande linéaire quadratique Gaussienne}
 La commande linéaire quadratique Gaussienne (anglais : Linear Quadratic Gaussian (LQG)) consiste aux deux étapes suivantes (voir~\cref{fig:LQG control scheme}): 
 \begin{enumerate}
@@ -501,55 +523,87 @@ Le système~\eqref{eq-chap2:LQG augmanted system} est stable au sens BIBO (Bound
 	\caption{Schéma synoptique de la commande LQG.} 
 	\label{fig:LQG control scheme}
 \end{figure}
+
+\newpage
 \section{Exercices}
-\begin{enumerate}
-	\item Soit le système suivant 
+\begin{exercise}
+	Soit le système suivant 
 	\begin{equation}
-		\dot{x} = 0.5x + u .
+	\dot{x} = 0.5x + u .
 	\end{equation}
 	On veut stabiliser ce système en utilisant une commande LQR à horizon fini, tel que $Q=Q_f=10$, $R=1$, $t_f = 1s$.
-	\begin{itemize}
+	\begin{enumerate}
 		\item Intégrer à rebours l'équation différentielle de Riccati à partir de $t=t_f$ sur 3 itérations en prenant $\boldmath{\dot{\matriceP}}=\frac{\matriceP_{k}-\matriceP_{k-1}}{\deltaT}$ et le pas d'intégration $\deltaT = 0.01~s$. Calculer les gains $\matriceK(t)$ correspondants.
 		\item Intégrer à rebours l'équation différentielle de Riccati à partir de $t=0.23~s$ sur 3 itérations tel que $\matriceP(t=0.1)=3.709$. 
 		\item Maintenant on veut stabiliser le système avec une commande LQR à horizon infini. Résoudre l'équation algébrique de Riccati, puis calculer le gain $\matriceK$ correspondant. Que peut-on constater par rapport à la question précédante ?
-	\end{itemize}
-	
-	\item Soit le système suivant 
+	\end{enumerate}
+\end{exercise}
+\begin{exercise}
+	Soit le système suivant 
 	\begin{equation}
-		\stateDot = \begin{bmatrix}
-			0 & 1 \\ 1 & 2
-		\end{bmatrix} \state+ \begin{bmatrix}
-		0 \\ 1
-		\end{bmatrix}\command.
+	\stateDot = \begin{bmatrix}
+	0 & 1 \\ 1 & 2
+	\end{bmatrix} \state+ \begin{bmatrix}
+	0 \\ 1
+	\end{bmatrix}u.
 	\end{equation}
 	On veut stabiliser ce système avec une commande LQR à horizon infini tel que $\matriceQ = \begin{bmatrix}
-		1 & 0 \\ 0 &0 
+	1 & 0 \\ 0 &0 
 	\end{bmatrix}$, et $\matriceR=1$
-	\begin{itemize}
+	\begin{enumerate}
 		\item Vérifier que $\matriceQ$ est semi-définie positive, et $\matriceR$ est définie positive
 		\item Trouver la matrice $\matriceM$ tel que $\matriceQ = \matriceM^T\matriceM$
 		\item Vérifier les conditions suffisantes d'éxistence d'une commande LQR
 		\item En posant la matrice $\matriceP=\begin{bmatrix}
-			P_1 & P_2 \\ P_2 & P_3
+		P_1 & P_2 \\ P_2 & P_3
 		\end{bmatrix}$, calculer $\matriceP$ solution de l'équation algébrique de Riccati, tel que $\matriceP$ est définie positive, ainsi que le gain $\matriceK$ correspondant.
 		\item On considère maintenant $\matriceQ = \begin{bmatrix}
-			0 & 0 \\ 0 &1 
+		0 & 0 \\ 0 &1 
 		\end{bmatrix}$. Les conditions suffisantes d'existance de la commande LQR sont-elles vérifiées ?
-	\end{itemize}
-
-	\item 	Considérons le système nonlinéaire 
+	\end{enumerate}
+\end{exercise}
+\begin{exercise}
+	Considérons le système nonlinéaire 
 	\begin{align}\label{eq-chap2:sys_exo3}
-		\begin{split}
-			\dot{x}_1 &= x_2 \\
-			\dot{x}_2 &= -\alpha \sin(x_1)-\beta x_2 +u
-		\end{split},
+	\begin{split}
+	\dot{x}_1 &= x_2 \\
+	\dot{x}_2 &= -\alpha \sin(x_1)-\beta x_2 +u
+	\end{split},
 	\end{align} avec un point de fonctionnement défini par $\state_{\rm f}^T = \left[{\pi}/{3} \quad 0\right]$  et $u_{\rm f} = \alpha\sin(\pi/3)=\alpha\sqrt{3}/2$.
-	\begin{itemize}
+	\begin{enumerate}
 		\item Linéariser le système~\eqref{eq-chap2:sys_exo3} autour du point de fonctionnement en calculant les expressions des matrices $\matriceA$ et $\matriceB$.
 		\item En posant $\matriceQ=\diag\left(\left[q_1 \quad q_2\right]\right)$ et $\matriceR=r$, résoudre symboliquement l'équation de Riccati.
 		\item En posant $\alpha=1$, $\beta=0$, $q_1=q_2=1$ et $r=1$, résoudre numériquement l'équation de Riccati, et calculer la commande LQR à horizon infini qui stabilise le système linéaire obtenu.
 		\item Calculer la commande totale $u$ qui stabilise le système nonlinéaire~\eqref{eq-chap2:sys_exo3}.
 		\item En posant $q_1=1$, et $q_2=0$, montrer que ce cas correspond au problème de régulation de la sortie $y=x_1$.
 		\item Vérifier que les conditions suffisantes pour l'existance de la commande LQR sont remplies.
-	\end{itemize}
-\end{enumerate}
+	\end{enumerate}
+\end{exercise}
+\begin{exercise}
+	Soit le système linéaire suivant 
+	\begin{align}
+	\begin{split}
+	\stateDot&=\begin{bmatrix} 
+	1 & 2 \\ -2 & 3  
+	\end{bmatrix}\state + \begin{bmatrix}
+	2 \\ 0
+	\end{bmatrix}u + \modelNoise  \\
+	\out &= \begin{bmatrix}
+	1 & 0
+	\end{bmatrix}\state + \measureNoise
+	\end{split},
+	\end{align}
+	où $\modelNoise\sim{\cal N}(0,\boldsymbol{\sigma}_{\modelNoise})$ et $\measureNoise\sim{\cal N}(0,{\sigma}_{\measureNoise})$, avec $\boldsymbol{\sigma}_{\modelNoise}^T = 10^{-1}\begin{bmatrix} 1 & 1 \end{bmatrix}$, et ${\sigma}_{\measureNoise} = 1$.
+	\begin{enumerate}
+		\item Donner les matrices $\matriceVw$ et $\matriceVn$.
+		\item Résoudre l'équation algébrique de Riccati pour l'observation, et déduire le gain de Kalman $\matriceL$.
+		\item Pour $\matriceQ = \begin{bmatrix}2&0\\0&0.5\end{bmatrix}$ et $\matriceR=1$, résoudre l'équation algébrique de Riccati pour la commande, et déduire le gain de la commande LQR $\matriceK$.
+		\item Intégrer numériquement le système augmenté (système physique + observateur) montré dans la \cref{fig:LQG control scheme} sur 3 itérations avec $\deltaT= 0.01~s$, $\modelNoise^T(0) = \begin{bmatrix}
+		-0.14 & 0.15
+		\end{bmatrix}$,  $\modelNoise^T(\deltaT) = \begin{bmatrix}
+		0.26 & 0.10
+		\end{bmatrix}$, $\modelNoise^T(2\deltaT) = \begin{bmatrix}
+		-0.15 & -0.07
+		\end{bmatrix}$, et $\measureNoise(0) = -0.52$, $\measureNoise(\deltaT) = 1.1$, $\measureNoise(2\deltaT) = -2.10$.	
+	\end{enumerate}
+\end{exercise}
