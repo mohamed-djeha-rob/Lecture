@@ -104,7 +104,7 @@ Soit le système nonlinéaire~\eqref{eq-chap1:autonomous system} ayant l'origine
 \end{split}
 \end{align} 
 La première méthode de Lyapunov, aussi connue par la \emph{méthode indirecte de Lyapunov} est anoncé par le théorème suivant.
-\begin{theoreme}
+\begin{theoreme}\label{thm:indirect Lyapunov method}
 	Soit le système nonlinéaire~\eqref{eq-chap1:autonomous system} ayant l'origine comme point d'équilibre, et soit $\matriceA =\left.\begin{matrix}
 	\frac{\partial f}{\partial\state}
 	\end{matrix}\right|_{{\state = \zeros}}$. Alors,
@@ -112,8 +112,22 @@ La première méthode de Lyapunov, aussi connue par la \emph{méthode indirecte 
 		\item L'origine est localement asymptotiquement stable si toutes les valeurs propres de $\matriceA$ sont à partie réelle négative $\left(\Leftrightarrow \forall\lambda_i(\matriceA): {\rm Re}\lambda_i(\matriceA)<0\right)$.
 		\item L'origine est instable si au moins une des valeurs propres de $\matriceA$ est à partie réelle positive $\left(\Leftrightarrow \exists\lambda_i(\matriceA): {\rm Re}\lambda_i(\matriceA)>0\right)$.
 	\end{enumerate}
-\end{theoreme} 
+\end{theoreme}
+La méthode indirecte de Lyapunov éffectue une  linéarisation du système autour du point d'équilibre, puis statue sur la stabilité du système nonlinéaire en se basant sur la stabilité du système linéarisé. Dans cette approche, il y un avantage et un inconvénient : l'analyse de stabilité d'un système linéaire est toujours possible d'analyser la stabilité d'un système linéaire à travers l'analyse des valeurs propores; mais la stabilité asymptotique est seulement prouvée pour être \emph{locale}. (\red{TODO: monter comment l'analyse de stabilité est performée pour les systèmes linéaires.})
+
+La stabilité asymptotique locale signifie qu'il existe un ensemble $\setD\subset\mathbb{R}^n$ contenant l'origine, tel que si $\state(0)\in\setD\Rightarrow \state(t)\underset{t_\rightarrow\infty}{\longrightarrow}0$. Dans ce qui suit, on va étudier la méthode directe de Lyapunov qui ne se base pas sur une approximation du système nonlinéaire, mais en contre partie utilise des fonctions dite de Lyapunov. 
 \subsection{Deuxième méthode de Lyapunov (méthode directe)}
+Commenceons par un exemple introductif. Considérons un pendule simple dont l'équation dynamique est 
+\begin{align}
+	\begin{split}
+		\dot{x}_1 &= x_2 \\
+		\dot{x}_2 &= -\frac{mgl}{J}\sin(x_1)-\frac{f}{J}x_2
+	\end{split}
+\end{align}
+L'énergie totale du pendule est donnée par 
+\begin{equation}
+	E = \fracOneTwo Jx_2^2+mgl(1-\cos(x_1))
+\end{equation}
 \section{Linéarisation autour du point de fonctionnement}
 
 \begin{itemize}
