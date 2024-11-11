@@ -598,7 +598,7 @@ Le système~\eqref{eq-chap2:LQG augmanted system} est stable au sens BIBO (Bound
 		\item Donner les matrices $\matriceVw$ et $\matriceVn$.
 		\item Résoudre l'équation algébrique de Riccati pour l'observation, et déduire le gain de Kalman $\matriceL$.
 		\item Pour $\matriceQ = \begin{bmatrix}2&0\\0&0.5\end{bmatrix}$ et $\matriceR=1$, résoudre l'équation algébrique de Riccati pour la commande, et déduire le gain de la commande LQR $\matriceK$.
-		\item Simuler avec Matlab le système augmenté (système physique + observateur) montré dans la \cref{fig:LQG control scheme} avec $\deltaT= 0.001~s$.
+		\item Simuler avec \textsc{Matlab} le système augmenté (système physique + observateur) montré dans la \cref{fig:LQG control scheme} avec $\deltaT= 0.001~s$.
 		\item Refaire la simulation avec $\boldsymbol{\sigma}_{\modelNoise}^T = \begin{bmatrix} 1 & 1 \end{bmatrix}$, et ${\sigma}_{\measureNoise} = 10^{-1}$. Que peut-on constater ?
 	\end{enumerate}
 \end{exercise}
@@ -628,7 +628,7 @@ Le système~\eqref{eq-chap2:LQG augmanted system} est stable au sens BIBO (Bound
 			0&1&0&0&0&0
 		\end{bmatrix}$. Déduire $\command_{\rm f}$. 
 		\item Linéariser le système obtenu dans (1) autour de $\bm{P}_{\rm f}$ en calculant les matrices $\matriceA$ et $\matriceB$.
-		\item En utilisant MATLAB, calculer la commande LQR qui stabilise le système linéaire obtenu dans (3), puis appliquer la commande totale sur le système obtenu dans (1).
+		\item En utilisant \textsc{Matlab}, calculer la commande LQR qui stabilise le système linéaire obtenu dans (3), puis appliquer la commande totale sur le système obtenu dans (1).
 		\item Maintenant, on suppose que l'état $\state$ n'est pas complètement mesurable, telque la sortie $\out^T = \begin{bmatrix}
 			x&y&\dot{\theta}
 		\end{bmatrix} $. Écrire $\out$ en fonction de $\state$
