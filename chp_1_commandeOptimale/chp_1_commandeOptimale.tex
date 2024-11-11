@@ -572,7 +572,7 @@ Le système~\eqref{eq-chap2:LQG augmanted system} est stable au sens BIBO (Bound
 	\end{align} avec un point de fonctionnement défini par $\state_{\rm f}^T = \left[{\pi}/{3} \quad 0\right]$  et $u_{\rm f} = \alpha\sin(\pi/3)=\alpha\sqrt{3}/2$.
 	\begin{enumerate}
 		\item Linéariser le système~\eqref{eq-chap2:sys_exo3} autour du point de fonctionnement en calculant les expressions des matrices $\matriceA$ et $\matriceB$.
-		\item En posant $\matriceQ=\diag\left(\left[q_1 \quad q_2\right]\right)$ et $\matriceR=r$, résoudre symboliquement l'équation de Riccati.
+		\item En posant $\matriceQ=\diag\left(\left[q_1 \quad q_2\right]\right)$ et $\matriceR=r$, vérifer symboliquement les conditions suffisantes d'existance de la commande LQR, puis résoudre symboliquement l'équation de Riccati.
 		\item En posant $\alpha=1$, $\beta=0$, $q_1=q_2=1$ et $r=1$, résoudre numériquement l'équation de Riccati, et calculer la commande LQR à horizon infini qui stabilise le système linéaire obtenu.
 		\item Calculer la commande totale $u$ qui stabilise le système nonlinéaire~\eqref{eq-chap2:sys_exo3}.
 		\item En posant $q_1=1$, et $q_2=0$, montrer que ce cas correspond au problème de régulation de la sortie $y=x_1$.
@@ -598,12 +598,67 @@ Le système~\eqref{eq-chap2:LQG augmanted system} est stable au sens BIBO (Bound
 		\item Donner les matrices $\matriceVw$ et $\matriceVn$.
 		\item Résoudre l'équation algébrique de Riccati pour l'observation, et déduire le gain de Kalman $\matriceL$.
 		\item Pour $\matriceQ = \begin{bmatrix}2&0\\0&0.5\end{bmatrix}$ et $\matriceR=1$, résoudre l'équation algébrique de Riccati pour la commande, et déduire le gain de la commande LQR $\matriceK$.
-		\item Intégrer numériquement le système augmenté (système physique + observateur) montré dans la \cref{fig:LQG control scheme} sur 3 itérations avec $\deltaT= 0.01~s$, $\modelNoise^T(0) = \begin{bmatrix}
-		-0.14 & 0.15
-		\end{bmatrix}$,  $\modelNoise^T(\deltaT) = \begin{bmatrix}
-		0.26 & 0.10
-		\end{bmatrix}$, $\modelNoise^T(2\deltaT) = \begin{bmatrix}
-		-0.15 & -0.07
-		\end{bmatrix}$, et $\measureNoise(0) = -0.52$, $\measureNoise(\deltaT) = 1.1$, $\measureNoise(2\deltaT) = -2.10$.	
+		\item Simuler avec Matlab le système augmenté (système physique + observateur) montré dans la \cref{fig:LQG control scheme} avec $\deltaT= 0.001~s$.
+		\item Refaire la simulation avec $\boldsymbol{\sigma}_{\modelNoise}^T = \begin{bmatrix} 1 & 1 \end{bmatrix}$, et ${\sigma}_{\measureNoise} = 10^{-1}$. Que peut-on constater ?
 	\end{enumerate}
 \end{exercise}
+\begin{tpe}
+	Soit l'équation dynamique d'un drone birotor qui se déplace dans le plan $(\overset{\rightarrow}{x},\overset{\rightarrow}{y})$ est donnée par 
+	\begin{align}\label{eq-chap2:birotor}
+		\begin{split}
+			m\ddot{x} &= -(u_1+u_2)\sin(\theta)\\
+			m\ddot{y} &= (u_1+u_2)\cos(\theta)-mg\\
+			I\ddot{\theta} &=r(u_1-u_2)
+		\end{split},
+	\end{align}
+	où $m$ est la masse du drone, $I$ le moment d'inertie, $r$ la distance entre les actionneurs et le centre de masse. 
+	\begin{enumerate}
+		\item En posant $\state^T=\begin{bmatrix}
+			x&y&\theta&\dot{x}&\dot{y}&\dot{\theta}
+		\end{bmatrix}$ et $\command^T = \begin{bmatrix}
+		u_1& u_2
+		\end{bmatrix}$, écrire~\eqref{eq-chap2:birotor} sous la forme : $\stateDot = f(\state,\command)$.
+		\item Soit le point de fonctionnement
+		\begin{equation}
+			\bm{P}_{\rm f} = \begin{bmatrix}
+				\state_{\rm f} \\ \command_{\rm f}
+			\end{bmatrix}
+		\end{equation} 
+		tel que $\state_{\rm f}^T = \begin{bmatrix}
+			0&1&0&0&0&0
+		\end{bmatrix}$. Déduire $\command_{\rm f}$. 
+		\item Linéariser le système obtenu dans (1) autour de $\bm{P}_{\rm f}$ en calculant les matrices $\matriceA$ et $\matriceB$.
+		\item En utilisant MATLAB, calculer la commande LQR qui stabilise le système linéaire obtenu dans (3), puis appliquer la commande totale sur le système obtenu dans (1).
+		\item Maintenant, on suppose que l'état $\state$ n'est pas complètement mesurable, telque la sortie $\out^T = \begin{bmatrix}
+			x&y&\dot{\theta}
+		\end{bmatrix} $. Écrire $\out$ en fonction de $\state$
+		\item Implémenter un observateur de Luenberger pour construire complètement l'état du système linéaire obtenu dans (3).
+		\item Implémenter une commande LQG (en choisissant judicieusement les matrices de covariance $\matriceVw$ et $\matriceVn$) qui stabilise le système obtenu dans (3). 
+		\item Aplliquer la commande totale sur le système obtenu dans (1).
+	\end{enumerate}
+\end{tpe}
+\begin{tpe}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.5\columnwidth]{cart-pole.png}
+		\caption{Pendule inversé sur un chariot.}
+		\label{fig:cart-pole}
+	\end{figure}
+	Soit un pendule inversé sur un chariot (voir \cref{fig:cart-pole}) dont l'équation dynamique est donné par 
+	\begin{align}
+		\begin{split}
+			\dot{x}&=v\\
+			\dot{v}&=\frac{-m^2L^2g\cos(\theta)\sin(\theta)+mL^2(mL\omega^2\sin(\theta)-\delta v)+mL^2u}{mL^2\left(M+m(1-\cos^2(\theta))\right)}\\
+			\dot{\theta} &= \omega\\
+			\dot{\omega} &= \frac{(m+M)mgL\sin(\theta)-mL\cos(\theta)(mL\omega^2\sin(\theta)-\delta v)-mL\cos(\theta)u}{mL^2\left(M+m(1-\cos^2(\theta))\right)}
+		\end{split},
+	\end{align}
+	où $m$ est la masse du pendule, $M$ est la masse du chariot, $L$ est la longueur du bras, $g$ est l'accélération de la gravité,  et $\delta$ est le coéfficient de frottement sur le chariot.
+	\begin{enumerate}
+		\item Suivre les mêmes questions du Travail pratique encadré 1, avec $\state_{\rm f}^T = \begin{bmatrix}
+			0 & 0 & 0 & 0
+		\end{bmatrix}$ et $\out^T = \begin{bmatrix}
+		x & \theta
+		\end{bmatrix}$.
+	\end{enumerate}
+\end{tpe}
