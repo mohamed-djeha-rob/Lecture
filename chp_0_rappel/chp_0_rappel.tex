@@ -113,12 +113,15 @@ La première méthode de Lyapunov, aussi connue par la \emph{méthode indirecte 
 		\item L'origine est instable si au moins une des valeurs propres de $\matriceA$ est à partie réelle positive $\left(\Leftrightarrow \exists\lambda_i(\matriceA): {\rm Re}\lambda_i(\matriceA)>0\right)$.
 	\end{enumerate}
 \end{theoreme}
-La méthode indirecte de Lyapunov éffectue une  linéarisation du système autour du point d'équilibre, puis statue sur la stabilité du système nonlinéaire en se basant sur la stabilité du système linéarisé. Dans cette approche, il y un avantage et un inconvénient : l'analyse de stabilité d'un système linéaire est toujours possible d'analyser la stabilité d'un système linéaire à travers l'analyse des valeurs propores; mais la stabilité asymptotique est seulement prouvée pour être \emph{locale}. (\red{TODO: monter comment l'analyse de stabilité est performée pour les systèmes linéaires.})
+La méthode indirecte de Lyapunov éffectue une  linéarisation du système autour du point d'équilibre, puis statue sur la stabilité du système nonlinéaire en se basant sur la stabilité du système linéarisé. Dans cette approche, il y un avantage majeur : l'analyse de stabilité d'un système linéaire est simple car il suffit d'analyser les valeurs propores de la matrice $\matriceA$. (\red{TODO: monter comment l'analyse de stabilité est performée pour les systèmes linéaires.})
 
-La stabilité asymptotique locale signifie qu'il existe un ensemble $\setD\subset\mathbb{R}^n$ contenant l'origine, tel que si $\state(0)\in\setD\Rightarrow \state(t)\underset{t_\rightarrow\infty}{\longrightarrow}0$. Dans ce qui suit, on va étudier la méthode directe de Lyapunov qui ne se base pas sur une approximation du système nonlinéaire, mais en contre partie utilise des fonctions dite de Lyapunov. 
+Par contre, la stabilité asymptotique est seulement prouvée pour être \emph{locale}. 
+La stabilité asymptotique locale signifie qu'il existe un ensemble $\setD\subset\mathbb{R}^n$ contenant l'origine, tel que si $\state(0)\in\setD\Rightarrow \state(t)\overset{t_\rightarrow\infty}{\longrightarrow}0$. 
+
+Dans ce qui suit, on va étudier la méthode directe de Lyapunov qui ne se base pas sur une approximation du système nonlinéaire, mais en contre partie utilise des fonctions dite de Lyapunov. 
 \subsection{Deuxième méthode de Lyapunov (méthode directe)}
 Commenceons par un exemple introductif. Considérons un pendule simple dont l'équation dynamique est 
-\begin{align}
+\begin{align}\label{eq-chap2:pendulum}
 	\begin{split}
 		\dot{x}_1 &= x_2 \\
 		\dot{x}_2 &= -\frac{mgl}{J}\sin(x_1)-\frac{f}{J}x_2
@@ -128,6 +131,98 @@ L'énergie totale du pendule est donnée par
 \begin{equation}
 	E = \fracOneTwo Jx_2^2+mgl(1-\cos(x_1))
 \end{equation}
+la dérivée par rapport au temps de $E$ donne
+\begin{align}\label{eq-chap2:pendulum Edot}
+	\begin{split}
+		\dot{E}&=Jx_2\dot{x}_2+mgl\sin(x_1)\dot{x}_1\\
+		 	   &= Jx_2\left(-\frac{mgl}{J}\sin(x_1)-\frac{f}{J}x_2\right) + mgl\sin(x_1)x_2\\
+		 	   &=-fx_2^2 \leq0
+	\end{split}
+\end{align} 
+\cref{eq-chap2:pendulum Edot} signife que si initialement l'énergie du pendule non nulle ($E>0$), alors va diminuer au fil du temps car le pendule dissipe de l'énergie à travers les frottements. De plus, cette dissipation disparait seulement si le pendule est à l'arrêt. Infine, l'énergie du pendule atteindra sa valeur minimale ($E=0$) qui correspond à la position d'équilibre $x_1=x_2=0$. 
+
+Cet exemple nous montre qu'on peut analyser le comportement du système en utilisant son énergie son avoir besoin de linéarisation, ni de résolution de l'équation dynamique nonlinéaire~\eqref{eq-chap2:pendulum}. De manière générale, Lyapunov a montré que l'on peut juste utiliser des fonctions scalaires $V(\state)$ (définies positives) qui ne représentent pas forcément l'énergie du système, mais qui y ressemblent : $V$  strictement positives sur $\setD$ sauf à l'origine où $V(\state=\zeros)=0$. 
+
+\begin{definition}\label{def:FDP}
+	\begin{itemize}
+		\item $V(\state)$ est une fonction définie positive (FDP) sur $\setD$ ssi 
+		\begin{itemize}
+			\item $V(\state)>0, \ \forall \state\in\setD-\left\{0\right\}$, et
+			\item $V(\state)=0$ seulement à l'origine.
+		\end{itemize}
+		\item $V(\state)$ est une fonction semi-définie positive (FSDP) sur $\setD$ ssi $V(\state)\geq0, \ \forall \state\in\setD$ (c.à.d., $V(\state)$ s'annule à l'origine et à d'autres points.).
+		\item $V(\state)$ est une fonction définie négative (FDN) sur $\setD$ ssi  $-V(\state)$ est FDP.
+		\item $V(\state)$ est une fonction semi-définie négative (FSDN) sur $\setD$ ssi  $-V(\state)$ est FSDP.
+	\end{itemize}
+\end{definition} 
+Il est important de noter que la Définition~\ref{def:FDP} est toujours relative à un espace $\setD$. Par exemple, 
+\begin{itemize}
+	\item La fonction $V(\state) = x_1^2$ est FDP sur $\setD=\mathbb{R}$, mais elle est FSDP $\setD=\mathbb{R}^2$.
+	\item La fonction $V(\state) = x_1^2 + x_2^2$ est FDP sur $\setD=\mathbb{R}^2$, mais elle est FSDP $\setD=\mathbb{R}^3$.
+\end{itemize}
+À ce stade, on est prêt à annoncer le deuxième Théorème de Lyapunov.
+\begin{theoreme}\label{thm:direct lyapunov method}
+	Soit le système~\eqref{eq-chap1:autonomous system} ayant l'origine comme point d'équilibre, et soit la fonction de Lyapunov $V(\state)$ définie positive sur $\setD\subset\mathbb{R}^n$. Alors, 
+	\begin{enumerate}
+		\item L'origine du système~\eqref{eq-chap1:autonomous system} est localement Lyapunov stable si $\dot{V}$ est FSDN sur $\setD$.
+		\item L'origine du système~\eqref{eq-chap1:autonomous system} est localement asymptotiquement stable si $\dot{V}$ est FDN sur $\setD$.
+		\item L'origine du système~\eqref{eq-chap1:autonomous system} est localement exponentiellement stable si $\exists\alpha,c_{{i=\left\{1,2,3\right\}}}>0:\ c_1\norm{\state}^\alpha\leq V(\state)\leq c_2\norm{\state}^\alpha$, et $ \dot{V}\leq c_3\norm{\state}^\alpha, \ \forall\state\in\setD$.
+	\end{enumerate}
+\end{theoreme}
+Le Théorème~\ref{thm:direct lyapunov method} est aussi appelé la \emph{méthode directe de Lyapunov}. La stabilité est \emph{locale} car elle définie par rapport $ \setD$. Pour que les conclusions de stabilité dans le Théorème~\ref{thm:direct lyapunov method} devienne \emph{globale}, il faut satisfaire deux conditions : 
+\begin{enumerate}
+	\item $\setD=\mathbb{R}$
+	\item $V(\state)$ est radialement non-bornée. Autrement dit, $V(\state)\longrightarrow\infty$ si  $\norm{\state}\longrightarrow\infty$
+\end{enumerate}
+Autant la première condition est très intuitive, la second condition est peu claire. En effet, cette condition est posée pour éviter que $V(\state)$ décrémente pendant que $\norm{\state}$ devient non-bornée. Par exemple, prenons le système nonlinéaire suivant 
+\begin{align}\label{eq-chap2:example of nonglobal stable system}
+	\begin{split}
+		\dot{x}_1 &=(x_2-1)x_1^3\\
+		\dot{x}_2 &=-\frac{x_1^4}{(x_1^2+1)^2}-\frac{x_2}{x_2^2+1}
+	\end{split},
+\end{align}
+ayant l'origine comme unique point d'équilibre. Considérons la fonction de Lyapunov candidate
+\begin{equation}\label{eq-chap2:example of lyapunov func}
+	V(\state) = x_2^2 + \frac{x_1^2}{x_1^2+1}
+\end{equation}
+qui est FDP sur $\mathbb{R}^2$. $\dot{V}$ est donnée par 
+\begin{equation*}
+	\dot{V} = -2\frac{x_1^4}{(x_1^2+1)^2}-2\frac{x_2^2}{x_2^2+1}
+\end{equation*}
+On pourrait conclure que le système est globalement asymptotiquement stable car $\dot{V}$ est FDN sur $\mathbb{R}^2$. Par contre, on peut montrer par simulation que le système~\eqref{eq-chap2:example of nonglobal stable system} est asymptotiquement stable pour la condition initiale $\state(0)^T=\begin{bmatrix}
+1 & 1.9
+\end{bmatrix}$, mais il est instable pour  $\state(0)^T=\begin{bmatrix}
+1 & 2
+\end{bmatrix}$. En effet, la stabilité globale n'est pas garantie car $V(\state)$ dans~\eqref{eq-chap2:example of lyapunov func} n'est pas radialement non-bornée ($V$ est bornée à 1 dans la direction de $x_1$). 
+
+Aussi, il est à noter que le Théorème~\ref{thm:direct lyapunov method} fournit des conditions \emph{suffisantes} de stabilité. En effet, trouver une fonction $V(\state)$ tel que $\dot{V}\geq0$ sur $\setD$ n'implique en aucun cas que le système est instable. 
+\begin{example}
+	Considérons le système nonlinéaire suivant 
+	\begin{align}\label{eq-chap2:expl nonlinear sys}
+		\begin{split}
+			\dot{x}_1 &=(x_2-1)x_1^3\\
+			\dot{x}_2 &=-\frac{x_1^4}{(x_1^2+1)^2}-\frac{x_2}{x_2^2+1}
+		\end{split},
+	\end{align}
+	ayant l'origine comme unique point d'équilibre. Étudions la stabilité de l'origine par les fonctions candidates suivantes 
+	\begin{align}		
+			\label{eq-chap2:V1}	V_1(\state)&= \fracOneTwo(x_1^2 + x_2^2),\\
+			\label{eq-chap2:V2}	V_2(\state)&= \fracOneTwo x_1^2 + (x_1+\fracOneTwo x_2^2)^2,\\
+		\label{eq-chap2:V3}		V_3(\state)&= \fracOneTwo x_1^2 + (x_1+\fracOneTwo x_2^2)^2 + \fracOneTwo x_2^2	.	
+	\end{align}
+	Les dérivées de $V_1,V_2$ et $V_3$ donnent
+	\begin{align}\label{eq-chap2:Vdot1}		
+		\dot{V}_1&= -x_1^2 - x_2^2(1-x_1),\\
+		\label{eq-chap2:Vdot2}	\dot{V}_2&= -3x_1^2,\\
+	\label{eq-chap2:Vdot3}		\dot{V}_3&= -3x_1^2 -x_2^2	.	
+	\end{align}
+	$\dot{V}_1$ est FDN sur $\setD = \left\{\state\inR^2: x_1<1\right\}$. Alors en utilisant la fonction candidate $V_1(\state)$, on conclue que l'origine du système~\eqref{eq-chap2:expl nonlinear sys} est asymptotiquement stable sur $\setD$. 
+	$\dot{V}_2$ est FSDN sur $\mathbb{R}^2$. Alors en utilisant la fonction candidate $V_2(\state)$ (qui est radialement non-bornée), on conclue que l'origine du système~\eqref{eq-chap2:expl nonlinear sys} Lyapunov stable sur $\mathbb{R}^2$. 
+	$\dot{V}_3$ est FDN sur $\mathbb{R}^2$. Alors en utilisant la fonction candidate $V_3(\state)$ (qui est radialement non-bornée), on conclue que l'origine du système~\eqref{eq-chap2:expl nonlinear sys} est globalement asymptotiquement. 
+\end{example}
+Il est important de remarquer que, pour un seul système~\eqref{eq-chap2:expl nonlinear sys}, on a eu trois conclusions différentes  sur la stabilité de son origine mais qui ne sont pas contradictoires. Ceci montre la difficulté relative à l'application du Théorème~\ref{thm:direct lyapunov method} pour l'analyse de stabilité des système linéaire : la méthode directe de Lyapunov ne fournit pas une approache constructive pour l'obtention d'une fonction de Lyapunov. En revanche trouver une fonction de Lyapunov reste tout de même moins difficile que la résolution d'un système différentiel nonlinéaire.
+\subsection{Principe de l'invariance}
+Parfois, le mieux que l'on peut trouver c'est une fonction de Lyapunov dont la dérivée est seulement FSDN. Par contre, on a des évidences (par simulation numérique, ou par constatation du comportement du système réel) que le système est asymptotiquement stable. À titre d'exemple, le système~\eqref{eq-chap2:expl nonlinear sys} est seulement prouvé d'être Lyapunov stable en utilisant $V_2(\state)$dans~\eqref{eq-chap2:V2}, alors qu'en réalité il est asymptotiquement stable. 
 \section{Linéarisation autour du point de fonctionnement}
 
 \begin{itemize}
