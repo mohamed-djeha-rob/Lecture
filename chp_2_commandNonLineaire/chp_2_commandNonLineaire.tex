@@ -1,6 +1,40 @@
 \graphicspath{{Figures/}}
 \chapter{Commande Nonlinéaire par Backstepping} \label{chap:backstepping}
-
+Dans la~\cref{subsec:lyapunov direct method}, on a vu comment analyser la stabilité d'un système nonlinéaire autonome en utilisant les fonctions de Lyapunov. Maintenant, supposons que l'on a un système nonlinéaire sous la forme~\eqref{eq-chap1:generic nnlinear sys}, où $\command$ est l'entrée de commande par laquelle on veut stabiliser le système. Le but est de trouver $\command$ telque le système~\eqref{eq-chap1:generic nnlinear sys} est asymptotiquement stable en boucle fermée. \emph{Comment peut-on exploiter la méthode directe de Lyapunov pour le problème de stabilization ?} 
+\section{Commande nonlinéaire par les fonctions de Lyapunov} 
+Exploiter une fonctions  de Lyapunov pour la commande consiste à effectuer les étapes suivantes : 
+\begin{enumerate}
+	\item Choisir $V(\state)$ FDP sur $\setD\subset\mathbb{R}^n$
+	\item Calculer $\dot{V} = \frac{\partial V}{\partial \state}\stateDot = \frac{\partial V}{\partial \state}f(\state,\command)$
+	\item Trouver $\command=\gamma(\state)$ tel que $\dot{V}$ est FDN sur $\setD$. 
+\end{enumerate}
+\begin{example}
+	Soit le système nonlinéaire suivant
+	 \begin{equation*}
+		\dot{x} = x^5 + u
+		\end{equation*}
+	En choissant $V(x) = \fracOneTwo x^2$, on a $\dot{V} = x(x^5+u)$. Alors, si 
+	\begin{equation}\label{eq-chap3:nnlinear feedback 1}
+		u = -x^5-\lambda x, \  \lambda>0,
+	\end{equation} alors $\dot{V} = -\lambda x^2$. 
+\end{example}
+On remarque que la commande dans~\eqref{eq-chap3:nnlinear feedback 1} est un retour d'état nonlinéaire à cause de la présence du terme $-x^5$. on va appliquer la même approche dans l'exemple suivant. 
+\begin{example}
+	Soit le système nonlinéaire suivant 
+	\begin{align*}
+		\dot{x}_1 &= x_1^2 + x_2 \\
+		\dot{x}_2 &= x_1x_2 + (x_2^2+1)u
+	\end{align*}
+	On choisit la fonction de Lyapunov $V(\state) = \fracOneTwo(x_1^2 + x_2^2)$. Sa dérivée est donnée par 
+	\begin{equation*}
+		\dot{V} = x_1(x_1^2 + x_2 + x_2^2) + x_2(x_2^2 +1)u
+	\end{equation*}
+	Si on  choisit  u tel que 
+	\begin{equation}\label{eq-chap3:nnlinear feedback 2}
+		u=\frac{1}{x_2(x_2^2+1)}\left(-x_1(x_1^2 + x_2 + x_2^2)  - \lambda_1x_1^2 -\lambda_2x_2^2\right),
+	\end{equation}
+	alors, $\dot{V} = - \lambda_1x_1^2 -\lambda_2x_2^2$ FDN sur $\mathbb{R}^2$. 
+\end{example}
 \begin{itemize}
 	\item special form of nonlinear systems
 	\item goal
