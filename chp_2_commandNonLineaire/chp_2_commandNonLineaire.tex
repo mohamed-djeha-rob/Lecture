@@ -35,6 +35,27 @@ On remarque que la commande dans~\eqref{eq-chap3:nnlinear feedback 1} est un ret
 	\end{equation}
 	alors, $\dot{V} = - \lambda_1x_1^2 -\lambda_2x_2^2$ FDN sur $\mathbb{R}^2$. 
 \end{example}
+Similairement à~\eqref{eq-chap3:nnlinear feedback 1}, u~\eqref{eq-chap3:nnlinear feedback 2} est aussi un retour d'état nonlinéaire. Par contre, u~\eqref{eq-chap3:nnlinear feedback 2} est indéfinie sur l'axe $x_2=0$. Ceci  renvoie à un \emph{mauvais choix} de la fonction de Lyapunov. Ce problème a été déja abordé dans la~\cref{subsec:lyapunov direct method} quant au choix des fonctions de Lyapunov pour l'analyse de stabilité. Dans ce qui suit, on va voir une technique de commande nonlinéaire pour construire de manière systématique une fonction de Lyapunov de tel manière que la commande est bien définie.  
+\section{Méthode de Backstepping}
+La méthode de backstepping est technique de commande nonlinéaire pour la construction d'une fonction de Lyapunov pour la commande de manière systèmatique. Cette technique consiste à fragmanter le système  global en des sous-systèmes en cascade, puis de résoudre le problème de commande de manière recursive partant du sous-système le plus interne (ordre 1) en remontant vers les ordres superieurs du système, d'où son nom \emph{Backstepping}. Néanmoins pour pouvoir appliquer cette technique, il faut que  le système nonlinéaire possède une structure trangulaire
+\begin{align}\label{eq-chap3:strict-feedback form}
+	\begin{split}
+		\dot{x}_1 &= f_1(x_1) + g_1(x_1)x_2\\
+		\dot{x}_2 &= f_2(x_1,x_2) + g_2(x_1,x_2)x_3\\
+		&\vdots \\
+		\dot{x}_{n-1} &= f_{n-1}(x_1,x_2,\ldots,x_{n-1}) +  g_{n-1}(x_1,x_2,\ldots,x_{n-1})x_n\\
+		\dot{x}_n &= f_{n}(x_1,x_2,\ldots,x_{n}) +  g_{n}(x_1,x_2,\ldots,x_{n})u
+	\end{split},
+\end{align} 
+avec $g_i(x_1,x_2,\ldots,x_i)\neq0, \forall \state\in\setD$. Le système~\eqref{eq-chap3:strict-feedback form} a une forme dite en "retour d'état stricte", car pour chaque sous-système $i$ on retrouve seulement le retour des états $(x_1,x_2,\ldots,x_i)$. De plus,  la forme en cascade est visible dans~\eqref{eq-chap3:strict-feedback form} : 
+\begin{itemize}
+	\item $x_2$ apparait comme une entreé de commande \emph{fictive} pour le sous-système 1,
+	\item $x_3$ apparait comme une entreé de commande \emph{fictive} pour le sous-système 2, $\cdots$
+	\item  $x_n$ apparait comme une entreé de commande \emph{fictive} pour le sous-système $n-1$, 
+	\item  $u$ apparait comme une entreé de commande \emph{réel} pour le sous-système 2,
+\end{itemize}
+\section{Synthèse de la commande par Backstepping}
+
 \begin{itemize}
 	\item special form of nonlinear systems
 	\item goal
