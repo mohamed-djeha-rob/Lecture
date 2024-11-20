@@ -163,16 +163,34 @@ Il est important de noter que la Définition~\ref{def:FDP} est toujours relative
 \end{itemize}
 À ce stade, on est prêt à annoncer le deuxième Théorème de Lyapunov.
 \begin{theoreme}\label{thm:direct lyapunov method}
-	Soit le système~\eqref{eq-chap1:autonomous system} ayant l'origine comme point d'équilibre, et soit la fonction de Lyapunov $V(\state)$ définie positive sur $\setD\subset\mathbb{R}^n$. Alors, 
+	Soit le système~\eqref{eq-chap1:autonomous system} ayant l'origine comme point d'équilibre, et soit la fonction de Lyapunov $V(\state)$ définie positive sur $\setD$ (contenant l'origine). Alors, 
 	\begin{enumerate}
-		\item L'origine du système~\eqref{eq-chap1:autonomous system} est localement Lyapunov stable si $\dot{V}$ est FSDN sur $\setD$.
-		\item L'origine du système~\eqref{eq-chap1:autonomous system} est localement asymptotiquement stable si $\dot{V}$ est FDN sur $\setD$.
-		\item L'origine du système~\eqref{eq-chap1:autonomous system} est localement exponentiellement stable si $\exists\alpha,c_{{i=\left\{1,2,3\right\}}}>0:\ c_1\norm{\state}^\alpha\leq V(\state)\leq c_2\norm{\state}^\alpha$, et $ \dot{V}\leq c_3\norm{\state}^\alpha, \ \forall\state\in\setD$.
+		\item L'origine du système~\eqref{eq-chap1:autonomous system} est  Lyapunov stable si $\dot{V}$ est FSDN sur $\setD$.
+		\item L'origine du système~\eqref{eq-chap1:autonomous system} est  asymptotiquement stable si $\dot{V}$ est FDN sur $\setD$.
+		\item L'origine du système~\eqref{eq-chap1:autonomous system} est  exponentiellement stable si $\exists\alpha,c_{{i=\left\{1,2,3\right\}}}>0:\ c_1\norm{\state}^\alpha\leq V(\state)\leq c_2\norm{\state}^\alpha$, et $ \dot{V}\leq c_3\norm{\state}^\alpha, \ \forall\state\in\setD$.
 	\end{enumerate}
 \end{theoreme}
-Le Théorème~\ref{thm:direct lyapunov method} est aussi appelé la \emph{méthode directe de Lyapunov}. La stabilité est \emph{locale} car elle définie par rapport $ \setD$. Pour que les conclusions de stabilité dans le Théorème~\ref{thm:direct lyapunov method} devienne \emph{globale}\footnote{La stabilité globale ne concerne que les systèmes avec un seul point d'équilibre !}, il faut satisfaire deux conditions : 
+\begin{example}
+	Soit le système nonlinéaire suivant 
+	\begin{align}
+		\begin{split}
+			\dot{x}_1 &=-x_1^3 + x_1x_2\\
+			\dot{x}_2 &=-x_1^2 -x_2^5
+		\end{split}
+	\end{align}
+	Analysons la stabilité de l'origine (l'unique point d'équilibre) par la fonction $V(\state)=\fracOneTwo\left(x_1^2+x_2^2\right)$. La dérivée $\dot{V}$ est donné par 
+	\begin{align}
+		\begin{split}
+			\dot{V}&=x_1\dot{x}_1 + x_2\dot{x}_2\\
+			&=x_1\left(-x_1^3 + x_1x_2\right) + x_2\left(-x_1^2 -x_2^5\right) \\
+			&= -x_1^4-x_2^6
+		\end{split}
+	\end{align}
+	$\dot{V}$ est FDN sur $\mathbb{R}^2$ donc l'origine est asymptotiquement stable.
+\end{example}
+Le Théorème~\ref{thm:direct lyapunov method} est aussi appelé la \emph{méthode directe de Lyapunov}. Comme le montre l'énoncé de ce Théorème, la stabilité est \emph{locale} car elle définie par rapport $ \setD$. Pour que les conclusions de stabilité dans le Théorème~\ref{thm:direct lyapunov method} devienne \emph{globale}\footnote{La stabilité globale ne concerne que les systèmes avec un seul point d'équilibre !}, il faut satisfaire deux conditions : 
 \begin{enumerate}
-	\item $\setD=\mathbb{R}$
+	\item $\setD=\mathbb{R}^n$
 	\item $V(\state)$ est radialement non-bornée. Autrement dit, $V(\state)\longrightarrow\infty$ si  $\norm{\state}\longrightarrow\infty$
 \end{enumerate}
 Autant la première condition est très intuitive, la second condition est peu claire. En effet, cette condition est posée pour éviter que $V(\state)$ décrémente pendant que $\norm{\state}$ devient non-bornée. Par exemple, prenons le système nonlinéaire suivant 
@@ -225,7 +243,8 @@ Il est important de remarquer que, pour un seul système~\eqref{eq-chap2:expl no
 \subsection{Principe de l'invariance}
 Dans la pratique, le mieux que l'on peut faire souvent c'est trouver $V(\state)$ FDP dont la dérivée est seulement FSDN. Par contre, on peut avoir des évidences (par simulation ou expérimentation) que le système est asymptotiquement stable. À titre d'exemple, le système~\eqref{eq-chap2:expl nonlinear sys} est seulement prouvé d'être Lyapunov stable en utilisant $V_2(\state)$ dans~\eqref{eq-chap2:V2}, alors qu'en réalité il est asymptotiquement stable tel que montré par le biai de   $V_3(\state)$ dans~\eqref{eq-chap2:V3}. Dans ces cas, on peut  utiliser le principe de Lasalle pour montrer que la stabilité asymptotique du système. 
 \begin{corolaire}\label{cor:Lasalle lemma}
-	Considérons le système~\eqref{eq-chap1:autonomous system} ayant l'origine comme point d'équilibre, et supposant qu'il existe $V(\state)$ FDP sur $\setD\subset\mathbb{R}^n$ tel que $\dot{V}$ est FSDN sur $\setD$. Alors, l'origine est localement asymptotiquement stable si l'ensemble limite invariant\footnote{Définition d'un ensemble limite invariant : } ${\cal F}(\state)=\left\{\state\in\setD: \dot{V}=0\right\}$ se réduit à  ${\cal F}(\state)=\left\{\state\in\setD: \state=\zeros\right\}$. 
+	Considérons le système~\eqref{eq-chap1:autonomous system} ayant l'origine comme point d'équilibre, et supposant qu'il existe $V(\state)$ FDP sur $\setD\subset\mathbb{R}^n$ tel que $\dot{V}$ est FSDN sur $\setD$. Alors, l'origine est localement asymptotiquement stable si l'ensemble 
+	 ${\cal F}(\state)=\left\{\state\in\setD: \dot{V}=0\right\}$ se réduit à  ${\cal F}(\state)=\left\{\state\in\setD: \state=\zeros\right\}$. 
 \end{corolaire}
 Le Principe de Lasalle (\cref{cor:Lasalle lemma}, aussi appelé le principe d'invariance) signifie qu'aucune solution $\state(t)$ ne peut identiquement rester sur ${\cal F}(\state)$ sauf l'origine.
 La stabilité asymptotique globale peut aussi être montrée en utilisant si $\setD=\mathbb{R}^n$ et $V(\state)$ est radialement non-bornée. 
