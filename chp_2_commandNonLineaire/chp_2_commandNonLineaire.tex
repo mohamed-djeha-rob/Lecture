@@ -60,8 +60,8 @@ Pour expliquer la synthèse de la commande par Backstepping, considérons un sys
 %\begin{align}
 	\begin{subequations}\label{eq-chap3:sys}
 		\begin{align}
-			\label{eq-chap3:subsys1}	\dot{x}_1 &= f_1(x_1) + g_1(x_1)x_2\\
-			\label{eq-chap3:subsys2}	\dot{x}_1 &= f_1(x_1) + g_1(x_1)x_2
+			\label{eq-chap3:subsys1}	\dot{x}_1 &= f_1(x_1) + g_1(x_1)x_2,\\
+			\label{eq-chap3:subsys2}	\dot{x}_2 &= f_2(\state) + g_2(\state)u,
 		\end{align}
 %		\begin{equation}
 %			\dot{x}_1 = f_1(x_1) + g_1(x_1)x_2
@@ -71,17 +71,53 @@ Pour expliquer la synthèse de la commande par Backstepping, considérons un sys
 %		\end{equation}
 	\end{subequations}
 %\end{align} 
-On suppose qu'il existe une fonction $\phi(x_1)$ tel que si $x_2 = \phi(x_1)$, alors le sous-système~\eqref{eq-chap3:subsys1} est asymptotiquement stable. Aussi, on suppose que l'on connait $V(x_1)$ FDP tel que 
+avec $g_1(x_1),g_2(\state)\neq0$. On suppose qu'il existe une fonction $\phi_1(x_1)$ avec $\phi_1(0)=0$ tel que si $x_2 = \phi_1(x_1)$, alors le sous-système~\eqref{eq-chap3:subsys1} est asymptotiquement stable. De plus, on suppose que l'on connait $V_1(x_1)$ FDP sur $\mathbb{R}$ tel que 
 \begin{equation}
-	\dot{V}=\frac{\partial V}{\partial x_1}\left(f_1(x_1) + g_1(x_1)\phi(x_1)\right)\leq - W(x_1)
+	\dot{V}_1=\frac{\partial V_1}{\partial x_1}\left(f_1(x_1) + g_1(x_1)\phi_1(x_1)\right)\leq - W(x_1)
 \end{equation}
-tel que $W(x_1)$ est FDP. En posant $z=x_2-\phi(x_1)$ et $u = \frac{1}{g_2(\state)}\left(-f_2(\state) + v\right)$,  le système~\eqref{eq-chap3:sys} est ré-écrit comme suit 
-	\begin{subequations}%\label{eq-chap3:sys}
+tel que $W(x_1)$ est FDP sur $\mathbb{R}$. En posant 
+\begin{align*}
+	z&=x_2-\phi_1(x_1),\\
+	u &= \frac{1}{g_2(\state)}\left(-f_2(\state) +\dot{\phi}_1(x_1) + v\right),
+\end{align*}
+  le système~\eqref{eq-chap3:sys} peut être ré-écrit comme suit 
+	\begin{subequations}\label{eq-chap3:sys_modif}
 	\begin{align}
-			\dot{x}_1 &= \left[f_1(x_1) + g_1(x_1)\phi(x_1)\right] + g_1(x_1)z\\
-			\dot{x}_2 &= v
+			\dot{x}_1 &= \left(f_1(x_1) + g_1(x_1)\phi_1(x_1)\right) + g_1(x_1)z\\
+			\dot{z} &= v
 	\end{align}
 	\end{subequations}
-\begin{itemize}
-	\item the command is not unique!
-\end{itemize}
+Finalement, il faut trouver la commande $v$ qui stabilize  $(x_1,z)$ à l'origine\footnote{$z\overset{t\rightarrow\infty}{\longrightarrow}0$ est un problème de poursuite. En effet, ceci est équivalent à dire $ x_2\overset{t\rightarrow\infty}{\longrightarrow}\phi_1(x_1)$.}. Il suffit de pose la fonction de Lyapunov $V_2$ suivante 
+\begin{equation}
+	V_2(x_1,z)=V_1 + \fracOneTwo z^2,
+\end{equation}	
+dont la dérivée $\dot{V}_2$ est 
+\begin{align}\label{eq-chap3:V2 dot}
+	\begin{split}
+		\dot{V}_2 &= \frac{\partial V_1}{\partial x_1}\left(f_1(x_1) + g_1(x_1)\phi_1(x_1) + g_1(x_1)z\right) + zv \\ 
+		&= \frac{\partial V_1}{\partial x_1}\left(f_1(x_1) + g_1(x_1)\phi_1(x_1)\right) + \left(v + \frac{\partial V_1}{\partial x_1}g_1(x_1)\right)z \\
+		&\leq -W(x_1) + \left(v + \frac{\partial V_1}{\partial x_1}g_1(x_1)\right)z
+	\end{split}
+\end{align}
+Alors, il est simple de voir qu'il suffit de choisir 
+\begin{equation}\label{eq-chap3:integrator input backstepping}
+	v= -\frac{\partial V_1}{\partial x_1}g_1(x_1) - \lambda_2z,
+\end{equation}
+pour que~\eqref{eq-chap3:V2 dot} soit FDN sur $\mathbb{R}^2$. Par la vértue du Théorème~\ref{thm:direct lyapunov method}, la commande 
+\begin{equation}\label{eq-chap3:backstepping command}
+	u = \frac{1}{g_2(\state)}\left(-f_2(\state) +\dot{\phi}_1(x_1) -\frac{\partial V_1}{\partial x_1}g_1(x_1) - \lambda_2\left(x_2-\phi_1(x_1)\right)\right)
+\end{equation}
+\subsection{Discussion}
+La fonction de Lyapunov $V_2$ est en fonction de $x_1$ et $z$ pour s'assurer que la commande $v$ stabilise ces deux états à l'origine. De plus, il faut noter que celà assure la convergence de $x_2$ vers 0. En effet, $z\overset{t\rightarrow\infty}{\longrightarrow}0$ implique que $ x_2\overset{t\rightarrow\infty}{\longrightarrow}\phi_1(x_1)\overset{t\rightarrow\infty}{\longrightarrow}0$ par conséquence de la convergence de $x_1$ vers 0. 
+Aussi, la commande par backstepping $u$~\eqref{eq-chap3:backstepping command} est non-unique par effet de la non-unicité du choix de $V_1$. Finalement, la synthèse de la commande par backstepping comme expliquée  peut être directement généralisé pour des systèmes d'ordre supérieur comme le montre l'exemple suivant. 
+\begin{example}
+	Soit le système nonlinéaire de 3ème ordre 
+	\begin{align}
+		\begin{split}
+			\dot{x}_1&= x_1^2 + (x_1^2+1)x_2 \\
+			\dot{x}_2&= x_1x_2 + x_2\\
+			\dot{x}_3&= x_2 + u 
+		\end{split}
+	\end{align}
+\end{example}
+
