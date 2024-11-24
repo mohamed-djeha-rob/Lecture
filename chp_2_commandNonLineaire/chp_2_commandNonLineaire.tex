@@ -21,10 +21,12 @@ Exploiter une fonctions  de Lyapunov pour la commande consiste à effectuer les 
 On remarque que la commande dans~\eqref{eq-chap3:nnlinear feedback 1} est un retour d'état nonlinéaire à cause de la présence du terme $-x^5$. on va appliquer la même approche dans l'exemple suivant. 
 \begin{example}
 	Soit le système nonlinéaire suivant 
-	\begin{align*}
-		\dot{x}_1 &= x_1^2 + x_2 \\
-		\dot{x}_2 &= x_1x_2 + (x_2^2+1)u
-	\end{align*}
+	\begin{align}\label{eq-chap3:expl nnsys}
+		\begin{split}
+			\dot{x}_1 &= x_1^2 + x_2 \\
+			\dot{x}_2 &= x_1x_2 + (x_2^2+1)u
+		\end{split}		
+	\end{align}
 	On choisit la fonction de Lyapunov $V(\state) = \fracOneTwo(x_1^2 + x_2^2)$. Sa dérivée est donnée par 
 	\begin{equation*}
 		\dot{V} = x_1(x_1^2 + x_2 + x_2^2) + x_2(x_2^2 +1)u
@@ -35,7 +37,7 @@ On remarque que la commande dans~\eqref{eq-chap3:nnlinear feedback 1} est un ret
 	\end{equation}
 	alors, $\dot{V} = - \lambda_1x_1^2 -\lambda_2x_2^2$ FDN sur $\mathbb{R}^2$. 
 \end{example}
-Similairement à~\eqref{eq-chap3:nnlinear feedback 1}, u~\eqref{eq-chap3:nnlinear feedback 2} est aussi un retour d'état nonlinéaire. Par contre, u~\eqref{eq-chap3:nnlinear feedback 2} est indéfinie sur l'axe $x_2=0$. Ceci  renvoie à un \emph{mauvais choix} de la fonction de Lyapunov. Ce problème a été déja abordé dans la~\cref{subsec:lyapunov direct method} quant au choix des fonctions de Lyapunov pour l'analyse de stabilité. Dans ce qui suit, on va voir une technique de commande nonlinéaire pour construire de manière systématique une fonction de Lyapunov de tel manière que la commande est bien définie.  
+Similairement à~\eqref{eq-chap3:nnlinear feedback 1}, u~\eqref{eq-chap3:nnlinear feedback 2} est aussi un retour d'état nonlinéaire. Par contre, $u$~\eqref{eq-chap3:nnlinear feedback 2} est indéfinie sur l'axe $x_2=0$. Ceci  renvoie à un \emph{mauvais choix} de la fonction de Lyapunov. Ce problème a été déja abordé dans la~\cref{subsec:lyapunov direct method} quant au choix des fonctions de Lyapunov pour l'analyse de stabilité. Dans ce qui suit, on va voir une technique de commande nonlinéaire pour construire de manière systématique une fonction de Lyapunov de tel manière que la commande est bien définie.  
 \section{Méthode de Backstepping}
 La méthode de backstepping est technique de commande nonlinéaire pour construire de manière systèmatique une fonction de Lyapunov pour la commande. Cette technique consiste à fragmanter le système  global en des sous-systèmes en cascade, puis de résoudre le problème de commande de manière recursive en partant du sous-système le plus interne (ordre 1), puis en remontant \emph{par étape} vers les ordres superieurs du système, d'où son nom \emph{Backstepping}. Néanmoins pour pouvoir appliquer cette technique, il faut que  le système nonlinéaire possède une structure trangulaire
 \begin{align}\label{eq-chap3:strict-feedback form}
@@ -76,48 +78,152 @@ avec $g_1(x_1),g_2(\state)\neq0$. On suppose qu'il existe une fonction $\phi_1(x
 	\dot{V}_1=\frac{\partial V_1}{\partial x_1}\left(f_1(x_1) + g_1(x_1)\phi_1(x_1)\right)\leq - W(x_1)
 \end{equation}
 tel que $W(x_1)$ est FDP sur $\mathbb{R}$. En posant 
-\begin{align*}
-	z&=x_2-\phi_1(x_1),\\
-	u &= \frac{1}{g_2(\state)}\left(-f_2(\state) +\dot{\phi}_1(x_1) + v\right),
-\end{align*}
+\begin{align}\label{eq-chap3:change of variables z}
+	z_1&=x_2-\phi_1(x_1),\\
+	\label{eq-chap3:change of variables u}u &= \frac{1}{g_2(\state)}\left(-f_2(\state) +\dot{\phi}_1(x_1) + v\right),
+\end{align}
   le système~\eqref{eq-chap3:sys} peut être ré-écrit comme suit 
 	\begin{subequations}\label{eq-chap3:sys_modif}
 	\begin{align}
-			\dot{x}_1 &= \left(f_1(x_1) + g_1(x_1)\phi_1(x_1)\right) + g_1(x_1)z\\
-			\dot{z} &= v
+			\dot{x}_1 &= \left(f_1(x_1) + g_1(x_1)\phi_1(x_1)\right) + g_1(x_1)z_1\\
+			\dot{z}_1 &= v
 	\end{align}
 	\end{subequations}
-Finalement, il faut trouver la commande $v$ qui stabilize  $(x_1,z)$ à l'origine\footnote{$z\overset{t\rightarrow\infty}{\longrightarrow}0$ est un problème de poursuite. En effet, ceci est équivalent à dire $ x_2\overset{t\rightarrow\infty}{\longrightarrow}\phi_1(x_1)$.}. Il suffit de pose la fonction de Lyapunov $V_2$ suivante 
-\begin{equation}
-	V_2(x_1,z)=V_1 + \fracOneTwo z^2,
+Finalement, il faut trouver la commande $v$ qui stabilize  $(x_1,z_1)$ à l'origine\footnote{$z_1\overset{t\rightarrow\infty}{\longrightarrow}0$ est un problème de poursuite. En effet, ceci est équivalent à dire $ x_2\overset{t\rightarrow\infty}{\longrightarrow}\phi_1(x_1)$.}. Il suffit de pose la fonction de Lyapunov $V_2$ suivante 
+\begin{equation}\label{eq-chap3:V2}
+	V_2(x_1,z)=V_1 + \fracOneTwo z_1^2,
 \end{equation}	
 dont la dérivée $\dot{V}_2$ est 
 \begin{align}\label{eq-chap3:V2 dot}
 	\begin{split}
-		\dot{V}_2 &= \frac{\partial V_1}{\partial x_1}\left(f_1(x_1) + g_1(x_1)\phi_1(x_1) + g_1(x_1)z\right) + zv \\ 
-		&= \frac{\partial V_1}{\partial x_1}\left(f_1(x_1) + g_1(x_1)\phi_1(x_1)\right) + \left(v + \frac{\partial V_1}{\partial x_1}g_1(x_1)\right)z \\
-		&\leq -W(x_1) + \left(v + \frac{\partial V_1}{\partial x_1}g_1(x_1)\right)z
+		\dot{V}_2 &= \frac{\partial V_1}{\partial x_1}\left(f_1(x_1) + g_1(x_1)\phi_1(x_1) + g_1(x_1)z_1\right) + z_1v \\ 
+		&= \frac{\partial V_1}{\partial x_1}\left(f_1(x_1) + g_1(x_1)\phi_1(x_1)\right) + \left(v + \frac{\partial V_1}{\partial x_1}g_1(x_1)\right)z_1 \\
+		&\leq -W(x_1) + \left(v + \frac{\partial V_1}{\partial x_1}g_1(x_1)\right)z_1
 	\end{split}
 \end{align}
 Alors, il est simple de voir qu'il suffit de choisir 
 \begin{equation}\label{eq-chap3:integrator input backstepping}
-	v= -\frac{\partial V_1}{\partial x_1}g_1(x_1) - \lambda_2z,
+	v= -\frac{\partial V_1}{\partial x_1}g_1(x_1) - \lambda_2z_1,
 \end{equation}
-pour que~\eqref{eq-chap3:V2 dot} soit FDN sur $\mathbb{R}^2$. Par la vértue du Théorème~\ref{thm:direct lyapunov method}, la commande 
+pour que~\eqref{eq-chap3:V2 dot} soit FDN sur $\mathbb{R}^2$. En remplaçant~\eqref{eq-chap3:integrator input backstepping}
+ dans~\eqref{eq-chap3:change of variables u}, on obtient la commande par backstepping $u$ 
 \begin{equation}\label{eq-chap3:backstepping command}
-	u = \frac{1}{g_2(\state)}\left(-f_2(\state) +\dot{\phi}_1(x_1) -\frac{\partial V_1}{\partial x_1}g_1(x_1) - \lambda_2\left(x_2-\phi_1(x_1)\right)\right)
+	u = \frac{1}{g_2(\state)}\left(-f_2(\state) +\dot{\phi}_1(x_1) -\frac{\partial V_1}{\partial x_1}g_1(x_1) - \lambda_2\left(x_2-\phi_1(x_1)\right)\right), \ \lambda_2>0
 \end{equation}
-\subsection{Discussion}
-La fonction de Lyapunov $V_2$ est en fonction de $x_1$ et $z$ pour s'assurer que la commande $v$ stabilise ces deux états à l'origine. De plus, il faut noter que celà assure la convergence de $x_2$ vers 0. En effet, $z\overset{t\rightarrow\infty}{\longrightarrow}0$ implique que $ x_2\overset{t\rightarrow\infty}{\longrightarrow}\phi_1(x_1)\overset{t\rightarrow\infty}{\longrightarrow}0$ par conséquence de la convergence de $x_1$ vers 0. 
-Aussi, la commande par backstepping $u$~\eqref{eq-chap3:backstepping command} est non-unique par effet de la non-unicité du choix de $V_1$. Finalement, la synthèse de la commande par backstepping comme expliquée  peut être directement généralisé pour des systèmes d'ordre supérieur comme le montre l'exemple suivant. 
+%\subsection{Discussion}
+qui stabilise le système~\eqref{eq-chap3:sys} à l'origine par la vértue du Théorème~\ref{thm:direct lyapunov method}. 
+La fonction de Lyapunov $V_2$ est en fonction de $x_1$ et $z$ pour s'assurer que la commande $v$ stabilise ces deux états à l'origine. De plus, celà assure la convergence de $x_2$ vers 0. En effet, $z\overset{t\rightarrow\infty}{\longrightarrow}0$ implique que $ x_2\overset{t\rightarrow\infty}{\longrightarrow}\phi_1(x_1)\overset{t\rightarrow\infty}{\longrightarrow}0$ par conséquence de la convergence de $x_1$ vers 0. 
+Aussi, la commande par backstepping $u$~\eqref{eq-chap3:backstepping command} est non-unique vu que le choix de $V_1$ est non-unique. 
+
+La synthèse de la commande par backstepping comme expliquée pour le système~\eqref{eq-chap3:sys}  peut être directement généralisé pour des systèmes d'ordre supérieur. En effet,
+soit le système suivant 
+\begin{subequations}%\label{eq-chap3:sys 3rd order}
+	\begin{align*}
+			\dot{x}_1 &= f_1(x_1) + g_1(x_1)x_2,\\
+			\dot{x}_2 &= f_2(x_1,x_2) + g_2(x_1,x_2)x_3,\\
+			\dot{x}_3 &= f_3(\state) + g_3(\state)u,
+	\end{align*}
+\end{subequations}
+avec $g_i(x_1,\ldots,x_i)\neq0$, et	qui peut être écrit comme suit 
+	\begin{subequations}\label{eq-chap3:sys 3rd order}
+		\begin{align}
+			\label{eq-chap3:subsys1_3rd}	\boldsymbol{\dot{\eta}} &= f_{\boldsymbol{{\eta}}}(\boldsymbol{\eta}) + g_{\boldsymbol{\eta}}(\boldsymbol{\eta})x_3,\\
+			\label{eq-chap3:subsys2_3rd}	\dot{x}_3 &= f_3(\state) + g_3(\state)u,
+		\end{align}
+\end{subequations}
+avec $ \boldsymbol{\eta} = \begin{bmatrix}
+	x_1 \\ x_2
+\end{bmatrix}$, $f_{\boldsymbol{{\eta}}}(\boldsymbol{\eta}) = \begin{bmatrix}
+f_1(x_1) + g_1(x_1)x_2 \\f_2(x_1,x_2)
+\end{bmatrix}$ et $g_{\boldsymbol{{\eta}}}(\boldsymbol{\eta}) = \begin{bmatrix}
+0 \\g_2(x_1,x_2)
+\end{bmatrix}$.
+
+On peut voir que le système~\eqref{eq-chap3:sys 3rd order} a la même  structure en cascade similaire à celle de~\eqref{eq-chap3:sys}. Par conséquent, en effectuant les mêmes étapes, la commande par backstepping $u$ qui stabilise asymptotiquement le système~\eqref{eq-chap3:sys 3rd order} est donnée par 
+\begin{equation}
+	u = \frac{1}{g_3(\state)}\left(-f_3(\state) +\dot{\phi}_2(x_1,x_2) -\frac{\partial V_2}{\partial \boldsymbol{\eta}}g_{\boldsymbol{\eta}}(\boldsymbol{\eta}) - \lambda_3\left(x_3-\phi_2(x_1,x_2)\right)\right), \ \lambda_3>0
+\end{equation}
+où $\dot{V}_3$ est FDN sur $\mathbb{R}^3$, avec 
+\begin{align}
+	V_3(\state)&= V_2(x_1,x_2) + \fracOneTwo z_2^2\\
+	V_2(x_1,x_2) &= \eqref{eq-chap3:V2}\\
+	z_2 &= x_3-\phi_2(x_1,x_2)\\
+	\phi_2(x_1,x_2) &= \eqref{eq-chap3:backstepping command}\\
+	\frac{\partial V_2}{\partial \boldsymbol{\eta}}g_{\boldsymbol{\eta}}(\boldsymbol{\eta}) & =\frac{\partial V_2}{\partial x_2}g_{2}(x_1,x_2).
+\end{align} 
+Il est important de remarquer que la synthèse de la commande par backstepping pour le système  d'ordre $n$ passe obligatoirement par la stabilisation des systèmes d'ordre $n-1$, $n-2$, $\ldots$, 1.
 \begin{example}
-	Soit le système nonlinéaire de 3ème ordre 
+	Reprenons le système~\eqref{eq-chap3:expl nnsys} et cherchons une commande stabilisante par Backstepping. \\
+	\textbf{Étape 01 :} Soit le sous-système 1 
+	\begin{equation}
+		\dot{x}_1 = x_1^2 + x_2.
+	\end{equation}
+	Pour trouver $\phi_1(x_1)$, on considère $V_1(x_1)= \fracOneTwo x_1^2$, dont la dérivée est 
+	\begin{equation}
+		\dot{V}_1 = x_1\dot{x}_1 = x_1\left(x_1^2 + x_2\right).
+	\end{equation}
+	Si $x_2=\phi_1(x_1) = -x_1^2-\lambda_1x_1$, alors $\dot{V}_1$ est FDN sur $\mathbb{R}$. \\
+	\textbf{Étape 02 :} Soit le système~\eqref{eq-chap3:expl nnsys}, et soit $V_2(\state) = V_1 + \fracOneTwo z_1^2$ tel que $z_1 = x_2-\phi_1(x_1)$. La dérivée de $V_2(\state)$ est donnée par 
 	\begin{align}
 		\begin{split}
-			\dot{x}_1&= x_1^2 + (x_1^2+1)x_2 \\
-			\dot{x}_2&= x_1x_2 + x_2\\
-			\dot{x}_3&= x_2 + u 
+			\dot{V}_2 &= x_1\left(x_1^2 + x_2\right) + z_1\left(x_1x_2 + (x_2^2+1)u - \dot{\phi}_1\right) \\
+			&= x_1\left(x_1^2 + \phi_1(x)\right) + z_1\left(x_1(x_2+1) + (x_2^2+1)u - \dot{\phi}_1\right) \\
+			&=-\lambda_1x_1^2 + z_1\left(x_1(x_2+1) + (x_2^2+1)u - \dot{\phi}_1\right)
 		\end{split}
 	\end{align}
+	Si la commande $u$ est 
+	\begin{equation}\label{eq-chap3:backstepping command expl1}
+		u = \frac{1}{x_2^2+1}\left(\dot{\phi}_1 - x_1(x_2+1) - \lambda_2z_1\right),
+	\end{equation}
+	alors $V_2(\state)$ est FDN sur $\mathbb{R}^2$. Comparativement avec la commande~\eqref{eq-chap3:nnlinear feedback 2}, $u$~\eqref{eq-chap3:backstepping command expl1} est bien définie sur $\mathbb{R}^2$.
+\end{example}
+
+\begin{example}
+	Soit le système nonlinéaire de 3ème ordre 
+	\begin{align}\label{eq-chap3:exemple 3rd order sys}
+		\begin{split}
+			\dot{x}_1&= -x_1^3 + x_2 \\
+			\dot{x}_2&= x_2 + x_3\\
+			\dot{x}_3&= u 
+		\end{split},
+	\end{align}
+	auquel on cherche la commande par backstepping $u$ qui le stabilise asymptotiquement à l'origine.\\
+	\textbf{Étape 01 :} Soit le sous-système 1 
+	\begin{equation}\label{eq-chap3:sous-sys1}
+		\dot{x}_1= -x_1^3 + x_2
+	\end{equation}
+		Pour trouver $\phi_1(x_1)$, on considère $V_1(x_1)= \fracOneTwo x_1^2$, dont la dérivée est 
+		\begin{equation}\label{eq-chap3:Vdot1 expl2}
+			\dot{V}_1 = x_1\left(-x_1^3 + x_2\right).
+		\end{equation}
+   De~\eqref{eq-chap3:Vdot1 expl2}, il est simple de voir qu'il suffit juste de choisir $x_2 = \phi_1=0$ pour que $\dot{V}_1$ soit FDN sur $\mathbb{R}$, et que le sous-système~\eqref{eq-chap3:sous-sys1} soit asymptotiquement stable. Ce choix exploite la présence du terme $-x_1^3$ dans la dynamique et qui est déjà un terme stabilisant. \\
+   \textbf{Étape 02 :} Soit le sous-système 2 
+   \begin{align}\label{eq-chap3:sous-sys2}
+   	\begin{split}
+   		\dot{x}_1&= -x_1^3 + x_2 \\
+   		\dot{x}_2&= x_2 + x_3
+   	\end{split},
+   \end{align}
+   et soit $V_2(x_1,x_2) = V_1 + \fracOneTwo x_2^2$. $\dot{V}_2$ est donnée par 
+   \begin{align}
+   	\begin{split}
+   		\dot{V}_2 &=x_1\left(-x_1^3 + x_2\right) + x_2\left(x_2 + x_3\right)\\
+   		&=-x_1^4 + x_2\left(x_1 +x_2 + x_3\right)
+   	\end{split}
+   \end{align}
+   Si $x_3=\phi_2(x_1,x_2) = -x_1-(1+\lambda_1)x_2$, alors $\dot{V}_2$ est FDN sur $\mathbb{R}^2$ et le sous-système~\eqref{eq-chap3:sous-sys2} est asymptotiquement stable.\\
+   \textbf{Étape 3:} Soit le système~\eqref{eq-chap3:exemple 3rd order sys}, et soit $V_3=V_2 + \fracOneTwo z^2$ avec $z = x_3-\phi_2$. $\dot{V}_3$ est donnée par 
+   \begin{align}
+	   	\begin{split}
+	   		\dot{V}_3 &= \dot{V}_2 + z\left(u-\dot{\phi}_2\right)\\
+	   		&= -x_1^4 + x_2\left(x_1 +x_2 + x_3\right)+ z\left(u-\dot{\phi}_2\right) \\ 
+	   		&= -x_1^4 -\lambda_1x_2^2 + z\left(u-\dot{\phi}_2+x_2\right)  
+	   	\end{split}
+   \end{align}
+   Si la commande 
+   \begin{equation}
+   	u = \dot{\phi}_2-x_2-\lambda_2z,
+   \end{equation} 
+   alors $\dot{V}_3$ est FDN sur $\mathbb{R}^3$ et le système~\eqref{eq-chap3:exemple 3rd order sys} est asymptotiquement stable.
 \end{example}
 
