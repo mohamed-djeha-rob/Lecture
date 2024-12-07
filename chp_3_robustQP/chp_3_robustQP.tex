@@ -1,5 +1,20 @@
 \graphicspath{{Figures/}}
-\chapter{Commande Robuste par Mode Glissant} \label{chap:commande robust}
+\chapter{Commande Robuste par Mode Glissant} \label{chap:robust control}
+Dans les Chapitres~\ref{chap:introduction_Gen} et~\ref{chap:optimal control}, on a vu que l'on peut commander un système linéaire de la forme de~\eqref{eq-chap2:syslin_commande} par une commande qui a la forme d'un retour d'état linéaire $\command = -\matriceK\state$. En l'occurence, les gains $\matriceK$ sont calculés soit par la méthode de placement des pôles, ou bien par la minimisation d'une fonction-coût quadratique. Par ailleurs, on a vu que les systèmes nonlinéaires de la forme de~\eqref{eq-chap1:generic nnlinear sys} peuvent être stabilisés en choisissant une commande $\command = \gamma(\state)$, potentiellement nonlinéaires, tel que le système en boucle fermée $\stateDot = f\left(\state,\gamma(\state)\right)$ est asymptotiquement stable.  En particulier  dans le Chapitre~\ref{chap:backstepping}, on a étudié la méthode dite de Backstepping qui permet de synthétiser une loi de commande de manière systèmatique en se basant sur le $2^\text{ème}$ théorème de Lyapunov (Théorème~\ref{thm:direct lyapunov method}). 
 
- 
+Les lois de commande vu jusqu'à maintenant ont des propriétés en commun : 
+\begin{itemize}
+	\item Continues par rapport à l'état,
+	\item Gains constants,
+	\item Synthèse de la commande dépend du modèle du système (notamment pour les systèmes nonlinéaires).
+\end{itemize}
+Dans ce cas, on dit que le système en boucle fermée est à \emph{structure unique}. Cependant en partique, certains systèmes échappent à cette classification. 
+\section{Systèmes à Structure Variable}
+Certains régulateurs de température fonctionnement en mode ‘on/off’ sur la base d'une logique dite en  hystéresis. La loi de commande générée commute entre deux valeurs distinctes et elle est donc discontinues. Ce cas de figure n'est pas isolé. En effet dans l'industrie automobile, le système de freinage Anti Blocking System (ABS) se base sur un concept similaire : effectuer des coups de frein discontinus et rapides afin de ralentir éfficacement la vitesse du véhicule tout en évitant le blocage des roues et le glissement. La commande de la vitesse des moteurs à courant continu s'éffectue pratiquement aussi par un signal sous forme d'impulsion dont la largeur est modulée (Pulse Width Modulation (PWM)). Dans le domaine de l'avionique, le pilote automatique ne garde pas des paramtres constant tout au long du vol, mais change de paramètres en fonction des différents phases de vol. Cette opération est connu sous le nom  de la commande à gains pré-programmés (gains-scheduling control) : un ensemble de commande est pré-implémenté pour chaque point de fonctionnement par lequel l'avion vas (ou peut) passer durant le vol. Ensuite, le régulateur commute entre les différents lois de commande (moyennant une interpoloation pour limiter les discontinuités) sur la base du changement des certains paramètres de vol, comme l'altitude.  
 
+Dans tout ces exemples, le régulateur change de structure (formulation) ou bien de paramètres suivant une certaine logique de commutation, et par conséquent le système en boucle fermée devient à \emph{structure variable}.
+\subsection{Avantages des systèmes à structure variable}
+\begin{itemize}
+	\item Combiner les avantages de chaque système,
+	\item Bénéficier de nouvelles propriétés qui sont absentes dans chacun des systèmes. 
+\end{itemize}
